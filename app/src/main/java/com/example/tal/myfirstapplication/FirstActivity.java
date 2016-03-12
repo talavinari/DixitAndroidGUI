@@ -1,33 +1,20 @@
 package com.example.tal.myfirstapplication;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 public class FirstActivity extends AppCompatActivity {
 
-    public static final String MY_MESSAGE = "my message";
-    public static final String REST_API_PREFIX = "http://10.0.0.6:8080/DixitRESTfulAPI/rest/service/";
-    public static final String GET_ROOMS_API_URL = REST_API_PREFIX + "rooms";
     TextView text;
 
     @Override
@@ -67,7 +54,7 @@ public class FirstActivity extends AppCompatActivity {
         if (text.equals("Go to second activity with data")){
 //            intent = new Intent(this, SecondActivity.class);
 //            intent.putExtra(MY_MESSAGE, editText.getText().toString());
-            new CallAPI().execute(GET_ROOMS_API_URL);
+            new CallAPI().execute(Constants.GET_ROOMS_API_URL);
         }
 
         else{

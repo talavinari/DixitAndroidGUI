@@ -33,6 +33,9 @@ public class CallAPI extends AsyncTask<String, String, String> {
             return e.getMessage();
         }
 
+        // HTTP Post
+
+
         // Parse XML
         XmlPullParserFactory pullParserFactory;
 
