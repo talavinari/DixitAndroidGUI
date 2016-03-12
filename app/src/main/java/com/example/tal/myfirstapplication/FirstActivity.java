@@ -54,7 +54,7 @@ public class FirstActivity extends AppCompatActivity {
         if (text.equals("Go to second activity with data")){
 //            intent = new Intent(this, SecondActivity.class);
 //            intent.putExtra(MY_MESSAGE, editText.getText().toString());
-            new CallAPI().execute(Constants.GET_ROOMS_API_URL);
+            //.execute(Constants.GET_ROOMS_API_URL);
         }
 
         else{
