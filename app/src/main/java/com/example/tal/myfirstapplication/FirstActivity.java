@@ -48,7 +48,15 @@ public class FirstActivity extends AppCompatActivity {
 
 
     }
+    public void createNewRoom(View view){
+        Intent intent = new Intent(this, SecondActivity.class);
 
+        startActivity(intent);
+    }
+
+    public void joinRoom(View view){
+
+    }
 
     public void changeText(View view){
         Button button = (Button) view;
@@ -90,51 +98,5 @@ public class FirstActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class CallAPI extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            String urlString=params[0];
-            String resultToDisplay = "";
-            InputStream in = null;
-
-            // HTTP Get
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                in = new BufferedInputStream(urlConnection.getInputStream());
-            } catch (Exception e ) {
-                System.out.println(e.getMessage());
-                return e.getMessage();
-            }
-
-            // Parse XML
-            XmlPullParserFactory pullParserFactory;
-
-            try {
-                pullParserFactory = XmlPullParserFactory.newInstance();
-                XmlPullParser parser = pullParserFactory.newPullParser();
-
-                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-                parser.setInput(in, null);
-                //result = parseXML(parser);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            }
-
-
-
-            return resultToDisplay;
-        }
-
-        protected void onPostExecute(String result) {
-            //Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
-
-            //intent.putExtra(EXTRA_MESSAGE, result);
-
-            //startActivity(intent);
-        }
-
-    } // end CallAPI
 
 }

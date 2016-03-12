@@ -3,6 +3,7 @@ package com.example.tal.myfirstapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 /**
@@ -22,5 +23,14 @@ public class SecondActivity extends Activity {
         textView.setTextSize(45);
         setContentView(textView);
         //setContentView(R.layout.second_activity_layout);
+    }
+
+
+    public void createRoom(View view){
+
+
+
+
+
     }
 }

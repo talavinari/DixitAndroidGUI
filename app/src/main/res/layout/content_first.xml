@@ -21,17 +21,18 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Go to second activity with data"
-        android:onClick="changeText"
-        android:id="@+id/button_to_second"
+        android:text="Create New Room"
+        android:onClick="createNewRoom"
+        android:id="@+id/create"
         android:layout_below="@+id/message"/>
 
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Go to third activity"
-        android:onClick="changeText"
-        android:layout_below="@+id/button_to_second"/>
+        android:text="Join room"
+        android:onClick="joinRoom"
+        android:layout_below="@+id/create"
+        android:id="@+id/join" />
 
 </RelativeLayout>
