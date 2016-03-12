@@ -42,7 +42,9 @@ public class FirstActivity extends AppCompatActivity {
     }
 
     public void joinRoom(View view){
+        Intent intent = new Intent(this, ThirdActivity.class);
 
+        startActivity(intent);
     }
 
     public void changeText(View view){

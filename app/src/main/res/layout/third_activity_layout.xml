@@ -6,102 +6,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Opponents"/>
+        android:text="All Rooms"
+        android:id="@+id/textView2"
+        android:layout_gravity="center_horizontal" />
 
-
-    <!--<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--android:id="@+id/tableLayout1"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="fill_parent" >-->
-
-        <!--&lt;!&ndash; 2 columns &ndash;&gt;-->
-        <!--<TableRow-->
-            <!--android:id="@+id/tableRow1"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:padding="5dip" >-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/textView1"-->
-                <!--android:text="Column 1"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-            <!--<Button-->
-                <!--android:id="@+id/button1"-->
-                <!--android:text="Column 2" />-->
-        <!--</TableRow>-->
-
-        <!--&lt;!&ndash; edittext span 2 column &ndash;&gt;-->
-        <!--<TableRow-->
-            <!--android:id="@+id/tableRow2"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:padding="5dip" >-->
-
-            <!--<EditText-->
-                <!--android:id="@+id/editText1"-->
-                <!--android:layout_span="2"-->
-                <!--android:text="Column 1 + 2" />-->
-        <!--</TableRow>-->
-
-        <!--&lt;!&ndash; just draw a red line &ndash;&gt;-->
-        <!--<View-->
-            <!--android:layout_height="2dip"-->
-            <!--android:background="#FF0000" />-->
-
-        <!--&lt;!&ndash; 3 columns &ndash;&gt;-->
-        <!--<TableRow-->
-            <!--android:id="@+id/tableRow3"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:padding="5dip" >-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/textView2"-->
-                <!--android:text="Column 1"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-            <!--<Button-->
-                <!--android:id="@+id/button2"-->
-                <!--android:text="Column 2" />-->
-
-            <!--<Button-->
-                <!--android:id="@+id/button3"-->
-                <!--android:text="Column 3" />-->
-        <!--</TableRow>-->
-
-        <!--&lt;!&ndash; display this button in 3rd column via layout_column(zero based) &ndash;&gt;-->
-        <!--<TableRow-->
-            <!--android:id="@+id/tableRow4"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:padding="5dip" >-->
-
-            <!--<Button-->
-                <!--android:id="@+id/button4"-->
-                <!--android:layout_column="2"-->
-                <!--android:text="Column 3" />-->
-        <!--</TableRow>-->
-
-        <!--&lt;!&ndash; display this button in 2nd column via layout_column(zero based) &ndash;&gt;-->
-        <!--<TableRow-->
-            <!--android:id="@+id/tableRow5"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:padding="5dip" >-->
-
-            <!--<Button-->
-                <!--android:id="@+id/button5"-->
-                <!--android:layout_column="1"-->
-                <!--android:text="Column 2" />-->
-        <!--</TableRow>-->
-
-    <!--</TableLayout>-->
-
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tableLayout1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-        </TableLayout>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/AllRooms"></TableLayout>
 
 </LinearLayout>
