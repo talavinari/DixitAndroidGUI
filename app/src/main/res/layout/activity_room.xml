@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,27 +7,27 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.tal.myfirstapplication.FirstActivity"
-    tools:showIn="@layout/activity_first_layout">
+    tools:context=".Room">
 
-
-    <ImageButton
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/create"
-        android:background="@drawable/create"
-        android:onClick="createNewRoom"
-        android:layout_centerVertical="true"
+        android:text="Room name:"
+        android:id="@+id/textView3"
+        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
-    <ImageButton
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/join"
-        android:background="@drawable/join"
-        android:layout_alignTop="@+id/create"
-        android:onClick="joinRoom"
-        android:layout_alignParentEnd="true" />
+        android:text="roomname"
+        android:id="@+id/roomname"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_toEndOf="@+id/textView3" />
 
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textView3"
+        android:layout_alignParentStart="true"></TableLayout>
 </RelativeLayout>

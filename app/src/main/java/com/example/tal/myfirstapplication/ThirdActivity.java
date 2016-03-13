@@ -1,8 +1,11 @@
 package com.example.tal.myfirstapplication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -25,7 +28,7 @@ import java.net.URL;
 /**
  * Created by tal on 3/11/2016.
  */
-public class ThirdActivity extends Activity {
+public class ThirdActivity extends Activity implements View.OnClickListener{
 
     TableLayout tableLayout;
 
@@ -37,56 +40,62 @@ public class ThirdActivity extends Activity {
         new GetRooms().execute(Constants.GET_ROOMS_API_URL);
 
     }
-/*
-    private void initGrid() {
-        tableLayout = (TableLayout) findViewById(R.id.tableLayout1);
-        for (int i = 0; i <2; i++) {
 
-            TableRow row= new TableRow(this);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-            row.setLayoutParams(lp);
-            TextView id = new TextView(this);
-            TextView name = new TextView(this);
-            name.setText("Tal " + i);
-            id.setText(String.valueOf(i));
-            row.addView(id);
-            row.addView(name);
-            tableLayout.addView(row, i);
-        }
-    }*/
-    private class GetRooms extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            String urlString = params[0];
-            String resultToDisplay = "";
-            InputStream in = null;
+    @Override
+    public void onClick(View v) {
+        displayRoom(v);
+    }
 
-            StringBuilder res = new StringBuilder();
+    /*
+        private void initGrid() {
+            tableLayout = (TableLayout) findViewById(R.id.tableLayout1);
+            for (int i = 0; i <2; i++) {
 
-
-
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setDoInput(true);
-                InputStream is = new BufferedInputStream(urlConnection.getInputStream());
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-                String line;
-                while((line = reader.readLine())!=null){
-                    res.append(line);
-                }
-
-
-
-
-                return res.toString();
-
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                return e.getMessage();
+                TableRow row= new TableRow(this);
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                row.setLayoutParams(lp);
+                TextView id = new TextView(this);
+                TextView name = new TextView(this);
+                name.setText("Tal " + i);
+                id.setText(String.valueOf(i));
+                row.addView(id);
+                row.addView(name);
+                tableLayout.addView(row, i);
             }
+        }*/
+    private class GetRooms extends AsyncTask<String, String, String> {
+            @Override
+            protected String doInBackground(String... params) {
+                String urlString = params[0];
+                String resultToDisplay = "";
+                InputStream in = null;
+
+                StringBuilder res = new StringBuilder();
+
+
+
+                try {
+                    URL url = new URL(urlString);
+                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.setDoInput(true);
+                    InputStream is = new BufferedInputStream(urlConnection.getInputStream());
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+                    String line;
+                    while((line = reader.readLine())!=null){
+                        res.append(line);
+                    }
+
+
+
+
+                    return res.toString();
+
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    return e.getMessage();
+                }
 //            XmlPullParserFactory pullParserFactory;
 //
 //            try {
@@ -98,7 +107,7 @@ public class ThirdActivity extends Activity {
 //                e.printStackTrace();
 //            }
 //            return resultToDisplay;
-        }
+            }
 
 
         protected void onPostExecute(String result) {
@@ -115,11 +124,28 @@ public class ThirdActivity extends Activity {
                 TableRow row= new TableRow(ThirdActivity.this);
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                 row.setLayoutParams(lp);
+                row.setOnClickListener(new ThirdActivity());
                 TextView name = new TextView(ThirdActivity.this);
                 name.setText(rooms[i]);
                 row.addView(name);
+                row.setId(Integer.valueOf(rooms[i + 1]));
                 tableLayout.addView(row, i);
+                i++;
             }
         }
+    }
+
+
+
+    public void displayRoom(View view){
+/*
+        EditText editText = (EditText) findViewById(R.id.edit_message);
+        String message = editText.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, message);
+*/
+        TableRow row = (TableRow) findViewById(view.getId());
+        Intent intent = new Intent(this, Room.class);
+
+        startActivity(intent);
     }
 }
