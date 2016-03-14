@@ -12,22 +12,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Room name:"
-        android:id="@+id/textView3"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="roomname"
         android:id="@+id/roomname"
-        android:layout_alignBottom="@+id/textView3"
-        android:layout_toEndOf="@+id/textView3" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="30dp" />
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/textView3"
-        android:layout_alignParentStart="true"></TableLayout>
+        android:layout_below="@+id/roomname"
+        android:layout_alignParentStart="true"
+        android:id="@+id/allPlayers"></TableLayout>
 </RelativeLayout>

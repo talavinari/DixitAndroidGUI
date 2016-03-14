@@ -19,6 +19,9 @@ public class FirstActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Getting the ip of the machine
+        Constants con = new Constants();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_layout);
 

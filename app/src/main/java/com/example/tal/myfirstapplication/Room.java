@@ -9,10 +9,15 @@ import android.widget.TextView;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.List;
 
 public class Room extends AppCompatActivity {
 
@@ -23,8 +28,15 @@ public class Room extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
+        String roomName = getIntent().getExtras().getString(Constants.ID_EXTRA);
 
-        new GetRoomDetails().execute(Constants.GET_ROOM_DETAILS_API_URL,"","1");
+        ((TextView)findViewById(R.id.roomname)).setText(roomName);
+
+        new GetRoomDetails().execute(Constants.GET_ROOM_DETAILS_API_URL, roomName);
+    }
+
+    public String getRoom(String roomName){
+        return new getPlayersForRoom().execute(roomName).toString();
     }
 
 
@@ -33,28 +45,41 @@ public class Room extends AppCompatActivity {
         protected String doInBackground(String... params) {
             String urlString = params[0];
             String roomName = params[1];
-            String roomId = params[2];
-            String resultToDisplay = "";
-            InputStream in = null;
+            urlString = urlString;
 
             StringBuilder res = new StringBuilder();
 
-
-
             try {
+                //URLEncoder.encode(urlString, "UTF-8");
+
                 URL url = new URL(urlString);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "text/plain");
                 urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+                OutputStream outputStream = urlConnection.getOutputStream();
+                BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+                bf.write(roomName);
+                bf.flush();
+                bf.close();
+                outputStream.close();
                 InputStream is = new BufferedInputStream(urlConnection.getInputStream());
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+         //       urlConnection.getInputStream();
 
-                String line;
+
+
+//
+//                URL url = new URL(urlString);
+//                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+//                urlConnection.setRequestMethod("GET");
+//                urlConnection.setDoInput(true);
+////                urlConnection.setRequestProperty("Content-Type", "application/json");
+               String line;
                 while((line = reader.readLine())!=null){
                     res.append(line);
                 }
-
-
 
 
                 return res.toString();
@@ -68,7 +93,7 @@ public class Room extends AppCompatActivity {
 
         protected void onPostExecute(String result) {
 
-            tableLayout = (TableLayout) findViewById(R.id.AllRooms);
+            tableLayout = (TableLayout) findViewById(R.id.allPlayers);
             String[] rooms = result.split(",");
             rooms[0] = rooms[0].substring(1);
             rooms[rooms.length-1] = rooms[rooms.length-1].substring(0,rooms[rooms.length-1].length()-1);
@@ -87,5 +112,42 @@ public class Room extends AppCompatActivity {
                 tableLayout.addView(row, i);
             }
         }
+    }
+
+
+    private class getPlayersForRoom extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... params) {
+
+            String urlString = Constants.GET_ROOM_DETAILS_API_URL;
+
+            StringBuilder res = new StringBuilder();
+
+            try {
+                URL url = new URL(urlString);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "text/plain");
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+                OutputStream outputStream = urlConnection.getOutputStream();
+                BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                bf.write(params[0]);
+                bf.flush();
+                bf.close();
+                outputStream.close();
+                InputStream is = new BufferedInputStream(urlConnection.getInputStream());
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    res.append(line);
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+            return res.toString();
+        }
+
     }
 }

@@ -2,6 +2,7 @@ package com.example.tal.myfirstapplication;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -31,6 +33,7 @@ import java.net.URL;
 public class ThirdActivity extends Activity implements View.OnClickListener{
 
     TableLayout tableLayout;
+    int counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,33 +49,13 @@ public class ThirdActivity extends Activity implements View.OnClickListener{
         displayRoom(v);
     }
 
-    /*
-        private void initGrid() {
-            tableLayout = (TableLayout) findViewById(R.id.tableLayout1);
-            for (int i = 0; i <2; i++) {
-
-                TableRow row= new TableRow(this);
-                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                row.setLayoutParams(lp);
-                TextView id = new TextView(this);
-                TextView name = new TextView(this);
-                name.setText("Tal " + i);
-                id.setText(String.valueOf(i));
-                row.addView(id);
-                row.addView(name);
-                tableLayout.addView(row, i);
-            }
-        }*/
     private class GetRooms extends AsyncTask<String, String, String> {
             @Override
             protected String doInBackground(String... params) {
                 String urlString = params[0];
                 String resultToDisplay = "";
                 InputStream in = null;
-
                 StringBuilder res = new StringBuilder();
-
-
 
                 try {
                     URL url = new URL(urlString);
@@ -86,27 +69,12 @@ public class ThirdActivity extends Activity implements View.OnClickListener{
                     while((line = reader.readLine())!=null){
                         res.append(line);
                     }
-
-
-
-
                     return res.toString();
 
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     return e.getMessage();
                 }
-//            XmlPullParserFactory pullParserFactory;
-//
-//            try {
-//                pullParserFactory = XmlPullParserFactory.newInstance();
-//                XmlPullParser parser = pullParserFactory.newPullParser();
-//                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-//                parser.setInput(in, null);
-//            } catch (XmlPullParserException e) {
-//                e.printStackTrace();
-//            }
-//            return resultToDisplay;
             }
 
 
@@ -120,22 +88,22 @@ public class ThirdActivity extends Activity implements View.OnClickListener{
 
             for (int i = 0; i <rooms.length; i++) {
 
-                rooms[i] = rooms[i].substring(1,rooms[i].length()-1);
+                rooms[counter] = rooms[counter].substring(1,rooms[counter].length()-1);
                 TableRow row= new TableRow(ThirdActivity.this);
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                 row.setLayoutParams(lp);
                 row.setOnClickListener(new ThirdActivity());
                 TextView name = new TextView(ThirdActivity.this);
+                name.setTextSize(30);
                 name.setText(rooms[i]);
                 row.addView(name);
-                row.setId(Integer.valueOf(rooms[i + 1]));
-                tableLayout.addView(row, i);
-                i++;
+                row.setOnClickListener(ThirdActivity.this);
+                tableLayout.addView(row, counter);
+                counter++;
+                //displayRoom2(row);
             }
         }
     }
-
-
 
     public void displayRoom(View view){
 /*
@@ -143,9 +111,39 @@ public class ThirdActivity extends Activity implements View.OnClickListener{
         String message = editText.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
 */
-        TableRow row = (TableRow) findViewById(view.getId());
+
+        String text = ((TextView)((TableRow)view).getVirtualChildAt(0)).getText().toString();
+
         Intent intent = new Intent(this, Room.class);
+        intent.putExtra(Constants.ID_EXTRA,text);
 
         startActivity(intent);
+    }
+    public void displayRoom2(View view) {
+        Room room = new Room();
+        String res = room.getRoom(((TextView) ((TableRow) view).getVirtualChildAt(0)).getText().toString());
+
+        String[] players = res.split(",");
+        players[0] = players[0].substring(1);
+        players[players.length-1] = players[players.length-1].substring(0,players[players.length-1].length()-1);
+
+        for (int i = 0; i <players.length; i++) {
+
+            players[i] = players[i].substring(1,players[i].length()-1);
+            TableRow row= new TableRow(ThirdActivity.this);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+            row.setLayoutParams(lp);
+            row.setOnClickListener(new ThirdActivity());
+            TextView name = new TextView(ThirdActivity.this);
+            name.setTextSize(30);
+            name.setText("      " + players[i]);
+            row.addView(name);
+            row.setBackgroundColor(Color.LTGRAY);
+            tableLayout.addView(row, counter);
+            counter++;
+        }
+
+
+
     }
 }
