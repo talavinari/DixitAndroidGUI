@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    // Color Palette
+    <color name="Black">#000000</color>
+    <color name="White">#FFFFFF</color>
+    <color name="Blue">#0000FF</color>
+    <color name="Green">#00FF00</color>
+    <color name="Red">#FF0000</color>
+
+
+
+
+    // Views
+    <style name="Background">
+        <item name="android:colorBackground">#00FF00</item>
+    </style>
+
+    <style name="Button">
+        <item name="android:textSize">30px</item>
+    </style>
+</resources>

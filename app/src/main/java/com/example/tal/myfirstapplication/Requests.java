@@ -2,12 +2,18 @@ package com.example.tal.myfirstapplication;
 
 import android.os.AsyncTask;
 
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -17,133 +23,119 @@ import java.net.URL;
 
 
 public class Requests{
-    private class AddRoom extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            String urlString = params[0];
-            String resultToDisplay = "";
-            InputStream in = null;
+    private static Requests instance;
 
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                in = new BufferedInputStream(urlConnection.getInputStream());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                return e.getMessage();
-            }
-            XmlPullParserFactory pullParserFactory;
-
-            try {
-                pullParserFactory = XmlPullParserFactory.newInstance();
-                XmlPullParser parser = pullParserFactory.newPullParser();
-                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-                parser.setInput(in, null);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            }
-            return resultToDisplay;
-        }
-
-        protected void onPostExecute(String result) {
-        }
-    }
-    public class JoinRoom extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            String urlString = params[0];
-            String resultToDisplay = "";
-            InputStream in = null;
-
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                in = new BufferedInputStream(urlConnection.getInputStream());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                return e.getMessage();
-            }
-            XmlPullParserFactory pullParserFactory;
-
-            try {
-                pullParserFactory = XmlPullParserFactory.newInstance();
-                XmlPullParser parser = pullParserFactory.newPullParser();
-                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-                parser.setInput(in, null);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            }
-            return resultToDisplay;
-        }
-
-        protected void onPostExecute(String result) {
-        }
+    private Requests() {
     }
 
-    public class PlayersRoomName extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            String urlString = params[0];
-            String resultToDisplay = "";
-            InputStream in = null;
-
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                in = new BufferedInputStream(urlConnection.getInputStream());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                return e.getMessage();
-            }
-            XmlPullParserFactory pullParserFactory;
-
-            try {
-                pullParserFactory = XmlPullParserFactory.newInstance();
-                XmlPullParser parser = pullParserFactory.newPullParser();
-                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-                parser.setInput(in, null);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            }
-            return resultToDisplay;
+    public static Requests getInstance(){
+        if (instance ==null){
+            instance = new Requests();
         }
-
-        protected void onPostExecute(String result) {
-        }
+        return instance;
     }
 
-    public class Rooms extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            String urlString = params[0];
-            String resultToDisplay = "";
-            InputStream in = null;
+    public String doGet(String urlString){
+        StringBuilder res = new StringBuilder();
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoInput(true);
+            InputStream is = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                in = new BufferedInputStream(urlConnection.getInputStream());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                return e.getMessage();
+            String line;
+            while((line = reader.readLine())!=null){
+                res.append(line);
             }
-            XmlPullParserFactory pullParserFactory;
+            return res.toString();
 
-            try {
-                pullParserFactory = XmlPullParserFactory.newInstance();
-                XmlPullParser parser = pullParserFactory.newPullParser();
-                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-                parser.setInput(in, null);
-            } catch (XmlPullParserException e) {
-                e.printStackTrace();
-            }
-            return resultToDisplay;
-        }
-
-        protected void onPostExecute(String result) {
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return e.getMessage();
         }
     }
 
 
 
+    public String doPost(String urlString, String var){
+
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
+            //urlConnection.setRequestProperty("Content-Type", "text/plain");
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+            OutputStream outputStream = urlConnection.getOutputStream();
+            BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+            bf.write(var);
+            bf.flush();
+            bf.close();
+            outputStream.close();
+            urlConnection.getInputStream();
+
+
+
+            return "";
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return e.getMessage();
+        }
+    }
+    public String doPost(String urlString, JSONObject jobj) {
+
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+            OutputStream outputStream = urlConnection.getOutputStream();
+            BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            bf.write(jobj.toString());
+            bf.flush();
+            bf.close();
+            outputStream.close();
+            urlConnection.getInputStream();
+
+            return "";
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return e.getMessage();
+        }
+    }
+
+    public String doPostWithResponse(String urlString, String var){
+        StringBuilder res = new StringBuilder();
+
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "text/plain");
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+            OutputStream outputStream = urlConnection.getOutputStream();
+            BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+            bf.write(var);
+            bf.flush();
+            bf.close();
+            outputStream.close();
+            InputStream is = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            String line;
+            while((line = reader.readLine())!=null){
+                res.append(line);
+            }
+            return res.toString();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return e.getMessage();
+        }
+    }
 }

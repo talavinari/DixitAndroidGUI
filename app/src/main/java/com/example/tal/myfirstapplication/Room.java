@@ -16,8 +16,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.List;
 
 public class Room extends AppCompatActivity {
 
@@ -45,59 +43,15 @@ public class Room extends AppCompatActivity {
         protected String doInBackground(String... params) {
             String urlString = params[0];
             String roomName = params[1];
-            urlString = urlString;
 
-            StringBuilder res = new StringBuilder();
-
-            try {
-                //URLEncoder.encode(urlString, "UTF-8");
-
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Content-Type", "text/plain");
-                urlConnection.setDoInput(true);
-                urlConnection.setDoOutput(true);
-                OutputStream outputStream = urlConnection.getOutputStream();
-                BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
-                bf.write(roomName);
-                bf.flush();
-                bf.close();
-                outputStream.close();
-                InputStream is = new BufferedInputStream(urlConnection.getInputStream());
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-         //       urlConnection.getInputStream();
-
-
-
-//
-//                URL url = new URL(urlString);
-//                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-//                urlConnection.setRequestMethod("GET");
-//                urlConnection.setDoInput(true);
-////                urlConnection.setRequestProperty("Content-Type", "application/json");
-               String line;
-                while((line = reader.readLine())!=null){
-                    res.append(line);
-                }
-
-
-                return res.toString();
-
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                return e.getMessage();
-            }
+            return Requests.getInstance().doPostWithResponse(urlString, roomName);
         }
 
-
         protected void onPostExecute(String result) {
-
             tableLayout = (TableLayout) findViewById(R.id.allPlayers);
             String[] rooms = result.split(",");
             rooms[0] = rooms[0].substring(1);
             rooms[rooms.length-1] = rooms[rooms.length-1].substring(0,rooms[rooms.length-1].length()-1);
-
 
             for (int i = 0; i <rooms.length; i++) {
 
@@ -105,7 +59,7 @@ public class Room extends AppCompatActivity {
                 TableRow row= new TableRow(Room.this);
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                 row.setLayoutParams(lp);
-                row.setOnClickListener(new ThirdActivity());
+                row.setOnClickListener(new JoinRoom());
                 TextView name = new TextView(Room.this);
                 name.setText(rooms[i]);
                 row.addView(name);
@@ -113,7 +67,6 @@ public class Room extends AppCompatActivity {
             }
         }
     }
-
 
     private class getPlayersForRoom extends AsyncTask<String, String, String> {
         @Override
@@ -148,6 +101,5 @@ public class Room extends AppCompatActivity {
 
             return res.toString();
         }
-
     }
 }
