@@ -23,6 +23,8 @@ public class Constants extends Activity {
     public Constants() {
     }
 
+
+    public static String userNickName ="";
     public static final String MY_MESSAGE = "my message";
     public static final String ID_EXTRA = "extra";
     public static final String REST_API_PREFIX = "http://192.168.1.11:8080/DixitRESTfulAPI/rest/service/";

@@ -138,4 +138,8 @@ public class Requests{
             return e.getMessage();
         }
     }
+
+    public String parseUrl(String url){
+        return url.replace(' ','+');
+    }
 }

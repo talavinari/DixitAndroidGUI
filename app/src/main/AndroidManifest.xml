@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
         <activity
-            android:name=".MainActivity"
+            android:name=".Splash"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -22,8 +22,19 @@
         </activity>
         <activity android:name=".CreateRoom" />
         <activity android:name=".JoinRoom" />
-        <activity android:name=".Room"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Room"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_splash"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".FirstLogIn"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_first_log_in"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>
