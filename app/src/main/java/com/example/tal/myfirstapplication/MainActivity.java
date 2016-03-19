@@ -1,11 +1,6 @@
 package com.example.tal.myfirstapplication;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -15,14 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
 public class MainActivity extends AppCompatActivity {
-
-    TextView text;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
