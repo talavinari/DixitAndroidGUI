@@ -1,6 +1,8 @@
 package com.example.tal.myfirstapplication;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
@@ -13,10 +15,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class MainActivity extends AppCompatActivity {
 
     TextView text;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
     }
 
     @Override
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void settings(View view){
+    public void settings(){
         Intent intent = new Intent(this,FirstLogIn.class);
         startActivity(intent);
     }
@@ -80,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            settings();
             return true;
         }
 

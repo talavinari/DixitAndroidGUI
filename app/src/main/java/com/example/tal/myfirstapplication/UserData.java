@@ -33,7 +33,14 @@ public class UserData extends Activity {
         return nickName;
     }
 
-    public String getCurrRoom() {
+    public String getCurrRoom(Context context) {
+
+        if (currRoom==null) {
+
+            SharedPreferences sp1 = context.getSharedPreferences("Login", 0);
+            currRoom = sp1.getString("currRoom", null);
+        }
+
         return currRoom;
     }
 
@@ -43,9 +50,18 @@ public class UserData extends Activity {
         SharedPreferences.Editor Ed=sp.edit();
         Ed.putString("nickName", nickName);
         Ed.commit();
+
+        this.nickName = nickName;
     }
 
-    public void setCurrRoom(String currRoom) {
+    public void setCurrRoom(String currRoom,Context context) {
+
+        SharedPreferences sp= context.getSharedPreferences("Login", 0);
+        SharedPreferences.Editor Ed=sp.edit();
+        Ed.putString("currRoom", currRoom);
+        Ed.commit();
+
+
         this.currRoom = currRoom;
     }
 

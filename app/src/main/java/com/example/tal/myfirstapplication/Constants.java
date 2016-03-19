@@ -31,6 +31,9 @@ public class Constants extends Activity {
     public static final String ADD_ROOM_API_URL = REST_API_PREFIX + "addRoom";
     public static final String ADD_PLAYER_TO_ROOM_API_URL = REST_API_PREFIX + "join";
     public static final String GET_ROOMS_API_URL = REST_API_PREFIX + "rooms";
+    public static final String REMOVE_ROOM = REST_API_PREFIX + "removeRoom";
+    public static final String REMOVE_PLAYER = REST_API_PREFIX + "removePlayer";
+    public static final String COUNT_PLAYERS = REST_API_PREFIX + "countPlayers";
 
     public static final String GET_ROOM_DETAILS_API_URL = REST_API_PREFIX + "players"; // /players/{roomName}
 }

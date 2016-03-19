@@ -91,6 +91,7 @@ public class Requests{
             URL url = new URL(urlString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setDoInput(true);
             urlConnection.setDoOutput(true);
             OutputStream outputStream = urlConnection.getOutputStream();

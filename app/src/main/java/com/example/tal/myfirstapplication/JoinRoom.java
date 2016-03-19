@@ -15,6 +15,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -49,14 +52,25 @@ public class JoinRoom extends Activity implements View.OnClickListener {
             displayRoom(v);
         }else{
             String roomName = ((TextView) ((TableRow) v).getVirtualChildAt(0)).getText().toString();
-            new AddMeToRoom().execute(Constants.ADD_PLAYER_TO_ROOM_API_URL,roomName);
+            UserData.getInstance().setCurrRoom(roomName,this);
+
+            new AddMeToRoom().execute(Constants.ADD_PLAYER_TO_ROOM_API_URL,UserData.getInstance().getNickName(this),roomName);
         }
     }
     public class AddMeToRoom extends AsyncTask<String, String, String> {
 
         @Override
         protected String doInBackground(String... params) {
-            return Requests.getInstance().doPost(params[0],params[1]);
+            JSONObject jobj = new JSONObject();
+            try {
+                jobj.put("nickName", params[1]);
+                jobj.put("roomName", params[2]);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Requests.getInstance().doPost(params[0],jobj);
+            Requests.getInstance().doPost(Constants.REMOVE_PLAYER,jobj);
+            return Requests.getInstance().doPost(params[0],jobj);
         }
     }
     private class GetRoomDetails extends AsyncTask<String, String, String> {
