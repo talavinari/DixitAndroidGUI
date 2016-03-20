@@ -11,4 +11,6 @@
     <string name="title_activity_splash">splash</string>
 
     <string name="title_activity_first_log_in">FirstLogIn</string>
+
+    <string name="title_activity_game_main">GameMain</string>
 </resources>

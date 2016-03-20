@@ -1,6 +1,8 @@
 package com.example.tal.myfirstapplication;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -35,18 +37,34 @@ public class CreateRoom extends Activity {
     public void createRoom(View view){
         EditText editText = (EditText) findViewById(R.id.RoomName);
 
-        new AddRoom().execute(Constants.ADD_ROOM_API_URL,editText.getText().toString());
+        new AddRoom(this).execute(Constants.ADD_ROOM_API_URL, editText.getText().toString(), UserData.getInstance().getNickName(this));
+
     }
 
     private class AddRoom extends AsyncTask<String, String, String> {
+        Context context;
+
+        public AddRoom(Context context) {
+            this.context = context.getApplicationContext();
+        }
+
         @Override
         protected String doInBackground(String... params) {
             String urlString = params[0];
             String roomName = params[1];
-            String jsonString = roomName +"\n"+"guy12";
-            Requests.getInstance().doPost(urlString,roomName);
+            String nickName = params[2];
+            JSONObject jobj = new JSONObject();
 
+            try {
+                jobj.put("nickName",nickName);
+                jobj.put("roomName",roomName);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
+            Requests.getInstance().doPost(Constants.ADD_ROOM_API_URL,jobj);
+            Requests.getInstance().doPost(Constants.ADD_PLAYER_TO_ROOM_API_URL,jobj);
+/*
             try {
                 JSONObject jobj = new JSONObject(jsonString);
                 urlString = Constants.ADD_PLAYER_TO_ROOM_API_URL;
@@ -55,10 +73,15 @@ public class CreateRoom extends Activity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            */
             return "";
         }
 
         protected void onPostExecute(String result) {
+
+            Intent intent = new Intent(context,GameMain.class);
+            startActivity(intent);
+
         }
     }
 }

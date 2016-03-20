@@ -37,6 +37,8 @@ public class JoinRoom extends Activity implements View.OnClickListener {
     TableLayout tableLayout;
     int counter;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,12 +54,19 @@ public class JoinRoom extends Activity implements View.OnClickListener {
             displayRoom(v);
         }else{
             String roomName = ((TextView) ((TableRow) v).getVirtualChildAt(0)).getText().toString();
-            UserData.getInstance().setCurrRoom(roomName,this);
+            UserData.getInstance().setCurrRoom(roomName, this);
 
-            new AddMeToRoom().execute(Constants.ADD_PLAYER_TO_ROOM_API_URL,UserData.getInstance().getNickName(this),roomName);
+            new AddMeToRoom(this).execute(Constants.ADD_PLAYER_TO_ROOM_API_URL, UserData.getInstance().getNickName(this), roomName);
+
+
         }
     }
     public class AddMeToRoom extends AsyncTask<String, String, String> {
+        Context context;
+
+        public AddMeToRoom(Context context) {
+            this.context = context.getApplicationContext();
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -68,9 +77,15 @@ public class JoinRoom extends Activity implements View.OnClickListener {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Requests.getInstance().doPost(params[0],jobj);
-            Requests.getInstance().doPost(Constants.REMOVE_PLAYER,jobj);
             return Requests.getInstance().doPost(params[0],jobj);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            Intent intent = new Intent(context,GameMain.class);
+            startActivity(intent);
         }
     }
     private class GetRoomDetails extends AsyncTask<String, String, String> {

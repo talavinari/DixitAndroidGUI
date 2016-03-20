@@ -3,7 +3,6 @@ package com.example.tal.myfirstapplication;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.EditText;
 
 /**
  * Created by gront on 19/03/2016.
