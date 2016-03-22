@@ -5,7 +5,13 @@
     android:background="#0099cc"
     tools:context="com.example.tal.myfirstapplication.GameMain">
 
-
+    <ImageView
+        android:id="@+id/table"
+        android:src="@drawable/table"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_alignParentTop="true"
+        />
     <ImageView
         android:id="@+id/card6"
         android:layout_width="wrap_content"
@@ -16,6 +22,13 @@
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/card5"
         android:contentDescription="@string/dummy_button"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/card6text"
+        android:text="0"
+        android:layout_centerHorizontal="@+id/card6"
+        android:layout_centerVertical="@+id/card6"/>
     <ImageView
         android:id="@+id/card1"
         android:layout_width="wrap_content"
@@ -27,6 +40,13 @@
         android:layout_alignParentStart="true"
         android:contentDescription="@string/dummy_button"
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/card1text"
+        android:text="0"
+        android:layout_centerHorizontal="@+id/card1"
+        android:layout_centerVertical="@+id/card1"/>
     <ImageView
         android:id="@+id/card2"
         android:layout_width="wrap_content"
@@ -37,6 +57,13 @@
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/card1"
         android:contentDescription="@string/dummy_button"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/card2text"
+        android:text="0"
+        android:layout_centerHorizontal="@+id/card2"
+        android:layout_centerVertical="@+id/card2"/>
 
     <ImageView
         android:id="@+id/card3"
@@ -48,6 +75,13 @@
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/card2"
         android:contentDescription="@string/dummy_button"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/card3text"
+        android:text="0"
+        android:layout_centerHorizontal="@+id/card3"
+        android:layout_centerVertical="@+id/card3"/>
 
     <ImageView
         android:id="@+id/card4"
@@ -59,6 +93,13 @@
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/card3"
         android:contentDescription="@string/dummy_button"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/card4text"
+        android:text="0"
+        android:layout_centerHorizontal="@+id/card4"
+        android:layout_centerVertical="@+id/card4"/>
     <ImageView
         android:id="@+id/card5"
         android:layout_width="wrap_content"
@@ -69,5 +110,20 @@
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/card4"
         android:contentDescription="@string/dummy_button"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/card5text"
+        android:text="0"
+        android:layout_centerHorizontal="@+id/card5"
+        android:layout_centerVertical="@+id/card5"/>
+    <ImageView
+        android:id="@+id/target"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/target_card"
+        android:contentDescription="@string/dummy_button"/>
+
 
 </RelativeLayout>
