@@ -39,7 +39,7 @@ import java.net.URL;
 public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
-    private static final String[] TOPICS = {"global"};
+    //private static final String[] TOPICS = {"global"};
 
     public RegistrationIntentService() {
         super(TAG);
@@ -66,7 +66,7 @@ public class RegistrationIntentService extends IntentService {
             //sendRegistrationToServer(token);
 
             // Subscribe to topic channels
-            subscribeTopics(token);
+            subscribeTopics(token, intent.getStringExtra(Constants.TOPIC_ROOM_NAME));
 
             // You should store a boolean that indicates whether the generated token has been
             // sent to your server.s If the boolean is false, end the token to your server,
@@ -122,11 +122,13 @@ public class RegistrationIntentService extends IntentService {
      * @throws IOException if unable to reach the GCM PubSub service
      */
     // [START subscribe_topics]
-    private void subscribeTopics(String token) throws IOException {
+    private void subscribeTopics(String token, String topic) throws IOException {
         GcmPubSub pubSub = GcmPubSub.getInstance(this);
-        for (String topic : TOPICS) {
-            pubSub.subscribe(token, "/topics/" + topic, null);
-        }
+        pubSub.subscribe(token, "/topics/" + topic, null);
+
+//        for (String topic : TOPICS) {
+//            pubSub.subscribe(token, "/topics/" + topic, null);
+//        }
     }
     // [END subscribe_topics]
 
