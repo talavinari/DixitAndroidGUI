@@ -3,17 +3,17 @@ package com.example.tal.myfirstapplication;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +27,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.locks.ReadWriteLock;
 
 /**
  * Created by tal on 3/11/2016.
@@ -36,8 +35,6 @@ public class JoinRoom extends Activity implements View.OnClickListener {
 
     TableLayout tableLayout;
     int counter;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +55,12 @@ public class JoinRoom extends Activity implements View.OnClickListener {
 
             new AddMeToRoom(this).execute(Constants.ADD_PLAYER_TO_ROOM_API_URL, UserData.getInstance().getNickName(this), roomName);
 
+            if (checkPlayServices()) {
+                // Start IntentService to register this application with GCM.
+                Intent intent = new Intent(this, RegistrationIntentService.class);
+                intent.putExtra(Constants.TOPIC_ROOM_NAME, roomName);
+                startService(intent);
+            }
 
         }
     }
@@ -251,4 +254,29 @@ public class JoinRoom extends Activity implements View.OnClickListener {
         }
         return players;
     }
+
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, Constants.PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(Constants.TAG_MAIN_CLASS, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+
 }
