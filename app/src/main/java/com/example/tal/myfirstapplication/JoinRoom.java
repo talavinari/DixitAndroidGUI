@@ -35,9 +35,6 @@ import java.util.concurrent.locks.ReadWriteLock;
 public class JoinRoom extends Activity implements View.OnClickListener {
 
     TableLayout tableLayout;
-    int counter;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +122,12 @@ public class JoinRoom extends Activity implements View.OnClickListener {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new GetRooms().execute(Constants.GET_ROOMS_API_URL);
+    }
+
     private class GetRooms extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... params) {
@@ -135,6 +138,10 @@ public class JoinRoom extends Activity implements View.OnClickListener {
         protected void onPostExecute(String result) {
 
             tableLayout = (TableLayout) findViewById(R.id.AllRooms);
+            tableLayout.removeAllViews();
+
+
+
             String[] rooms = result.split(",");
             rooms[0] = rooms[0].substring(1);
             StringBuilder res = new StringBuilder();

@@ -5,5 +5,9 @@
     <solid android:color="#88FF88"/>
     <size android:height="40dp"
         android:width="20dp"/>
+    <stroke android:color="#CCCC00"
+        android:width="5px"
+        android:dashGap="8px"
+        android:dashWidth="15px"/>
 
 </shape>

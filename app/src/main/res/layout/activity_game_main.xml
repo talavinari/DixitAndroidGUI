@@ -27,8 +27,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/card6text"
         android:text="0"
-        android:layout_centerHorizontal="@+id/card6"
-        android:layout_centerVertical="@+id/card6"/>
+        android:layout_alignLeft="@+id/card6"
+        android:layout_alignTop="@+id/card6"
+        android:layout_alignRight="@+id/card6"
+        android:layout_alignBottom="@+id/card6"
+        android:gravity="center" />
     <ImageView
         android:id="@+id/card1"
         android:layout_width="wrap_content"
@@ -45,8 +48,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/card1text"
         android:text="0"
-        android:layout_centerHorizontal="@+id/card1"
-        android:layout_centerVertical="@+id/card1"/>
+        android:layout_alignLeft="@+id/card1"
+        android:layout_alignTop="@+id/card2"
+        android:layout_alignRight="@+id/card1"
+        android:layout_alignBottom="@+id/card1"
+        android:gravity="center" />
     <ImageView
         android:id="@+id/card2"
         android:layout_width="wrap_content"
@@ -62,8 +68,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/card2text"
         android:text="0"
-        android:layout_centerHorizontal="@+id/card2"
-        android:layout_centerVertical="@+id/card2"/>
+        android:layout_alignLeft="@+id/card2"
+        android:layout_alignTop="@+id/card2"
+        android:layout_alignRight="@+id/card2"
+        android:layout_alignBottom="@+id/card2"
+        android:gravity="center" />
 
     <ImageView
         android:id="@+id/card3"
@@ -80,8 +89,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/card3text"
         android:text="0"
-        android:layout_centerHorizontal="@+id/card3"
-        android:layout_centerVertical="@+id/card3"/>
+        android:layout_alignLeft="@+id/card3"
+        android:layout_alignTop="@+id/card3"
+        android:layout_alignRight="@+id/card3"
+        android:layout_alignBottom="@+id/card3"
+        android:gravity="center" />
 
     <ImageView
         android:id="@+id/card4"
@@ -98,8 +110,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/card4text"
         android:text="0"
-        android:layout_centerHorizontal="@+id/card4"
-        android:layout_centerVertical="@+id/card4"/>
+        android:layout_alignLeft="@+id/card4"
+        android:layout_alignTop="@+id/card4"
+        android:layout_alignRight="@+id/card4"
+        android:layout_alignBottom="@+id/card4"
+        android:gravity="center" />
     <ImageView
         android:id="@+id/card5"
         android:layout_width="wrap_content"
@@ -116,14 +131,44 @@
         android:layout_height="wrap_content"
         android:id="@+id/card5text"
         android:text="0"
-        android:layout_centerHorizontal="@+id/card5"
-        android:layout_centerVertical="@+id/card5"/>
+        android:layout_alignLeft="@+id/card5"
+        android:layout_alignTop="@+id/card5"
+        android:layout_alignRight="@+id/card5"
+        android:layout_alignBottom="@+id/card5"
+        android:gravity="center" />
     <ImageView
         android:id="@+id/target"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/target_card"
         android:contentDescription="@string/dummy_button"/>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/user"
+        android:id="@+id/user1"
+        android:layout_marginLeft="-50px"
+        android:layout_marginTop="50px"
+        android:layout_alignParentStart="true" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/user"
+        android:id="@+id/user2"
+        android:layout_marginRight="-50px"
+        android:layout_marginTop="50px"
+        android:layout_alignParentEnd="true" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/user"
+        android:id="@+id/user3"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@id/table"
+        android:layout_marginTop="-1150px" />
+
 
 
 </RelativeLayout>

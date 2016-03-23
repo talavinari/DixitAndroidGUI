@@ -3,6 +3,8 @@ package com.example.tal.myfirstapplication;
 import android.content.Context;
 import android.location.GpsStatus;
 import android.net.sip.SipAudioCall;
+import android.opengl.Visibility;
+import android.text.Layout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -29,8 +31,30 @@ public class Card {
         this.tv = tv;
     }
 
+
+    public Card() {
+    }
+
+    public void setVisibility(int i){
+        cardPic.setVisibility(i);
+
+        tv.setVisibility(i);
+    }
+
     public void setText(String text){
         this.tv.setText(text);
+    }
+
+    private void setTextAlign(){
+//        RelativeLayout.LayoutParams lay = (RelativeLayout.LayoutParams) tv.getLayoutParams();
+//        lay.addRule(RelativeLayout.CENTER_HORIZONTAL,cardPic.getId());
+//        lay.addRule(RelativeLayout.CENTER_VERTICAL,cardPic.getId());
+//        tv.setLayoutParams(lay);
+    }
+
+    public void bringToFront(){
+        cardPic.bringToFront();
+        tv.bringToFront();
     }
 
 

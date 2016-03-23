@@ -82,6 +82,13 @@ public class Splash extends Activity {
         getUserNick();
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
     private void start(){
         Runnable run = new Runnable() {
             @Override
@@ -131,26 +138,12 @@ public class Splash extends Activity {
 
         @Override
         protected String doInBackground(String... params) {
-            final JSONObject jobj = new JSONObject();
-            try {
-                jobj.put("nickName",params[0]);
-                jobj.put("currRoom", params[1]);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
 
-            Requests.getInstance().doPost(Constants.REMOVE_PLAYER, jobj);
-            String str = Requests.getInstance().doPostWithResponse(Constants.COUNT_PLAYERS, params[0]);
-
-            if (Boolean.parseBoolean(str) != true){
-                Requests.getInstance().doPost(Constants.REMOVE_ROOM, params[1]);
-            }
-            return null;
+            return "";
         }
 
         @Override
         protected void onPostExecute(String s) {
-            System.out.println(" onClick ");
             closeApplication();
         }
     }
@@ -193,7 +186,6 @@ public class Splash extends Activity {
     }
 
     private void closeApplication() {
-        System.out.println("closeApplication ");
         this.finish();
     }
 
