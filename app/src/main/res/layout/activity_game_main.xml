@@ -146,29 +146,69 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:src="@drawable/user"
         android:id="@+id/user1"
+        android:onClick="moveUser1"
         android:layout_marginLeft="-50px"
-        android:layout_marginTop="50px"
+        android:layout_marginTop="400px"
         android:layout_alignParentStart="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="user1"
+        android:id="@+id/username1"
+        android:gravity="center"
+        android:layout_alignLeft="@+id/user1"
+        android:layout_alignRight="@+id/user1"
+        android:layout_alignBottom="@+id/user1"
+        android:layout_marginBottom="-40px"
+        android:visibility="invisible"
+        />
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:src="@drawable/user"
         android:id="@+id/user2"
+        android:onClick="moveUser2"
         android:layout_marginRight="-50px"
-        android:layout_marginTop="50px"
+        android:layout_marginTop="400px"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="user2"
+        android:id="@+id/username2"
+        android:gravity="center"
+        android:layout_alignLeft="@+id/user2"
+        android:layout_alignRight="@+id/user2"
+        android:layout_alignBottom="@+id/user2"
+        android:layout_marginBottom="-40px"
+        android:visibility="invisible"
+        />
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:src="@drawable/user"
         android:id="@+id/user3"
+        android:onClick="moveUser3"
         android:layout_centerHorizontal="true"
         android:layout_alignTop="@id/table"
-        android:layout_marginTop="-1150px" />
+        android:layout_marginTop="-50px" />
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="user3"
+        android:id="@+id/username3"
+        android:gravity="center"
+        android:layout_alignLeft="@+id/user3"
+        android:layout_alignRight="@+id/user3"
+        android:layout_alignBottom="@+id/user3"
+        android:layout_marginBottom="-40px"
+        android:visibility="invisible"
+        />
 
 </RelativeLayout>
