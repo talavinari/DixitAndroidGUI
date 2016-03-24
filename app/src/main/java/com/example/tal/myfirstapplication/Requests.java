@@ -111,6 +111,9 @@ public class Requests{
         }
     }
 
+
+
+
     public String doPostWithResponse(String urlString, String var){
         StringBuilder res = new StringBuilder();
 
@@ -141,7 +144,38 @@ public class Requests{
         }
     }
 
-    public String parseUrl(String url){
-        return url.replace(' ','+');
+
+
+    public String doPostWithResponse(String urlString, JSONObject var){
+        StringBuilder res = new StringBuilder();
+
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+            OutputStream outputStream = urlConnection.getOutputStream();
+            BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+            bf.write(var.toString());
+            bf.flush();
+            bf.close();
+            outputStream.close();
+            InputStream is = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            String line;
+            while((line = reader.readLine())!=null){
+                res.append(line);
+            }
+            return res.toString();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return e.getMessage();
+        }
     }
+
+    /*  */
+
 }

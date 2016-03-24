@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.json.JSONObject;
+
 /**
  * Created by gront on 19/03/2016.
  */
@@ -12,6 +14,7 @@ public class UserData extends Activity {
     private static UserData userData;
 
     private UserData(){}
+    private String[] cards;
 
     public static UserData getInstance(){
         if (userData == null){
@@ -21,6 +24,30 @@ public class UserData extends Activity {
     }
 
     private String nickName;
+
+    public String[] getCards() {
+        return cards;
+    }
+
+    public void setCards(String string) {
+        string.replace('"',' ');
+
+        String[] cards = string.split(",");
+
+        cards[0] = cards[0].substring(1);
+        cards[cards.length - 1] = cards[cards.length - 1].substring(0, cards[cards.length - 1].length() - 1);
+        cards[0].trim();
+        cards[1].trim();
+        cards[2].trim();
+        cards[3].trim();
+        cards[4].trim();
+        cards[5].trim();
+
+
+
+        this.cards = cards;
+    }
+
     private String currRoom;
 
     public String getNickName(Context context) {

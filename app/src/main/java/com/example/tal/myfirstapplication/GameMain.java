@@ -163,14 +163,18 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         anset3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user3movement);
 
         anset1.setTarget(plr1);
+        anset2.setTarget(plr2);
+        anset3.setTarget(plr3);
 
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card1), this, (TextView) findViewById(R.id.card1text)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card2), this, (TextView) findViewById(R.id.card2text)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card3), this, (TextView) findViewById(R.id.card3text)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card4), this, (TextView) findViewById(R.id.card4text)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card5), this, (TextView) findViewById(R.id.card5text)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text)));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card1), this, (TextView) findViewById(R.id.card1text),UserData.getInstance().getCards()[0]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card2), this, (TextView) findViewById(R.id.card2text),UserData.getInstance().getCards()[1]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card3), this, (TextView) findViewById(R.id.card3text),UserData.getInstance().getCards()[2]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card4), this, (TextView) findViewById(R.id.card4text),UserData.getInstance().getCards()[3]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card5), this, (TextView) findViewById(R.id.card5text),UserData.getInstance().getCards()[4]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text),UserData.getInstance().getCards()[5]));
         calcSize();
+
+
 
         targetCard = (ImageView) findViewById(R.id.target);
         targetCard.setLayoutParams(getOutgoingCardLayoutParams());

@@ -20,7 +20,7 @@ public class Card {
     ImageView cardPic;
     private TextView tv;
 
-    public Card(int cardNum, int imageNum, RelativeLayout.LayoutParams layoutParams, ImageView cardPic,Object obj, TextView tv) {
+    public Card(int cardNum, int imageNum, RelativeLayout.LayoutParams layoutParams, ImageView cardPic,Object obj, TextView tv, String tvText) {
         this.cardNum = cardNum;
         this.imageNum = imageNum;
         this.layoutParams = layoutParams;
@@ -29,6 +29,7 @@ public class Card {
         cardPic.setOnLongClickListener((View.OnLongClickListener) obj);
         cardPic.setOnDragListener((View.OnDragListener) obj);
         this.tv = tv;
+        this.tv.setText(tvText.substring(1,tvText.length()-1));
     }
 
 

@@ -18,16 +18,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 /**
  * Created by tal on 3/11/2016.
  */
@@ -63,6 +53,7 @@ public class JoinRoom extends Activity implements View.OnClickListener {
 
         }
     }
+
     public class AddMeToRoom extends AsyncTask<String, String, String> {
         Context context;
 
@@ -79,7 +70,10 @@ public class JoinRoom extends Activity implements View.OnClickListener {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return Requests.getInstance().doPost(params[0],jobj);
+            UserData.getInstance().setCards(Requests.getInstance().doPostWithResponse(params[0], jobj));
+
+
+            return "";
         }
 
         @Override
@@ -88,42 +82,6 @@ public class JoinRoom extends Activity implements View.OnClickListener {
 
             Intent intent = new Intent(context,GameMain.class);
             startActivity(intent);
-        }
-    }
-    private class GetRoomDetails extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String urlString = Constants.GET_ROOM_DETAILS_API_URL;
-            String roomName = params[0];
-            StringBuilder res = new StringBuilder();
-
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Content-Type", "text/plain");
-                urlConnection.setDoInput(true);
-                urlConnection.setDoOutput(true);
-                OutputStream outputStream = urlConnection.getOutputStream();
-                BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                bf.write(roomName);
-                bf.flush();
-                bf.close();
-                outputStream.close();
-                InputStream is = new BufferedInputStream(urlConnection.getInputStream());
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    res.append(line);
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-            return res.toString();
-
         }
     }
 
@@ -149,7 +107,6 @@ public class JoinRoom extends Activity implements View.OnClickListener {
 
             String[] rooms = result.split(",");
             rooms[0] = rooms[0].substring(1);
-            StringBuilder res = new StringBuilder();
             rooms[rooms.length - 1] = rooms[rooms.length - 1].substring(0, rooms[rooms.length - 1].length() - 1);
 
 
@@ -171,47 +128,6 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                 row.setOnClickListener(JoinRoom.this);
                 tableLayout.addView(row);
 
-/*
-                try {
-                    URL url = new URL(Constants.GET_ROOM_DETAILS_API_URL);
-                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setRequestMethod("POST");
-                    urlConnection.setRequestProperty("Content-Type", "text/plain");
-                    urlConnection.setDoInput(true);
-                    urlConnection.setDoOutput(true);
-                    OutputStream outputStream = urlConnection.getOutputStream();
-                    BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                    bf.write(rooms[i]);
-                    bf.flush();
-                    bf.close();
-                    outputStream.close();
-                    InputStream is = new BufferedInputStream(urlConnection.getInputStream());
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        res.append(line);
-                    }
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-
-                String[] str = res.toString().split(",");
-                str[0] = str[0].substring(1);
-                str[str.length - 1] = str[str.length - 1].substring(0, str[str.length - 1].length() - 1);
-
-                for (int j=0;j<str.length;j++){
-                    str[j] = str[j].substring(1, str[j].length() - 1);
-                    TableRow row2 = new TableRow(JoinRoom.this);
-                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                    row2.setLayoutParams(lp2);
-                    row2.setOnClickListener(new JoinRoom());
-                    TextView name2 = new TextView(JoinRoom.this);
-                    name2.setTextSize(30);
-                    name2.setText(str[j]);
-                    row2.addView(name2);
-                    row2.setOnClickListener(JoinRoom.this);
-                    tableLayout.addView(row);
-                }*/
             }
         }
     }
@@ -223,45 +139,6 @@ public class JoinRoom extends Activity implements View.OnClickListener {
         intent.putExtra(Constants.ID_EXTRA, text);
 
         startActivity(intent);
-    }
-
-    public String[] displayRoom2(View view) {
-
-        String urlString = Constants.GET_ROOM_DETAILS_API_URL;
-        String roomName = ((TextView) ((TableRow) view).getVirtualChildAt(0)).getText().toString();
-        StringBuilder res = new StringBuilder();
-
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-            urlConnection.setDoInput(true);
-            urlConnection.setDoOutput(true);
-            OutputStream outputStream = urlConnection.getOutputStream();
-            BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-            bf.write(roomName);
-            bf.flush();
-            bf.close();
-            outputStream.close();
-            InputStream is = new BufferedInputStream(urlConnection.getInputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                res.append(line);
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        String[] players = res.toString().split(",");
-        players[0] = players[0].substring(1);
-        players[players.length - 1] = players[players.length - 1].substring(0, players[players.length - 1].length() - 1);
-
-        for (int i = 0; i < players.length; i++) {
-            players[i] = players[i].substring(1, players[i].length() - 1);
-        }
-        return players;
     }
 
 
