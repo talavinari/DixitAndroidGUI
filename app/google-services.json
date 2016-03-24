@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_id": "my-first-application-3d791",
+    "project_number": "102043151700",
+    "name": "My First Application"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102043151700:android:9cbb3746b6905fff",
+        "client_id": "android:com.example.tal.myfirstapplication",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.example.tal.myfirstapplication",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 2,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
