@@ -62,7 +62,8 @@ public class CreateRoom extends Activity {
                 e.printStackTrace();
             }
 
-            Requests.getInstance().doPost(Constants.ADD_ROOM_API_URL,jobj);
+            UserData.getInstance().setCards(Requests.getInstance().doPostWithResponse(Constants.ADD_ROOM_API_URL, jobj));
+
             return "";
         }
 
