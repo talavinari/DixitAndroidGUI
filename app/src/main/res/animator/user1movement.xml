@@ -4,8 +4,8 @@
     android:ordering="sequentially" >
 
     <objectAnimator
-        android:duration="1500"
+        android:duration="300"
         android:propertyName="x"
-        android:valueTo="20px"
+        android:valueTo="150px"
         android:valueType="floatType" />
 </set>

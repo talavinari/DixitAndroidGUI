@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.json.JSONObject;
 
 /**
  * Created by gront on 19/03/2016.
@@ -86,6 +85,8 @@ public class UserData extends Activity {
         SharedPreferences.Editor Ed=sp.edit();
         Ed.putString("currRoom", currRoom);
         Ed.commit();
+
+
 
 
         this.currRoom = currRoom;

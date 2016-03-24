@@ -1,6 +1,5 @@
 package com.example.tal.myfirstapplication;
 
-import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.app.Activity;
@@ -12,7 +11,6 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.DragEvent;
 import android.view.View;
-import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,6 +43,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     AnimatorSet anset1;
     AnimatorSet anset2;
     AnimatorSet anset3;
+    AnimatorSet antext1;
+    AnimatorSet antext2;
+    AnimatorSet antext3;
+
 
 
     @Override
@@ -76,28 +78,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             } else {
                 setAllCards(cardSize, cardSize * 2);
             }
-        } /*else if (v.getId() == R.id.user1) {
-            if (usr1) {
-
-                usr1 = false;
-            } else {
-                usr1 = true;
-
-            }
-        } else if (v.getId() == R.id.user2) {
-            if (usr2) {
-                usr2 = false;
-            } else {
-                usr2 = true;
-            }
-        } else if (v.getId() == R.id.user3) {
-            if (usr3) {
-                usr3 = false;
-            } else {
-                usr3 = true;
-            }
-        }*/
-    }
+        }    }
 
     @Override
     public boolean onLongClick(View v) {
@@ -151,16 +132,18 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         ImageView plr1 = (ImageView) findViewById(R.id.user1);
         ImageView plr2 = (ImageView) findViewById(R.id.user2);
         ImageView plr3 = (ImageView) findViewById(R.id.user3);
-/*
-        plr1.setOnClickListener(this);
-        plr2.setOnClickListener(this);
-        plr3.setOnClickListener(this);
-*/
+
+        findViewById(R.id.user1).setVisibility(View.INVISIBLE);
+        findViewById(R.id.username1).setVisibility(View.INVISIBLE);
 
 
         anset1 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user1movement);
         anset2 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user2movement);
         anset3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user3movement);
+
+        antext1 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user1movement);
+        antext2 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user2movement);
+        antext3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user3movement);
 
         anset1.setTarget(plr1);
         anset2.setTarget(plr2);
@@ -262,33 +245,55 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public void moveUser1(View view){
         if(usr1){
             findViewById(R.id.username1).setVisibility(View.INVISIBLE);
+            anset1 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user1moveback);
+            antext1 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user1moveback);
             usr1=false;
         }else{
             findViewById(R.id.username1).setVisibility(View.VISIBLE);
-            anset1.start();
+            anset1 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user1movement);
+            antext1 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user1movement);
             usr1=true;
         }
+        anset1.setTarget(findViewById(R.id.user1));
+        antext1.setTarget(findViewById(R.id.username1));
+        anset1.start();
+        antext1.start();
     }
+
     public void moveUser2(View view){
         if(usr2){
             findViewById(R.id.username2).setVisibility(View.INVISIBLE);
-
+            anset2 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user2moveback);
+            antext2 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user2moveback);
             usr2=false;
         }else{
             findViewById(R.id.username2).setVisibility(View.VISIBLE);
+            anset2 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user2movement);
+            antext2 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user2movement);
             usr2=true;
         }
+        anset2.setTarget(findViewById(R.id.user2));
+        antext2.setTarget(findViewById(R.id.username2));
+        anset2.start();
+        antext2.start();
     }
     public void moveUser3(View view){
         if(usr3){
             findViewById(R.id.username3).setVisibility(View.INVISIBLE);
-
+            anset3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user3moveback);
+            antext3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.text3moveback);
             usr3=false;
         }else{
             findViewById(R.id.username3).setVisibility(View.VISIBLE);
-
+            anset3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user3movement);
+            antext3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.text3movement);
             usr3=true;
         }
+
+        anset3.setTarget(findViewById(R.id.user3));
+        antext3.setTarget(findViewById(R.id.username3));
+        anset3.start();
+        antext3.start();
     }
 
     private void calcSize() {
