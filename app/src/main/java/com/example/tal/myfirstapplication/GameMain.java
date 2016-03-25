@@ -46,7 +46,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     AnimatorSet antext1;
     AnimatorSet antext2;
     AnimatorSet antext3;
-
+    int draggedCardNum;
 
 
     @Override
@@ -78,19 +78,19 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             } else {
                 setAllCards(cardSize, cardSize * 2);
             }
-        }    }
+        }
+    }
 
     @Override
     public boolean onLongClick(View v) {
         if (!isCardOnTable) {
-            draggedView = cardsInHand.get(getListPlaceByView(v));
+            draggedCardNum = getListPlaceByView(v);
+            draggedView = cardsInHand.get(draggedCardNum);
             View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
             v.startDrag(data, shadowBuilder, v, 0);
-            draggedView.setVisibility(View.INVISIBLE);
             GameMain.vib.vibrate(20);
             targetCard.setVisibility(View.VISIBLE);
             targetCard.bringToFront();
-            isCardOnTable = true;
             return true;
         }
         return false;
@@ -100,32 +100,46 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public boolean onDrag(View v, DragEvent event) {
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
-                break;
+                draggedView.setVisibility(View.INVISIBLE);
+                return true;
             case DragEvent.ACTION_DRAG_ENTERED:
-                break;
+                return false;
             case DragEvent.ACTION_DRAG_EXITED:
-                draggedView.cardPic.setVisibility(View.VISIBLE);
+                draggedView.setVisibility(View.VISIBLE);
+//                cardsInHand.get(draggedCardNum).cardPic.setVisibility(View.VISIBLE);
+                isCardOnTable = false;
                 setAllCards(cardSize, cardSize * 2);
-                break;
+                return true;
             case DragEvent.ACTION_DROP:
                 if (findViewById(R.id.table) == v) {
-                    int i = getListPlaceByView(draggedView.cardPic);
-                    if (i >= 0) {
-                        cardsInHand.remove(i);
+                        cardsInHand.remove(draggedCardNum);
                         draggedView.cardPic.setLayoutParams(getOutgoingCardLayoutParams());
                         rearrangeCards();
+                        draggedView.setVisibility(View.VISIBLE);
                         draggedView.bringToFront();
-                    }
+                        isCardOnTable = true;
+//                    draggedView.setVisibility(View.VISIBLE);
+
+                    return true;
                 }
                 draggedView.setVisibility(View.VISIBLE);
-                break;
+
+//                draggedView.setVisibility(View.VISIBLE);
+                return false;
             case DragEvent.ACTION_DRAG_ENDED:
-                targetCard.setVisibility(View.INVISIBLE);
-                break;
+
+                draggedView.cardPic.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        draggedView.setVisibility(View.VISIBLE);
+                    }
+                });
+//                draggedView.setVisibility(View.VISIBLE);
+//                cardsInHand.get(draggedCardNum).cardPic.setVisibility(View.VISIBLE);
+                return false;
             default:
-                break;
+                return true;
         }
-        return true;
     }
 
     public void setCardsInPosition() {
@@ -137,33 +151,30 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         findViewById(R.id.username1).setVisibility(View.INVISIBLE);
 
 
-        anset1 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user1movement);
-        anset2 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user2movement);
-        anset3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user3movement);
+        anset1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
+        anset2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
+        anset3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user3movement);
 
-        antext1 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user1movement);
-        antext2 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user2movement);
-        antext3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user3movement);
+        antext1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
+        antext2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
+        antext3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user3movement);
 
         anset1.setTarget(plr1);
         anset2.setTarget(plr2);
         anset3.setTarget(plr3);
 
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card1), this, (TextView) findViewById(R.id.card1text),UserData.getInstance().getCards()[0]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card2), this, (TextView) findViewById(R.id.card2text),UserData.getInstance().getCards()[1]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card3), this, (TextView) findViewById(R.id.card3text),UserData.getInstance().getCards()[2]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card4), this, (TextView) findViewById(R.id.card4text),UserData.getInstance().getCards()[3]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card5), this, (TextView) findViewById(R.id.card5text),UserData.getInstance().getCards()[4]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text),UserData.getInstance().getCards()[5]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card1), this, (TextView) findViewById(R.id.card1text), UserData.getInstance().getCards()[0]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card2), this, (TextView) findViewById(R.id.card2text), UserData.getInstance().getCards()[1]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card3), this, (TextView) findViewById(R.id.card3text), UserData.getInstance().getCards()[2]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card4), this, (TextView) findViewById(R.id.card4text), UserData.getInstance().getCards()[3]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card5), this, (TextView) findViewById(R.id.card5text), UserData.getInstance().getCards()[4]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text), UserData.getInstance().getCards()[5]));
         calcSize();
-
-
 
         targetCard = (ImageView) findViewById(R.id.target);
         targetCard.setLayoutParams(getOutgoingCardLayoutParams());
         targetCard.setVisibility(View.INVISIBLE);
         targetCard.bringToFront();
-
 
         setAllCards(cardSize, cardSize * 2);
         for (int i = 0; i < cardsInHand.size(); i++) {
@@ -187,7 +198,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private int getListPlaceByView(View v) {
         for (int i = 0; i < cardsInHand.size(); i++) {
-            if (cardsInHand.get(i).cardPic == v) {
+            if (cardsInHand.get(i).cardPic.getId() == v.getId()) {
                 return i;
             }
         }
@@ -242,17 +253,17 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         setAllCards(cardSize, cardSize * 2);
     }
 
-    public void moveUser1(View view){
-        if(usr1){
+    public void moveUser1(View view) {
+        if (usr1) {
             findViewById(R.id.username1).setVisibility(View.INVISIBLE);
-            anset1 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user1moveback);
-            antext1 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user1moveback);
-            usr1=false;
-        }else{
+            anset1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1moveback);
+            antext1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1moveback);
+            usr1 = false;
+        } else {
             findViewById(R.id.username1).setVisibility(View.VISIBLE);
-            anset1 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user1movement);
-            antext1 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user1movement);
-            usr1=true;
+            anset1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
+            antext1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
+            usr1 = true;
         }
         anset1.setTarget(findViewById(R.id.user1));
         antext1.setTarget(findViewById(R.id.username1));
@@ -260,34 +271,35 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         antext1.start();
     }
 
-    public void moveUser2(View view){
-        if(usr2){
+    public void moveUser2(View view) {
+        if (usr2) {
             findViewById(R.id.username2).setVisibility(View.INVISIBLE);
-            anset2 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user2moveback);
-            antext2 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user2moveback);
-            usr2=false;
-        }else{
+            anset2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2moveback);
+            antext2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2moveback);
+            usr2 = false;
+        } else {
             findViewById(R.id.username2).setVisibility(View.VISIBLE);
-            anset2 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user2movement);
-            antext2 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user2movement);
-            usr2=true;
+            anset2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
+            antext2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
+            usr2 = true;
         }
         anset2.setTarget(findViewById(R.id.user2));
         antext2.setTarget(findViewById(R.id.username2));
         anset2.start();
         antext2.start();
     }
-    public void moveUser3(View view){
-        if(usr3){
+
+    public void moveUser3(View view) {
+        if (usr3) {
             findViewById(R.id.username3).setVisibility(View.INVISIBLE);
-            anset3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user3moveback);
-            antext3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.text3moveback);
-            usr3=false;
-        }else{
+            anset3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user3moveback);
+            antext3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.text3moveback);
+            usr3 = false;
+        } else {
             findViewById(R.id.username3).setVisibility(View.VISIBLE);
-            anset3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.user3movement);
-            antext3 = (AnimatorSet)AnimatorInflater.loadAnimator(this,R.animator.text3movement);
-            usr3=true;
+            anset3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user3movement);
+            antext3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.text3movement);
+            usr3 = true;
         }
 
         anset3.setTarget(findViewById(R.id.user3));

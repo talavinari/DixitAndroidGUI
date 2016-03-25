@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -36,9 +37,9 @@ public class JoinRoom extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getClass() == ImageButton.class){
+        if (v.getClass() == ImageButton.class) {
             displayRoom(v);
-        }else{
+        } else {
             String roomName = ((TextView) ((TableRow) v).getVirtualChildAt(0)).getText().toString();
             UserData.getInstance().setCurrRoom(roomName, this);
 
@@ -80,7 +81,7 @@ public class JoinRoom extends Activity implements View.OnClickListener {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            Intent intent = new Intent(context,GameMain.class);
+            Intent intent = new Intent(context, GameMain.class);
             startActivity(intent);
         }
     }
@@ -102,32 +103,38 @@ public class JoinRoom extends Activity implements View.OnClickListener {
 
             tableLayout = (TableLayout) findViewById(R.id.AllRooms);
             tableLayout.removeAllViews();
+            if (result != null) {
 
 
+                String[] rooms = result.split(",");
+                rooms[0] = rooms[0].substring(1);
+                rooms[rooms.length - 1] = rooms[rooms.length - 1].substring(0, rooms[rooms.length - 1].length() - 1);
 
-            String[] rooms = result.split(",");
-            rooms[0] = rooms[0].substring(1);
-            rooms[rooms.length - 1] = rooms[rooms.length - 1].substring(0, rooms[rooms.length - 1].length() - 1);
+                for (int i = 0; i < rooms.length; i++) {
 
-
-            for (int i = 0; i < rooms.length; i++) {
-
-                rooms[i] = rooms[i].substring(1, rooms[i].length() - 1);
-                TableRow row = new TableRow(JoinRoom.this);
-                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                row.setLayoutParams(lp);
-                row.setOnClickListener(new JoinRoom());
-                TextView name = new TextView(JoinRoom.this);
-                name.setTextSize(30);
-                name.setText(rooms[i]);
-                ImageButton but = new ImageButton(JoinRoom.this);
-                but.setBackground( getResources().getDrawable(R.drawable.i));
-                but.setOnClickListener(JoinRoom.this);
-                row.addView(name);
-                row.addView(but);
-                row.setOnClickListener(JoinRoom.this);
-                tableLayout.addView(row);
-
+                    rooms[i] = rooms[i].substring(1, rooms[i].length() - 1);
+                    TableRow row = new TableRow(JoinRoom.this);
+                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                    row.setLayoutParams(lp);
+                    row.setOnClickListener(new JoinRoom());
+                    TextView name = new TextView(JoinRoom.this);
+                    name.setTextSize(30);
+                    name.setText(rooms[i]);
+                    ImageButton but = new ImageButton(JoinRoom.this);
+                    but.setBackground(getResources().getDrawable(R.drawable.i));
+                    but.setOnClickListener(JoinRoom.this);
+                    row.addView(name);
+                    row.addView(but);
+                    row.setOnClickListener(JoinRoom.this);
+                    tableLayout.addView(row);
+                }
+            }else{
+                TableRow tr = new TableRow(JoinRoom.this);
+                TextView tv = new TextView(JoinRoom.this);
+                tv.setTextSize(30);
+                tv.setText("NO ROOMS TO SHOW!");
+                tr.addView(tv);
+                tableLayout.addView(tr);
             }
         }
     }
@@ -162,7 +169,6 @@ public class JoinRoom extends Activity implements View.OnClickListener {
         }
         return true;
     }
-
 
 
 }

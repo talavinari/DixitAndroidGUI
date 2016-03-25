@@ -29,22 +29,23 @@ public class UserData extends Activity {
     }
 
     public void setCards(String string) {
-        string.replace('"',' ');
+        if (string.length() > 0) {
+            string.replace('"', ' ');
 
-        String[] cards = string.split(",");
+            String[] cards = string.split(",");
 
-        cards[0] = cards[0].substring(1);
-        cards[cards.length - 1] = cards[cards.length - 1].substring(0, cards[cards.length - 1].length() - 1);
-        cards[0].trim();
-        cards[1].trim();
-        cards[2].trim();
-        cards[3].trim();
-        cards[4].trim();
-        cards[5].trim();
+            cards[0] = cards[0].substring(1);
+            cards[cards.length - 1] = cards[cards.length - 1].substring(0, cards[cards.length - 1].length() - 1);
+            cards[0].trim();
+            cards[1].trim();
+            cards[2].trim();
+            cards[3].trim();
+            cards[4].trim();
+            cards[5].trim();
 
 
-
-        this.cards = cards;
+            this.cards = cards;
+        }
     }
 
     private String currRoom;
