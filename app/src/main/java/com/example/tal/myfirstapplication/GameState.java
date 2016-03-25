@@ -6,8 +6,8 @@ import java.util.List;
  * Created by gront on 24/03/2016.
  */
 public class GameState {
-    List<User> allUsers;
-
-
+    List<Player> players;
+    Player currentStoryTeller;
+    String Association;
 
 }

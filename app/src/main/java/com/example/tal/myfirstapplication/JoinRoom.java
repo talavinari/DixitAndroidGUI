@@ -71,7 +71,14 @@ public class JoinRoom extends Activity implements View.OnClickListener {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            UserData.getInstance().setCards(Requests.getInstance().doPostWithResponse(params[0], jobj));
+            String json = Requests.getInstance().doPostWithResponse(params[0], jobj);
+            try {
+                JSONObject response = new JSONObject(json);
+                String cards = (String)response.get("cards");
+                UserData.getInstance().setCards(cards);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
             return "";

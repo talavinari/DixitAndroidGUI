@@ -1,10 +1,5 @@
 package com.example.tal.myfirstapplication;
 
-import android.content.Context;
-import android.location.GpsStatus;
-import android.net.sip.SipAudioCall;
-import android.opengl.Visibility;
-import android.text.Layout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -29,7 +24,7 @@ public class Card {
         cardPic.setOnLongClickListener((View.OnLongClickListener) obj);
         cardPic.setOnDragListener((View.OnDragListener) obj);
         this.tv = tv;
-        this.tv.setText(tvText.substring(1,tvText.length()-1));
+        this.tv.setText(tvText);
     }
 
 

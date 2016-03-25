@@ -3,12 +3,16 @@ package com.example.tal.myfirstapplication;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -48,11 +52,27 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     AnimatorSet antext3;
     int draggedCardNum;
 
+    BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_main);
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Bundle data = intent.getBundleExtra("message");
+                String messageType = data.getString(Constants.MESSAGE_TYPE);
+                if (MessageType.Association.getDescription().equals(messageType)){
+                    //notifyAssociation(data);
+                }else if(MessageType.Vote.getDescription().equals(messageType)){
+                    //notifyVote(data);
+                }else if (MessageType.JoinedToRoom.getDescription().equals(messageType)){
+                    //notifyJoinedToRoom(data);
+                }
+            }
+        };
+        registerReceiver();
         draggedView = new Card();
         cardSize = 0;
         po = new Point();
@@ -335,6 +355,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
             return null;
         }
+    }
+    private void registerReceiver() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
+                new IntentFilter(QuickstartPreferences.ROOM_MESSAGE_RECEIVED));
     }
 }
 

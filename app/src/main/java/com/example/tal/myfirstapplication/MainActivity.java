@@ -1,31 +1,14 @@
 package com.example.tal.myfirstapplication;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 
 public class MainActivity extends AppCompatActivity {
-
-
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private boolean isReceiverRegistered;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,28 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Registering BroadcastReceiver
-
-
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                SharedPreferences sharedPreferences =
-                        PreferenceManager.getDefaultSharedPreferences(context);
-                boolean sentToken = sharedPreferences
-                        .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
-            }
-        };
-
-        registerReceiver();
-
-//        if (checkPlayServices()) {
-//            // Start IntentService to register this application with GCM.
-//            Intent intent = new Intent(this, RegistrationIntentService.class);
-//            intent.putExtra(Constants.TOPIC_ROOM_NAME, "Room1");
-//            startService(intent);
-//        }
-
     }
 
     @Override
@@ -80,23 +41,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void changeText(View view){
-        Button button = (Button) view;
-
-        String text = button.getText().toString();
-        Intent intent;
-        if (text.equals("Go to second activity with data")){
-//            intent = new Intent(this, CreateRoom.class);
-//            intent.putExtra(MY_MESSAGE, editText.getText().toString());
-            //.execute(Constants.GET_ROOMS_API_URL);
-        }
-
-        else{
-            intent = new Intent(this, JoinRoom.class);
-            startActivity(intent);
-        }
-    }
-
     public void settings(){
         Intent intent = new Intent(this,FirstLogIn.class);
         startActivity(intent);
@@ -117,15 +61,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    private void registerReceiver(){
-        if(!isReceiverRegistered) {
-            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                    new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
-            isReceiverRegistered = true;
-        }
-    }
-
-
 }

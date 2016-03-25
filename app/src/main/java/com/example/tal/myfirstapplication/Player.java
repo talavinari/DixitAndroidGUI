@@ -5,9 +5,9 @@ import java.util.List;
 /**
  * Created by gront on 24/03/2016.
  */
-public class User {
+public class Player {
     String name;
+    int index;
     List<Card> cardsInHeand;
-    String Association;
     int pickedCard;
 }
