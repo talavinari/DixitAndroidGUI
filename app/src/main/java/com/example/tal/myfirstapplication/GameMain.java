@@ -64,11 +64,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 Bundle data = intent.getBundleExtra("message");
                 String messageType = data.getString(Constants.MESSAGE_TYPE);
                 if (MessageType.Association.getDescription().equals(messageType)){
-                    //notifyAssociation(data);
+                    notifyAssociation(data);
                 }else if(MessageType.Vote.getDescription().equals(messageType)){
-                    //notifyVote(data);
+                    notifyVote(data);
                 }else if (MessageType.JoinedToRoom.getDescription().equals(messageType)){
-                    //notifyJoinedToRoom(data);
+                    notifyJoinedToRoom(data);
                 }
             }
         };
@@ -79,6 +79,49 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         data = ClipData.newPlainText("", "");
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         setCardsInPosition();
+    }
+
+    private void notifyVote(Bundle data) {
+        String playerName = data.getString(Constants.PLAYER_NAME);
+        int votedCard = data.getInt(Constants.VOTED_CARD);
+        GameState game = GameState.getGame();
+        game.setVoteForPlayer(playerName, votedCard);
+        if (game.votes.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1){
+            game.calculateScore();
+            game.continueToNextStory();
+        }
+
+        updateGUI();
+    }
+
+    private void updateGUI() {
+        //TODO gui of next trun
+    }
+
+    private void notifyAssociation(Bundle data) {
+        //Maybe player name is redundant?
+        String playerName = data.getString(Constants.PLAYER_NAME);
+        GameState.getGame().currentWinningCard = Integer.valueOf(data.getInt(Constants.WINNING_CARD));
+        GameState.getGame().currentAssociation = data.getString(Constants.ASSOCIATION);
+        handleAssociationGUI();
+    }
+
+    private void handleAssociationGUI() {
+        // TODO handle association received GUI
+    }
+
+    private void notifyJoinedToRoom(Bundle data) {
+        String playerName = data.getString(Constants.PLAYER_NAME);
+        int index = Integer.valueOf(data.getString(Constants.INDEX));
+        GameState.getGame().addPlayer(new Player(playerName, index));
+
+        if (GameState.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT){
+            startGameGUI();
+        }
+    }
+
+    private void startGameGUI() {
+        // TODO handle GUI of start
     }
 
     @Override

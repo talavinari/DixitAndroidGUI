@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -72,16 +73,30 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                 e.printStackTrace();
             }
             String json = Requests.getInstance().doPostWithResponse(params[0], jobj);
+            parseJsonResponse(json);
+
+            return "";
+        }
+
+        private void parseJsonResponse(String json) {
             try {
                 JSONObject response = new JSONObject(json);
                 String cards = (String)response.get("cards");
                 UserData.getInstance().setCards(cards);
+
+                JSONArray players = ((JSONArray) response.get("players"));
+                for (int i = 0; i < players.length(); i++) {
+                    JSONObject playerJSON = players.getJSONObject(i);
+                    Player p = new Player(playerJSON.getString("name"),
+                                          playerJSON.getInt("index"));
+                    GameState.getGame().addPlayer(p);
+                }
+
+                GameState.getGame().setFirstStoryTeller();
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
-            return "";
         }
 
         @Override

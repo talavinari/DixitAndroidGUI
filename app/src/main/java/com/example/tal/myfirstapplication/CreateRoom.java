@@ -67,6 +67,9 @@ public class CreateRoom extends Activity {
                 JSONObject response = new JSONObject(json);
                 String cards = (String)response.get("cards");
                 UserData.getInstance().setCards(cards);
+
+                // TODO maybe change the server to give the index?
+                GameState.getGame().addPlayer(new Player(nickName, 0));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

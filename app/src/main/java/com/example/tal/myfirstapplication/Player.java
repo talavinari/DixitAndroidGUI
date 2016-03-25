@@ -1,13 +1,20 @@
 package com.example.tal.myfirstapplication;
 
-import java.util.List;
-
 /**
  * Created by gront on 24/03/2016.
  */
 public class Player {
     String name;
     int index;
-    List<Card> cardsInHeand;
+    int score = 0;
     int pickedCard;
+
+    public Player(String name, int index) {
+        this.name = name;
+        this.index = index;
+    }
+
+    //List<Card> cardsInHeand;
+
+
 }

@@ -52,5 +52,7 @@ public class Constants extends Activity {
     public static final String MESSAGE_TYPE = "messageType";
     public static final String INDEX = "index";
     public static final int NUMBER_OF_CARDS_IN_HAND = 6;
+    public static final int NUMBER_OF_PLAYERS_IN_DIXIT = 4;
+
     public static final String DELIMITER = ",";
 }
