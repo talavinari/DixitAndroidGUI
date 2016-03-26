@@ -143,13 +143,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     public void setCardsInPosition() {
-        ImageView plr1 = (ImageView) findViewById(R.id.user1);
-        ImageView plr2 = (ImageView) findViewById(R.id.user2);
-        ImageView plr3 = (ImageView) findViewById(R.id.user3);
-
-        findViewById(R.id.user1).setVisibility(View.INVISIBLE);
-        findViewById(R.id.username1).setVisibility(View.INVISIBLE);
-
+        GameState.getInstance().addPlayer(new User((TextView) findViewById(R.id.username1), (ImageView) findViewById(R.id.user1), ""));
+        GameState.getInstance().addPlayer(new User((TextView) findViewById(R.id.username2), (ImageView) findViewById(R.id.user2), ""));
+        GameState.getInstance().addPlayer(new User((TextView) findViewById(R.id.username3), (ImageView) findViewById(R.id.user3), ""));
+        GameState.getInstance().addPlayer(new User(null, null, UserData.getInstance().getNickName(this)));
 
         anset1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
         anset2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
@@ -159,9 +156,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         antext2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
         antext3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user3movement);
 
-        anset1.setTarget(plr1);
-        anset2.setTarget(plr2);
-        anset3.setTarget(plr3);
+        anset1.setTarget(GameState.getInstance().allUsers.get(1));
+        anset2.setTarget(GameState.getInstance().allUsers.get(2));
+        anset3.setTarget(GameState.getInstance().allUsers.get(3));
 
         cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card1), this, (TextView) findViewById(R.id.card1text), UserData.getInstance().getCards()[0]));
         cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card2), this, (TextView) findViewById(R.id.card2text), UserData.getInstance().getCards()[1]));
@@ -336,6 +333,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             return null;
         }
     }
+
+    public void addPlayer(int i){
+
+//        GameState.gameState.allUsers.get(i).name
+    }
+
+
 }
 
 
