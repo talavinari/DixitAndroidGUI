@@ -2,6 +2,7 @@ package com.example.tal.myfirstapplication;
 
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -14,9 +15,14 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -29,7 +35,7 @@ import java.util.List;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class GameMain extends Activity implements View.OnClickListener, View.OnLongClickListener, View.OnDragListener {
+public class GameMain extends Activity implements View.OnClickListener, View.OnLongClickListener, View.OnDragListener, View.OnKeyListener{
     int sizeW;
     int sizeH;
     int cardSize;
@@ -51,6 +57,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     AnimatorSet antext2;
     AnimatorSet antext3;
     int draggedCardNum;
+    List<Player> tmpPlayers;
 
     BroadcastReceiver broadcastReceiver;
 
@@ -79,6 +86,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         data = ClipData.newPlainText("", "");
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         setCardsInPosition();
+        tmpPlayers = new ArrayList<>();
     }
 
     private void notifyVote(Bundle data) {
@@ -96,6 +104,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void updateGUI() {
         //TODO gui of next trun
+        setTellerPic();
     }
 
     private void notifyAssociation(Bundle data) {
@@ -122,6 +131,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void startGameGUI() {
         // TODO handle GUI of start
+
+
+
     }
 
     @Override
@@ -182,7 +194,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                         draggedView.bringToFront();
                         isCardOnTable = true;
 //                    draggedView.setVisibility(View.VISIBLE);
-
+                        if (amITheTeller()){
+                            findViewById(R.id.association).setVisibility(View.VISIBLE);
+                        }
                     return true;
                 }
                 draggedView.setVisibility(View.VISIBLE);
@@ -223,6 +237,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         anset2.setTarget(GameState.getGame().players.get(2));
         anset3.setTarget(GameState.getGame().players.get(3));
 
+        setTellerPic();
+
         cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card1), this, (TextView) findViewById(R.id.card1text), UserData.getInstance().getCards()[0]));
         cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card2), this, (TextView) findViewById(R.id.card2text), UserData.getInstance().getCards()[1]));
         cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card3), this, (TextView) findViewById(R.id.card3text), UserData.getInstance().getCards()[2]));
@@ -230,6 +246,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card5), this, (TextView) findViewById(R.id.card5text), UserData.getInstance().getCards()[4]));
         cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text), UserData.getInstance().getCards()[5]));
         calcSize();
+
+        findViewById(R.id.association).setOnKeyListener(this);
 
         targetCard = (ImageView) findViewById(R.id.target);
         targetCard.setLayoutParams(getOutgoingCardLayoutParams());
@@ -380,6 +398,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         sizeH = po.y;
     }
 
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode==KeyEvent.KEYCODE_ENTER){
+            findViewById(R.id.association).setVisibility(View.INVISIBLE);
+        }
+
+        return false;
+    }
+
     private class OnClose extends AsyncTask<String, String, String> {
 
         @Override
@@ -401,12 +428,27 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 new IntentFilter(QuickstartPreferences.ROOM_MESSAGE_RECEIVED));
     }
 
-    public void addPlayer(int i){
+    public void setAllPlayers(){
+        for (Player p:GameState.getGame().players){
 
-//        GameState.gameState.allUsers.get(i).name
+        }
     }
 
-    public void openKeyBoard(){
+    public boolean amITheTeller(){
+//        return GameState.getGame().currentStoryTeller.index == UserData.getInstance().getMyIndex();
+
+        // TODO: erase!!!
+        return true;
+    }
+
+    private void setTellerPic(){
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) GameState.getGame().currentStoryTeller.userPic.getLayoutParams();
+
+        if(!amITheTeller()){
+            lp.leftMargin = 100;
+            lp.leftMargin = 350;
+        }
+        findViewById(R.id.teller).setLayoutParams(lp);
 
     }
 

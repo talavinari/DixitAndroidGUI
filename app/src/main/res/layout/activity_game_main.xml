@@ -5,6 +5,7 @@
     android:background="#0099cc"
     tools:context="com.example.tal.myfirstapplication.GameMain">
 
+
     <ImageView
         android:id="@+id/table"
         android:src="@drawable/table"
@@ -213,5 +214,25 @@
         android:layout_marginBottom="-40px"
         android:visibility="invisible"
         />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/association"
+        android:layout_alignParentTop="true"
+        android:hint="Enter your association (50 characters)"
+        android:maxLength="50"
+        android:background="#ccffffff"
+        android:textColor="@color/Black"
+        android:imeActionLabel="SEND"
+        android:visibility="invisible"
+        android:lines="2"
+        android:imeOptions="actionSend"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/teller"
+        android:id="@+id/teller"/>
 
 </RelativeLayout>

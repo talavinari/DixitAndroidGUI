@@ -11,7 +11,7 @@ import android.content.SharedPreferences;
 public class UserData extends Activity {
 
     private static UserData userData;
-
+    private int myIndex;
     private UserData(){}
     private String[] cards;
 
@@ -38,6 +38,14 @@ public class UserData extends Activity {
 
             this.cards = cards;
         }
+    }
+
+    public int getMyIndex() {
+        return myIndex;
+    }
+
+    public void setMyIndex(int myIndex) {
+        this.myIndex = myIndex;
     }
 
     private String currRoom;
