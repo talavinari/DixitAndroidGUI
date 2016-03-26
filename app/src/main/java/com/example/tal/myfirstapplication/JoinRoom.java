@@ -152,6 +152,8 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                 }
             }else{
                 TableRow tr = new TableRow(JoinRoom.this);
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                tr.setLayoutParams(lp);
                 TextView tv = new TextView(JoinRoom.this);
                 tv.setTextSize(30);
                 tv.setText("NO ROOMS TO SHOW!");

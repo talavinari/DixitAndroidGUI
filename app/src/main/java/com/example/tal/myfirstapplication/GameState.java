@@ -1,5 +1,9 @@
 package com.example.tal.myfirstapplication;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +11,6 @@ import java.util.Map;
  * Created by gront on 24/03/2016.
  */
 public class GameState {
-    List<User> allUsers;
 
     List<Player> players;
     Map<Player,Integer> votes;
@@ -87,12 +90,21 @@ public class GameState {
 
     public void setVoteForPlayer(String playerName, int votedCard) {
         Player player = getPlayerByName(playerName);
-        votes.put(player,votedCard);
+        votes.put(player, votedCard);
     }
 
     private Player getPlayerByName(String name) {
         for (Player p : players){
             if (p.name.equals(name)){
+                return p;
+            }
+        }
+
+        return null;
+    }
+    public Player getPlayerByIndex(int index) {
+        for (Player p : players){
+            if (p.index == index){
                 return p;
             }
         }
