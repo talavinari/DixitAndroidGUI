@@ -28,7 +28,7 @@ public class Constants extends Activity {
     public static final String MY_MESSAGE = "my message";
     public static final String ID_EXTRA = "extra";
 //    public static final String REST_API_PREFIX = "http://192.168.1.11:8080/DixitRESTfulAPI/rest/service/";
-    public static final String REST_API_PREFIX = "http://192.168.1.27:8080/DixitRESTfulAPI/rest/service/";
+    public static final String REST_API_PREFIX = "http://10.0.0.6:8080/DixitRESTfulAPI/rest/service/";
 //    public static final String REST_API_PREFIX = "http://149.78.156.195:8080/DixitRESTfulAPI/rest/service/";
     public static final String ADD_ROOM_API_URL = REST_API_PREFIX + "addRoom";
     public static final String ADD_PLAYER_TO_ROOM_API_URL = REST_API_PREFIX + "join";
@@ -45,4 +45,14 @@ public class Constants extends Activity {
 
     public static final String TOPIC_ROOM_NAME = "roomName";
 
+    public static final String PLAYER_NAME = "playerName";
+    public static final String WINNING_CARD = "winningCard";
+    public static final String VOTED_CARD = "card";
+    public static final String ASSOCIATION = "association";
+    public static final String MESSAGE_TYPE = "messageType";
+    public static final String INDEX = "index";
+    public static final int NUMBER_OF_CARDS_IN_HAND = 6;
+    public static final int NUMBER_OF_PLAYERS_IN_DIXIT = 4;
+
+    public static final String DELIMITER = ",";
 }

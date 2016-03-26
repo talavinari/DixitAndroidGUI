@@ -28,21 +28,13 @@ public class UserData extends Activity {
         return cards;
     }
 
-    public void setCards(String string) {
-        if (string.length() > 0) {
-            string.replace('"', ' ');
+    public void setCards(String cardsInput) {
+        if (cardsInput.length() > 0) {
+            String[] cards = cardsInput.split(Constants.DELIMITER);
 
-            String[] cards = string.split(",");
-
-            cards[0] = cards[0].substring(1);
-            cards[cards.length - 1] = cards[cards.length - 1].substring(0, cards[cards.length - 1].length() - 1);
-            cards[0].trim();
-            cards[1].trim();
-            cards[2].trim();
-            cards[3].trim();
-            cards[4].trim();
-            cards[5].trim();
-
+            for (int i=0;i<Constants.NUMBER_OF_CARDS_IN_HAND; i++){
+                cards[i] = cards[i].trim();
+            }
 
             this.cards = cards;
         }
@@ -86,9 +78,6 @@ public class UserData extends Activity {
         SharedPreferences.Editor Ed=sp.edit();
         Ed.putString("currRoom", currRoom);
         Ed.commit();
-
-
-
 
         this.currRoom = currRoom;
     }
