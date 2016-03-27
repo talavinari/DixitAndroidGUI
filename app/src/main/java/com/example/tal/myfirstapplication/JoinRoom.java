@@ -73,12 +73,12 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                 e.printStackTrace();
             }
             String json = Requests.getInstance().doPostWithResponse(params[0], jobj);
-            parseJsonResponse(json);
+            parseJsonResponse(json, params[1]);
 
             return "";
         }
 
-        private void parseJsonResponse(String json) {
+        private void parseJsonResponse(String json, String myName) {
             try {
                 JSONObject response = new JSONObject(json);
                 String cards = (String)response.get("cards");
@@ -87,8 +87,9 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                 JSONArray players = ((JSONArray) response.get("players"));
                 for (int i = 0; i < players.length(); i++) {
                     JSONObject playerJSON = players.getJSONObject(i);
-                    Player p = new Player(playerJSON.getString("name"),
-                                          playerJSON.getInt("index"), false);
+                    String playerName = playerJSON.getString("name");
+                    Player p = new Player(playerName,
+                                          playerJSON.getInt("index"), playerName.equals(myName));
                     GameState.getGame().addPlayer(p);
                 }
 
