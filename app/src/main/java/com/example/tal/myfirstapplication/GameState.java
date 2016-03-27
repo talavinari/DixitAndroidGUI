@@ -14,6 +14,7 @@ public class GameState {
 
     List<Player> players;
     Map<Player,Integer> votes;
+    Map<Player,Integer> pickedCards;
     Player currentStoryTeller;
     String currentAssociation;
     int currentWinningCard;
@@ -23,6 +24,7 @@ public class GameState {
     private GameState(){
         players = new ArrayList<>();
         votes = new HashMap<>();
+        pickedCards = new HashMap<>();
     }
 
     public static GameState getGame(){
@@ -48,12 +50,13 @@ public class GameState {
         }
     }
 
-    private Player findPlayerByPickedCard(int vote) {
-        for (Player p : votes.keySet()){
-            if (p.pickedCard == vote){
-                return p;
+    private Player findPlayerByPickedCard(int pickedCard) {
+        for (Map.Entry<Player,Integer> entry : pickedCards.entrySet()) {
+            if (entry.getValue() == pickedCard) {
+                return  entry.getKey();
             }
         }
+
         return null;
     }
 
@@ -86,6 +89,7 @@ public class GameState {
         int i = players.indexOf(currentStoryTeller);
         currentStoryTeller = players.get((i+1)% Constants.NUMBER_OF_PLAYERS_IN_DIXIT);
         votes.clear();
+        pickedCards.clear();
     }
 
     public void setVoteForPlayer(String playerName, int votedCard) {
@@ -93,7 +97,7 @@ public class GameState {
         votes.put(player, votedCard);
     }
 
-    private Player getPlayerByName(String name) {
+    public Player getPlayerByName(String name) {
         for (Player p : players){
             if (p.name.equals(name)){
                 return p;
@@ -112,4 +116,22 @@ public class GameState {
         return null;
     }
 
+    public void setPickedCardForPlayer(String playerName, int pickedCard) {
+        Player player = getPlayerByName(playerName);
+        pickedCards.put(player, pickedCard);
+    }
+
+    public boolean allPlayersPicked() {
+        return pickedCards.size() == (Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1);
+    }
+
+
+    public Player getDevicePlayer() {
+        for (Player player : players){
+            if (player.currentAndroidUserIndication){
+                return player;
+            }
+        }
+        return null;
+    }
 }
