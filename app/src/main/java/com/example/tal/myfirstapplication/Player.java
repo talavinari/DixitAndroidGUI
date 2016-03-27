@@ -10,18 +10,18 @@ import java.util.List;
  * Created by gront on 24/03/2016.
  */
 public class Player {
-    List<Card> cardsInHeand;
-    String Association;
+    List<Card> cardsInHand;
     String name;
     TextView username;
     ImageView userPic;
     int index;
     int score = 0;
-    int pickedCard;
+    boolean currentAndroidUserIndication;
 
-    public Player(String name, int index) {
+    public Player(String name, int index, boolean isCurrentUser) {
         this.name = name;
         this.index = index;
+        this.currentAndroidUserIndication = isCurrentUser;
     }
 
     public Player(TextView username, ImageView userPic, String name, int index) {
@@ -44,9 +44,5 @@ public class Player {
     public void showText(){
         username.setVisibility(View.VISIBLE);
     }
-
-
-    //List<Card> cardsInHeand;
-
 
 }

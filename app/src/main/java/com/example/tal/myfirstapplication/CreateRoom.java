@@ -68,8 +68,7 @@ public class CreateRoom extends Activity {
                 String cards = (String)response.get("cards");
                 UserData.getInstance().setCards(cards);
 
-                // TODO maybe change the server to give the index?
-                GameState.getGame().addPlayer(new Player(nickName, 0));
+                GameState.getGame().addPlayer(new Player(nickName, 1, true));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

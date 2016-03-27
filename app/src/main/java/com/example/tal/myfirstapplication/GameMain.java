@@ -2,7 +2,6 @@ package com.example.tal.myfirstapplication;
 
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -17,12 +16,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -77,6 +72,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 }else if (MessageType.JoinedToRoom.getDescription().equals(messageType)){
                     notifyJoinedToRoom(data);
                 }
+                else if (MessageType.PickedCard.getDescription().equals(messageType)){
+                    notifyPlayerPickedCard(data);
+                }
             }
         };
         registerReceiver();
@@ -88,6 +86,17 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         setCardsInPosition();
         tmpPlayers = new ArrayList<>();
     }
+
+    private void notifyPlayerPickedCard(Bundle data) {
+        String playerName = data.getString(Constants.PLAYER_NAME);
+        int pickedCard = data.getInt(Constants.VOTED_CARD);
+        GameState.getGame().setPickedCardForPlayer(playerName,pickedCard);
+        if (GameState.getGame().allPlayersPicked()){
+            handlePickedCardsGUI();
+        }
+
+    }
+
 
     private void notifyVote(Bundle data) {
         String playerName = data.getString(Constants.PLAYER_NAME);
@@ -102,15 +111,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         updateGUI();
     }
 
-    private void updateGUI() {
-        //TODO gui of next trun
-        setTellerPic();
-    }
 
     private void notifyAssociation(Bundle data) {
         //Maybe player name is redundant?
         String playerName = data.getString(Constants.PLAYER_NAME);
-        GameState.getGame().currentWinningCard = Integer.valueOf(data.getInt(Constants.WINNING_CARD));
+        GameState.getGame().currentWinningCard = Integer.valueOf(data.getString(Constants.WINNING_CARD));
         GameState.getGame().currentAssociation = data.getString(Constants.ASSOCIATION);
         handleAssociationGUI();
     }
@@ -119,10 +124,20 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         // TODO handle association received GUI
     }
 
+
+    private void handlePickedCardsGUI() {
+
+    }
+
+    private void updateGUI() {
+        //TODO gui of next trun
+        setTellerPic();
+    }
+
     private void notifyJoinedToRoom(Bundle data) {
         String playerName = data.getString(Constants.PLAYER_NAME);
         int index = Integer.valueOf(data.getString(Constants.INDEX));
-        GameState.getGame().addPlayer(new Player(playerName, index));
+        GameState.getGame().addPlayer(new Player(playerName, index, false));
 
         if (GameState.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT){
             startGameGUI();
@@ -239,12 +254,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         setTellerPic();
 
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card1), this, (TextView) findViewById(R.id.card1text), UserData.getInstance().getCards()[0]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card2), this, (TextView) findViewById(R.id.card2text), UserData.getInstance().getCards()[1]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card3), this, (TextView) findViewById(R.id.card3text), UserData.getInstance().getCards()[2]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card4), this, (TextView) findViewById(R.id.card4text), UserData.getInstance().getCards()[3]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card5), this, (TextView) findViewById(R.id.card5text), UserData.getInstance().getCards()[4]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text), UserData.getInstance().getCards()[5]));
+        handleCards();
         calcSize();
 
         findViewById(R.id.association).setOnKeyListener(this);
@@ -266,6 +276,21 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         r.addRule(RelativeLayout.ALIGN_PARENT_START);
         table.setLayoutParams(r);
         table.setOnDragListener(this);
+    }
+
+    private void handleCards() {
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1),
+                (ImageView) findViewById(R.id.card1), this,
+                (TextView) findViewById(R.id.card1text),
+                UserData.getInstance().getCards()[0]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1),
+                (ImageView) findViewById(R.id.card2), this,
+                (TextView) findViewById(R.id.card2text),
+                UserData.getInstance().getCards()[1]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card3), this, (TextView) findViewById(R.id.card3text), UserData.getInstance().getCards()[2]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card4), this, (TextView) findViewById(R.id.card4text), UserData.getInstance().getCards()[3]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card5), this, (TextView) findViewById(R.id.card5text), UserData.getInstance().getCards()[4]));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text), UserData.getInstance().getCards()[5]));
     }
 
     private void setAllCards(int w, int h) {

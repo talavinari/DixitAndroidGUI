@@ -88,7 +88,7 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                 for (int i = 0; i < players.length(); i++) {
                     JSONObject playerJSON = players.getJSONObject(i);
                     Player p = new Player(playerJSON.getString("name"),
-                                          playerJSON.getInt("index"));
+                                          playerJSON.getInt("index"), false);
                     GameState.getGame().addPlayer(p);
                 }
 
