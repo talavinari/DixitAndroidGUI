@@ -235,4 +235,34 @@
         android:src="@drawable/teller"
         android:id="@+id/teller"/>
 
+    <ImageView
+        android:id="@+id/user1card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/card"
+        android:contentDescription="@string/dummy_button"
+        android:layout_alignTop="@+id/user2card"
+        android:layout_alignStart="@+id/username3" />
+
+    <ImageView
+        android:id="@+id/user3card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/card"
+        android:contentDescription="@string/dummy_button"
+        android:layout_alignTop="@+id/username3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="31dp" />
+
+    <ImageView
+        android:id="@+id/user2card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/card"
+        android:layout_marginBottom="300dp"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/dummy_button"
+        android:layout_marginLeft="250dp" />
+
+
 </RelativeLayout>
