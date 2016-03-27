@@ -30,7 +30,7 @@ import java.util.List;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class GameMain extends Activity implements View.OnClickListener, View.OnLongClickListener, View.OnDragListener, View.OnKeyListener{
+public class GameMain extends Activity implements View.OnClickListener, View.OnLongClickListener, View.OnDragListener, View.OnKeyListener {
     int sizeW;
     int sizeH;
     int cardSize;
@@ -65,14 +65,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             public void onReceive(Context context, Intent intent) {
                 Bundle data = intent.getBundleExtra("message");
                 String messageType = data.getString(Constants.MESSAGE_TYPE);
-                if (MessageType.Association.getDescription().equals(messageType)){
+                if (MessageType.Association.getDescription().equals(messageType)) {
                     notifyAssociation(data);
-                }else if(MessageType.Vote.getDescription().equals(messageType)){
+                } else if (MessageType.Vote.getDescription().equals(messageType)) {
                     notifyVote(data);
-                }else if (MessageType.JoinedToRoom.getDescription().equals(messageType)){
+                } else if (MessageType.JoinedToRoom.getDescription().equals(messageType)) {
                     notifyJoinedToRoom(data);
-                }
-                else if (MessageType.PickedCard.getDescription().equals(messageType)){
+                } else if (MessageType.PickedCard.getDescription().equals(messageType)) {
                     notifyPlayerPickedCard(data);
                 }
             }
@@ -90,8 +89,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void notifyPlayerPickedCard(Bundle data) {
         String playerName = data.getString(Constants.PLAYER_NAME);
         int pickedCard = data.getInt(Constants.VOTED_CARD);
-        GameState.getGame().setPickedCardForPlayer(playerName,pickedCard);
-        if (GameState.getGame().allPlayersPicked()){
+        GameState.getGame().setPickedCardForPlayer(playerName, pickedCard);
+
+
+        if (GameState.getGame().allPlayersPicked()) {
             handlePickedCardsGUI();
         }
 
@@ -103,7 +104,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         int votedCard = data.getInt(Constants.VOTED_CARD);
         GameState game = GameState.getGame();
         game.setVoteForPlayer(playerName, votedCard);
-        if (game.votes.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1){
+        if (game.votes.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1) {
             game.calculateScore();
             game.continueToNextStory();
         }
@@ -127,11 +128,21 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void handlePickedCardsGUI() {
 
+        findViewById(R.id.user1card).setVisibility(View.VISIBLE);
+        findViewById(R.id.user2card).setVisibility(View.VISIBLE);
+        findViewById(R.id.user3card).setVisibility(View.VISIBLE);
+
     }
 
     private void updateGUI() {
         //TODO gui of next trun
         setTellerPic();
+        // TODO get card.
+
+        findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
+        findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
+        findViewById(R.id.user3card).setVisibility(View.INVISIBLE);
+
     }
 
     private void notifyJoinedToRoom(Bundle data) {
@@ -139,14 +150,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         int index = Integer.valueOf(data.getString(Constants.INDEX));
         GameState.getGame().addPlayer(new Player(playerName, index, false));
 
-        if (GameState.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT){
+        if (GameState.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
             startGameGUI();
         }
     }
 
     private void startGameGUI() {
         // TODO handle GUI of start
-
 
 
     }
@@ -167,6 +177,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 setBigCardLayout(getListPlaceByView(v));
             } else {
                 setAllCards(cardSize, cardSize * 2);
+            }
+        } else if (
+                v == findViewById(R.id.user1card) ||
+                        v == findViewById(R.id.user2card) ||
+                        v == findViewById(R.id.user3card)) {
+            if (v.getLayoutParams().height < cardSize * 5){
+                setRegularCard(v);
+            }else{
+                setBigCard(v);
             }
         }
     }
@@ -202,16 +221,16 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 return true;
             case DragEvent.ACTION_DROP:
                 if (findViewById(R.id.table) == v) {
-                        cardsInHand.remove(draggedCardNum);
-                        draggedView.cardPic.setLayoutParams(getOutgoingCardLayoutParams());
-                        rearrangeCards();
-                        draggedView.setVisibility(View.VISIBLE);
-                        draggedView.bringToFront();
-                        isCardOnTable = true;
+                    cardsInHand.remove(draggedCardNum);
+                    draggedView.cardPic.setLayoutParams(getOutgoingCardLayoutParams());
+                    rearrangeCards();
+                    draggedView.setVisibility(View.VISIBLE);
+                    draggedView.bringToFront();
+                    isCardOnTable = true;
 //                    draggedView.setVisibility(View.VISIBLE);
-                        if (amITheTeller()){
-                            findViewById(R.id.association).setVisibility(View.VISIBLE);
-                        }
+                    if (amITheTeller()) {
+                        findViewById(R.id.association).setVisibility(View.VISIBLE);
+                    }
                     return true;
                 }
                 draggedView.setVisibility(View.VISIBLE);
@@ -235,10 +254,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     public void setCardsInPosition() {
-        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username1), (ImageView) findViewById(R.id.user1), "",1));
-        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username2), (ImageView) findViewById(R.id.user2), "",2));
-        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username3), (ImageView) findViewById(R.id.user3), "",3));
-        GameState.getGame().addPlayer(new Player(null, null, UserData.getInstance().getNickName(this),0));
+        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username1), (ImageView) findViewById(R.id.user1), "", 1));
+        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username2), (ImageView) findViewById(R.id.user2), "", 2));
+        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username3), (ImageView) findViewById(R.id.user3), "", 3));
+        GameState.getGame().addPlayer(new Player(null, (ImageView)findViewById(R.id.table), UserData.getInstance().getNickName(this), 0));
 
         anset1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
         anset2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
@@ -256,6 +275,18 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         handleCards();
         calcSize();
+
+        findViewById(R.id.user1card).setOnClickListener(this);
+        findViewById(R.id.user2card).setOnClickListener(this);
+        findViewById(R.id.user3card).setOnClickListener(this);
+
+//        findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.user3card).setVisibility(View.INVISIBLE);
+
+        setRegularCard(findViewById(R.id.user1card));
+        setRegularCard(findViewById(R.id.user2card));
+        setRegularCard(findViewById(R.id.user3card));
 
         findViewById(R.id.association).setOnKeyListener(this);
 
@@ -315,6 +346,24 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         labelLayoutParams.leftMargin = (i * (cardSize + sizeW)) + sizeW;
         return labelLayoutParams;
     }
+
+    private void setRegularCard(View view){
+        RelativeLayout.LayoutParams labelLayoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        labelLayoutParams.width = cardSize;
+        labelLayoutParams.height = cardSize * 2;
+        view.setLayoutParams(labelLayoutParams);
+    }
+
+
+    private void setBigCard(View view){
+        int bigCardSize = cardSize * 5;
+        RelativeLayout.LayoutParams labelLayoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        labelLayoutParams.width = bigCardSize;
+        labelLayoutParams.height = bigCardSize * 2;
+        view.setLayoutParams(labelLayoutParams);
+    }
+
+
 
     private void setBigCardLayout(int i) {
         int tmpCardSize = cardSize / 2;
@@ -425,7 +474,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode==KeyEvent.KEYCODE_ENTER){
+        if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
             findViewById(R.id.association).setVisibility(View.INVISIBLE);
         }
 
@@ -448,32 +497,42 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             return null;
         }
     }
+
     private void registerReceiver() {
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
                 new IntentFilter(QuickstartPreferences.ROOM_MESSAGE_RECEIVED));
     }
 
-    public void setAllPlayers(){
-        for (Player p:GameState.getGame().players){
+    public void setAllPlayers() {
+        for (Player p : GameState.getGame().players) {
 
         }
     }
 
-    public boolean amITheTeller(){
+    public boolean amITheTeller() {
 //        return GameState.getGame().currentStoryTeller.index == UserData.getInstance().getMyIndex();
 
         // TODO: erase!!!
         return true;
     }
 
-    private void setTellerPic(){
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) GameState.getGame().currentStoryTeller.userPic.getLayoutParams();
+    private void setTellerPic() {
+        if(GameState.getGame().currentStoryTeller.userPic!=null) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) GameState.getGame().currentStoryTeller.userPic.getLayoutParams();
 
-        if(!amITheTeller()){
-            lp.leftMargin = 100;
-            lp.leftMargin = 350;
+
+            if (!amITheTeller()) {
+                lp.leftMargin = 100;
+                lp.leftMargin = 350;
+                lp.leftMargin = 350;
+            }
+            findViewById(R.id.teller).setLayoutParams(lp);
+        }else{
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) findViewById(R.id.teller).getLayoutParams();
+            lp.leftMargin = (int) (po.x - (lp.width * 1.5));
+            lp.bottomMargin = (po.y - findViewById(R.id.table).getHeight());
+
         }
-        findViewById(R.id.teller).setLayoutParams(lp);
 
     }
 

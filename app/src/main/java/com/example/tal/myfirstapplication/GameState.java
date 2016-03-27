@@ -116,9 +116,10 @@ public class GameState {
         return null;
     }
 
-    public void setPickedCardForPlayer(String playerName, int pickedCard) {
+    public int setPickedCardForPlayer(String playerName, int pickedCard) {
         Player player = getPlayerByName(playerName);
         pickedCards.put(player, pickedCard);
+        return player.index;
     }
 
     public boolean allPlayersPicked() {
