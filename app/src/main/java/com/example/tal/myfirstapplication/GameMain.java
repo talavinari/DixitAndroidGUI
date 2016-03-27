@@ -71,8 +71,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     notifyVote(data);
                 } else if (MessageType.JoinedToRoom.getDescription().equals(messageType)) {
                     notifyJoinedToRoom(data);
-                }
-                else if (MessageType.PickedCard.getDescription().equals(messageType)){
+                } else if (MessageType.PickedCard.getDescription().equals(messageType)) {
                     notifyPlayerPickedCard(data);
                 }
             }
@@ -90,8 +89,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void notifyPlayerPickedCard(Bundle data) {
         String playerName = data.getString(Constants.PLAYER_NAME);
         int pickedCard = data.getInt(Constants.VOTED_CARD);
-        GameState.getGame().setPickedCardForPlayer(playerName,pickedCard);
-        if (GameState.getGame().allPlayersPicked()){
+        GameState.getGame().setPickedCardForPlayer(playerName, pickedCard);
+
+
+        if (GameState.getGame().allPlayersPicked()) {
             handlePickedCardsGUI();
         }
 
@@ -127,11 +128,21 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void handlePickedCardsGUI() {
 
+        findViewById(R.id.user1card).setVisibility(View.VISIBLE);
+        findViewById(R.id.user2card).setVisibility(View.VISIBLE);
+        findViewById(R.id.user3card).setVisibility(View.VISIBLE);
+
     }
 
     private void updateGUI() {
         //TODO gui of next trun
         setTellerPic();
+        // TODO get card.
+
+        findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
+        findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
+        findViewById(R.id.user3card).setVisibility(View.INVISIBLE);
+
     }
 
     private void notifyJoinedToRoom(Bundle data) {
@@ -160,15 +171,21 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     @Override
     public void onClick(View v) {
-        if (getListPlaceByView(v) != -1 ||
-                v == findViewById(R.id.user1card) ||
-                v == findViewById(R.id.user2card) ||
-                v == findViewById(R.id.user3card)) {
+        if (getListPlaceByView(v) != -1) {
             int i = getListPlaceByView(v);
             if (v.getLayoutParams().height < cardSize * 5 && i >= 0) {
                 setBigCardLayout(getListPlaceByView(v));
             } else {
                 setAllCards(cardSize, cardSize * 2);
+            }
+        } else if (
+                v == findViewById(R.id.user1card) ||
+                        v == findViewById(R.id.user2card) ||
+                        v == findViewById(R.id.user3card)) {
+            if (v.getLayoutParams().height < cardSize * 5){
+                setRegularCard(v);
+            }else{
+                setBigCard(v);
             }
         }
     }
@@ -240,7 +257,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username1), (ImageView) findViewById(R.id.user1), "", 1));
         GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username2), (ImageView) findViewById(R.id.user2), "", 2));
         GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username3), (ImageView) findViewById(R.id.user3), "", 3));
-        GameState.getGame().addPlayer(new Player(null, null, UserData.getInstance().getNickName(this), 0));
+        GameState.getGame().addPlayer(new Player(null, (ImageView)findViewById(R.id.table), UserData.getInstance().getNickName(this), 0));
 
         anset1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
         anset2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
@@ -263,9 +280,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         findViewById(R.id.user2card).setOnClickListener(this);
         findViewById(R.id.user3card).setOnClickListener(this);
 
-        findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
-        findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
-        findViewById(R.id.user3card).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
+//        findViewById(R.id.user3card).setVisibility(View.INVISIBLE);
+
+        setRegularCard(findViewById(R.id.user1card));
+        setRegularCard(findViewById(R.id.user2card));
+        setRegularCard(findViewById(R.id.user3card));
 
         findViewById(R.id.association).setOnKeyListener(this);
 
@@ -325,6 +346,24 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         labelLayoutParams.leftMargin = (i * (cardSize + sizeW)) + sizeW;
         return labelLayoutParams;
     }
+
+    private void setRegularCard(View view){
+        RelativeLayout.LayoutParams labelLayoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        labelLayoutParams.width = cardSize;
+        labelLayoutParams.height = cardSize * 2;
+        view.setLayoutParams(labelLayoutParams);
+    }
+
+
+    private void setBigCard(View view){
+        int bigCardSize = cardSize * 5;
+        RelativeLayout.LayoutParams labelLayoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+        labelLayoutParams.width = bigCardSize;
+        labelLayoutParams.height = bigCardSize * 2;
+        view.setLayoutParams(labelLayoutParams);
+    }
+
+
 
     private void setBigCardLayout(int i) {
         int tmpCardSize = cardSize / 2;
@@ -478,13 +517,22 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void setTellerPic() {
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) GameState.getGame().currentStoryTeller.userPic.getLayoutParams();
+        if(GameState.getGame().currentStoryTeller.userPic!=null) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) GameState.getGame().currentStoryTeller.userPic.getLayoutParams();
 
-        if (!amITheTeller()) {
-            lp.leftMargin = 100;
-            lp.leftMargin = 350;
+
+            if (!amITheTeller()) {
+                lp.leftMargin = 100;
+                lp.leftMargin = 350;
+                lp.leftMargin = 350;
+            }
+            findViewById(R.id.teller).setLayoutParams(lp);
+        }else{
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) findViewById(R.id.teller).getLayoutParams();
+            lp.leftMargin = (int) (po.x - (lp.width * 1.5));
+            lp.bottomMargin = (po.y - findViewById(R.id.table).getHeight());
+
         }
-        findViewById(R.id.teller).setLayoutParams(lp);
 
     }
 

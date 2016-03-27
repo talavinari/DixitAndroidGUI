@@ -244,6 +244,17 @@
         android:layout_alignTop="@+id/user2card"
         android:layout_alignStart="@+id/username3" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user1cardtext"
+        android:text="0"
+        android:layout_alignLeft="@+id/user1card"
+        android:layout_alignTop="@+id/user1card"
+        android:layout_alignRight="@+id/user1card"
+        android:layout_alignBottom="@+id/user1card"
+        android:gravity="center" />
+
     <ImageView
         android:id="@+id/user3card"
         android:layout_width="wrap_content"
@@ -253,7 +264,16 @@
         android:layout_alignTop="@+id/username3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp" />
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user3cardtext"
+        android:text="0"
+        android:layout_alignLeft="@+id/user3card"
+        android:layout_alignTop="@+id/user3card"
+        android:layout_alignRight="@+id/user3card"
+        android:layout_alignBottom="@+id/user3card"
+        android:gravity="center" />
     <ImageView
         android:id="@+id/user2card"
         android:layout_width="wrap_content"
@@ -263,6 +283,15 @@
         android:layout_alignParentBottom="true"
         android:contentDescription="@string/dummy_button"
         android:layout_marginLeft="250dp" />
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user2cardtext"
+        android:text="0"
+        android:layout_alignLeft="@+id/user2card"
+        android:layout_alignTop="@+id/user2card"
+        android:layout_alignRight="@+id/user2card"
+        android:layout_alignBottom="@+id/user2card"
+        android:gravity="center" />
 
 </RelativeLayout>
