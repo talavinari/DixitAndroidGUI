@@ -27,19 +27,11 @@ import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
-    //private static final String[] TOPICS = {"global"};
 
     public RegistrationIntentService() {
         super(TAG);
@@ -85,37 +77,6 @@ public class RegistrationIntentService extends IntentService {
     }
 
     /**
-     * Persist registration to third-party servers.
-     *
-     * Modify this method to associate the user's GCM registration token with any server-side account
-     * maintained by your application.
-     *
-     * @param token The new token.
-     */
-    private void sendRegistrationToServer(String token) {
-        // Add custom implementation, as needed.
-        try {
-            URL url = new URL(Constants.SEND_REGISTARTION_TOKEN);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "text/plain");
-            urlConnection.setDoInput(true);
-            urlConnection.setDoOutput(true);
-            OutputStream outputStream = urlConnection.getOutputStream();
-            BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
-            bf.write(token);
-            bf.flush();
-            bf.close();
-            outputStream.close();
-            InputStream is = new BufferedInputStream(urlConnection.getInputStream());
-            urlConnection.getInputStream();
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
      * Subscribe to any GCM topics of interest, as defined by the TOPICS constant.
      *
      * @param token GCM token
@@ -125,10 +86,6 @@ public class RegistrationIntentService extends IntentService {
     private void subscribeTopics(String token, String topic) throws IOException {
         GcmPubSub pubSub = GcmPubSub.getInstance(this);
         pubSub.subscribe(token, "/topics/" + topic, null);
-
-//        for (String topic : TOPICS) {
-//            pubSub.subscribe(token, "/topics/" + topic, null);
-//        }
     }
     // [END subscribe_topics]
 

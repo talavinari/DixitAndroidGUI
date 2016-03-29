@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by gront on 19/03/2016.
@@ -11,9 +14,12 @@ import android.content.SharedPreferences;
 public class UserData extends Activity {
 
     private static UserData userData;
-    private int myIndex;
-    private UserData(){}
-    private String[] cards;
+    private List<String> cards;
+    private String nickName;
+
+    private UserData(){
+        cards = new ArrayList<>();
+    }
 
     public static UserData getInstance(){
         if (userData == null){
@@ -22,9 +28,7 @@ public class UserData extends Activity {
         return userData;
     }
 
-    private String nickName;
-
-    public String[] getCards() {
+    public List<String> getCards() {
         return cards;
     }
 
@@ -33,19 +37,9 @@ public class UserData extends Activity {
             String[] cards = cardsInput.split(Constants.DELIMITER);
 
             for (int i=0;i<Constants.NUMBER_OF_CARDS_IN_HAND; i++){
-                cards[i] = cards[i].trim();
+                this.cards.add(cards[i].trim());
             }
-
-            this.cards = cards;
         }
-    }
-
-    public int getMyIndex() {
-        return myIndex;
-    }
-
-    public void setMyIndex(int myIndex) {
-        this.myIndex = myIndex;
     }
 
     private String currRoom;
@@ -90,6 +84,11 @@ public class UserData extends Activity {
         this.currRoom = currRoom;
     }
 
+    public void removeCard(String card) {
+        cards.remove(card);
+    }
 
-
+    public void addCard(String card) {
+        cards.add(card);
+    }
 }

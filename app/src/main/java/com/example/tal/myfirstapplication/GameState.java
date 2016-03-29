@@ -18,6 +18,8 @@ public class GameState {
     Player currentStoryTeller;
     String currentAssociation;
     int currentWinningCard;
+    Player currentDevicePlayer;
+    List<Player> winners;
 
     private static GameState game = new GameState();
 
@@ -25,6 +27,7 @@ public class GameState {
         players = new ArrayList<>();
         votes = new HashMap<>();
         pickedCards = new HashMap<>();
+        winners = new ArrayList<>();
     }
 
     public static GameState getGame(){
@@ -38,6 +41,15 @@ public class GameState {
     public void calculateScore(){
         handleCorrectAnswers();
         handleWrongAnswers();
+        findWinners();
+    }
+
+    private void findWinners() {
+        for (Player p: players){
+            if (p.score > Constants.WINNING_SCORE_THRESHOLD){
+                winners.add(p);
+            }
+        }
     }
 
     private void handleWrongAnswers() {
@@ -116,23 +128,33 @@ public class GameState {
         return null;
     }
 
-    public int setPickedCardForPlayer(String playerName, int pickedCard) {
+    public void setPickedCardForPlayer(String playerName, int pickedCard) {
         Player player = getPlayerByName(playerName);
         pickedCards.put(player, pickedCard);
-        return player.index;
     }
 
     public boolean allPlayersPicked() {
-        return pickedCards.size() == (Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1);
+        return pickedCards.size() == (Constants.NUMBER_OF_PLAYERS_IN_DIXIT);
     }
 
 
     public Player getDevicePlayer() {
-        for (Player player : players){
-            if (player.currentAndroidUserIndication){
-                return player;
+        if (currentDevicePlayer == null){
+            for (Player player : players) {
+                if (player.currentAndroidUserIndication) {
+                    currentDevicePlayer = player;
+                }
             }
         }
-        return null;
+        return currentDevicePlayer;
+    }
+
+    public static void initGame() {
+        game = new GameState();
+    }
+
+    public boolean noWinner() {
+        return winners.size() == 0;
     }
 }
+//TODO change the retun index?

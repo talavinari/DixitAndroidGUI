@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -32,8 +31,7 @@ public class JoinRoom extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_room);
 
-        new GetRooms().execute(Constants.GET_ROOMS_API_URL);
-
+        new GetRooms().execute();
     }
 
     @Override
@@ -44,7 +42,7 @@ public class JoinRoom extends Activity implements View.OnClickListener {
             String roomName = ((TextView) ((TableRow) v).getVirtualChildAt(0)).getText().toString();
             UserData.getInstance().setCurrRoom(roomName, this);
 
-            new AddMeToRoom(this).execute(Constants.ADD_PLAYER_TO_ROOM_API_URL, UserData.getInstance().getNickName(this), roomName);
+            new AddMeToRoom(this).execute();
 
             if (checkPlayServices()) {
                 // Start IntentService to register this application with GCM.
@@ -52,36 +50,33 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                 intent.putExtra(Constants.TOPIC_ROOM_NAME, roomName);
                 startService(intent);
             }
-
         }
     }
 
-    public class AddMeToRoom extends AsyncTask<String, String, String> {
-        Context context;
+    public class AddMeToRoom extends BaseTask {
 
         public AddMeToRoom(Context context) {
-            this.context = context.getApplicationContext();
+            super(context.getApplicationContext());
         }
 
         @Override
         protected String doInBackground(String... params) {
-            JSONObject jobj = new JSONObject();
             try {
-                jobj.put("nickName", params[1]);
-                jobj.put("roomName", params[2]);
+                GameState.initGame();
+                String responseJSON = Requests.doPostWithResponse(Constants.ADD_PLAYER_TO_ROOM_API_URL, getBasicInfoJSON());
+                parseJsonResponse(responseJSON);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            String json = Requests.getInstance().doPostWithResponse(params[0], jobj);
-            parseJsonResponse(json, params[1]);
-
             return "";
         }
 
-        private void parseJsonResponse(String json, String myName) {
+        private void parseJsonResponse(String json) {
             try {
+
                 JSONObject response = new JSONObject(json);
-                String cards = (String)response.get("cards");
+                String cards = (String) response.get("cards");
                 UserData.getInstance().setCards(cards);
 
                 JSONArray players = ((JSONArray) response.get("players"));
@@ -89,7 +84,7 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                     JSONObject playerJSON = players.getJSONObject(i);
                     String playerName = playerJSON.getString("name");
                     Player p = new Player(playerName,
-                                          playerJSON.getInt("index"), playerName.equals(myName));
+                            playerJSON.getInt("index"), playerName.equals(GameState.getGame().getDevicePlayer().name));
                     GameState.getGame().addPlayer(p);
                 }
 
@@ -112,14 +107,13 @@ public class JoinRoom extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        new GetRooms().execute(Constants.GET_ROOMS_API_URL);
+        new GetRooms().execute();
     }
 
     private class GetRooms extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... params) {
-            String urlString = params[0];
-            return Requests.getInstance().doGet(urlString);
+            return Requests.doGet(Constants.GET_ROOMS_API_URL);
         }
 
         protected void onPostExecute(String result) {
@@ -127,8 +121,6 @@ public class JoinRoom extends Activity implements View.OnClickListener {
             tableLayout = (TableLayout) findViewById(R.id.AllRooms);
             tableLayout.removeAllViews();
             if (result != null) {
-
-
                 String[] rooms = result.split(",");
                 rooms[0] = rooms[0].substring(1);
                 rooms[rooms.length - 1] = rooms[rooms.length - 1].substring(0, rooms[rooms.length - 1].length() - 1);
@@ -151,7 +143,7 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                     row.setOnClickListener(JoinRoom.this);
                     tableLayout.addView(row);
                 }
-            }else{
+            } else {
                 TableRow tr = new TableRow(JoinRoom.this);
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                 tr.setLayoutParams(lp);

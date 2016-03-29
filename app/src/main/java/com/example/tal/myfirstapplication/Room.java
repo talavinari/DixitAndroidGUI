@@ -1,8 +1,8 @@
 package com.example.tal.myfirstapplication;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -44,7 +44,7 @@ public class Room extends AppCompatActivity {
             String urlString = params[0];
             String roomName = params[1];
 
-            return Requests.getInstance().doPostWithResponse(urlString, roomName);
+            return Requests.doPostWithResponse(urlString, roomName);
         }
 
         protected void onPostExecute(String result) {

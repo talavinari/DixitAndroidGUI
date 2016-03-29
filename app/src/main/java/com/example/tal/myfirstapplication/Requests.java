@@ -1,11 +1,6 @@
 package com.example.tal.myfirstapplication;
 
-import android.os.AsyncTask;
-
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -21,21 +16,9 @@ import java.net.URL;
  * Created by gront on 12/03/2016.
  */
 
-
 public class Requests{
-    private static Requests instance;
 
-    private Requests() {
-    }
-
-    public static Requests getInstance(){
-        if (instance ==null){
-            instance = new Requests();
-        }
-        return instance;
-    }
-
-    public String doGet(String urlString){
+    public static String doGet(String urlString){
         StringBuilder res = new StringBuilder();
         try {
             URL url = new URL(urlString);
@@ -57,36 +40,7 @@ public class Requests{
         }
     }
 
-
-
-    public String doPost(String urlString, String var){
-
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("POST");
-            //urlConnection.setRequestProperty("Content-Type", "text/plain");
-            urlConnection.setDoInput(true);
-            urlConnection.setDoOutput(true);
-            OutputStream outputStream = urlConnection.getOutputStream();
-            BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
-            bf.write(var);
-            bf.flush();
-            bf.close();
-            outputStream.close();
-            urlConnection.getInputStream();
-
-
-
-            return "";
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return e.getMessage();
-        }
-    }
-
-    public String doPost(String urlString, JSONObject jobj) {
+    public static String doPost(String urlString, JSONObject jobj) {
 
         try {
             URL url = new URL(urlString);
@@ -114,7 +68,7 @@ public class Requests{
 
 
 
-    public String doPostWithResponse(String urlString, String var){
+    public static String doPostWithResponse(String urlString, String var){
         StringBuilder res = new StringBuilder();
 
         try {
@@ -144,9 +98,7 @@ public class Requests{
         }
     }
 
-
-
-    public String doPostWithResponse(String urlString, JSONObject var){
+    public static String doPostWithResponse(String urlString, JSONObject var){
         StringBuilder res = new StringBuilder();
 
         try {
@@ -175,7 +127,4 @@ public class Requests{
             return e.getMessage();
         }
     }
-
-    /*  */
-
 }

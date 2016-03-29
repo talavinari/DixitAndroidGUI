@@ -12,9 +12,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Getting the ip of the machine
-        Constants con = new Constants();
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
@@ -24,9 +21,6 @@ public class MainActivity extends AppCompatActivity {
     {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_first, menu);
-
-
-
         return true;
     }
     public void createNewRoom(View view){

@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
@@ -21,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +29,8 @@ import java.util.List;
  * status bar and navigation/system bar) with user interaction.
  */
 public class GameMain extends Activity implements View.OnClickListener, View.OnLongClickListener, View.OnDragListener, View.OnKeyListener {
+
+
     int sizeW;
     int sizeH;
     int cardSize;
@@ -54,13 +54,43 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     int draggedCardNum;
     List<Player> tmpPlayers;
 
-    BroadcastReceiver broadcastReceiver;
+    BroadcastReceiver googleCloudBroadcastReceiver;
+    BroadcastReceiver inApplicationBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_main);
-        broadcastReceiver = new BroadcastReceiver() {
+        initReceivers();
+        draggedView = new Card();
+        cardSize = 0;
+        po = new Point();
+        data = ClipData.newPlainText("", "");
+        vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        setCardsInPosition();
+        tmpPlayers = new ArrayList<>();
+    }
+
+    private void initReceivers() {
+        initGCMReceiver();
+        initInAppReceiver();
+    }
+
+    private void initInAppReceiver() {
+        inApplicationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String messageType = intent.getExtras().getString(Constants.IN_APP_MESSAGE_TYPE);
+                if (messageType!=null && messageType.equals(Constants.CARD_RECEIVED_EVENT)){
+                    rearrangeCards();
+                }
+            }
+        };
+        registerInAppReceiver();
+    }
+
+    private void initGCMReceiver() {
+        googleCloudBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Bundle data = intent.getBundleExtra("message");
@@ -76,40 +106,50 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 }
             }
         };
-        registerReceiver();
-        draggedView = new Card();
-        cardSize = 0;
-        po = new Point();
-        data = ClipData.newPlainText("", "");
-        vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        setCardsInPosition();
-        tmpPlayers = new ArrayList<>();
+        registerGCMReceiver();
     }
 
     private void notifyPlayerPickedCard(Bundle data) {
         String playerName = data.getString(Constants.PLAYER_NAME);
-        int pickedCard = data.getInt(Constants.VOTED_CARD);
-        GameState.getGame().setPickedCardForPlayer(playerName, pickedCard);
-
-
-        if (GameState.getGame().allPlayersPicked()) {
-            handlePickedCardsGUI();
+        if (checkNotSelfNotification(playerName)) {
+            int pickedCard = Integer.parseInt(data.getString(Constants.WINNING_CARD));
+            GameState.getGame().setPickedCardForPlayer(playerName, pickedCard);
+            if (GameState.getGame().allPlayersPicked()) {
+                handlePickedCardsGUI();
+            }
         }
-
     }
 
+    private boolean checkNotSelfNotification(String playerName) {
+        return !GameState.getGame().getDevicePlayer().name.equals(playerName);
+    }
 
     private void notifyVote(Bundle data) {
         String playerName = data.getString(Constants.PLAYER_NAME);
-        int votedCard = data.getInt(Constants.VOTED_CARD);
-        GameState game = GameState.getGame();
-        game.setVoteForPlayer(playerName, votedCard);
-        if (game.votes.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1) {
-            game.calculateScore();
-            game.continueToNextStory();
-        }
+        if (checkNotSelfNotification(playerName)) {
+            int votedCard = data.getInt(Constants.VOTED_CARD);
+            GameState game = GameState.getGame();
+            game.setVoteForPlayer(playerName, votedCard);
+            if (game.votes.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1) {
+                game.calculateScore();
+                if (game.noWinner()) {
+                    game.continueToNextStory();
+                }
+                else{
+                    handleWinningGUI();
+                    return;
+                }
+            }
 
-        updateGUI();
+            updateGUI();
+        }
+    }
+
+    private void handleWinningGUI() {
+        // TODO winnig GUI - Unsubscribe from topic + cant touch anything
+        List<Player> winners = GameState.getGame().winners;
+
+
     }
 
 
@@ -147,8 +187,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void notifyJoinedToRoom(Bundle data) {
         String playerName = data.getString(Constants.PLAYER_NAME);
-        int index = Integer.valueOf(data.getString(Constants.INDEX));
-        GameState.getGame().addPlayer(new Player(playerName, index, false));
+
+        // Excluding self notification
+        if (checkNotSelfNotification(playerName)) {
+            int index = Integer.valueOf(data.getString(Constants.INDEX));
+            GameState.getGame().addPlayer(new Player(playerName, index, false));
+        }
 
         if (GameState.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
             startGameGUI();
@@ -163,8 +207,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     @Override
     protected void onStop() {
-        this.context = this;
-        new OnClose().execute();
+        new OnClose(this).execute();
         super.onStop();
     }
 
@@ -222,6 +265,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             case DragEvent.ACTION_DROP:
                 if (findViewById(R.id.table) == v) {
                     cardsInHand.remove(draggedCardNum);
+                    new PickCardTask(this).execute(String.valueOf(draggedCardNum), "Association") ;
                     draggedView.cardPic.setLayoutParams(getOutgoingCardLayoutParams());
                     rearrangeCards();
                     draggedView.setVisibility(View.VISIBLE);
@@ -254,10 +298,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     public void setCardsInPosition() {
-        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username1), (ImageView) findViewById(R.id.user1), "", 1));
-        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username2), (ImageView) findViewById(R.id.user2), "", 2));
-        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username3), (ImageView) findViewById(R.id.user3), "", 3));
-        GameState.getGame().addPlayer(new Player(null, (ImageView)findViewById(R.id.table), UserData.getInstance().getNickName(this), 0));
+//        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username1), (ImageView) findViewById(R.id.user1), "", 1));
+//        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username2), (ImageView) findViewById(R.id.user2), "", 2));
+//        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username3), (ImageView) findViewById(R.id.user3), "", 3));
+//        GameState.getGame().addPlayer(new Player(null, (ImageView)findViewById(R.id.table), UserData.getInstance().getNickName(this), 0));
 
         anset1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
         anset2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
@@ -313,15 +357,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1),
                 (ImageView) findViewById(R.id.card1), this,
                 (TextView) findViewById(R.id.card1text),
-                UserData.getInstance().getCards()[0]));
+                UserData.getInstance().getCards().get(0)));
         cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1),
                 (ImageView) findViewById(R.id.card2), this,
                 (TextView) findViewById(R.id.card2text),
-                UserData.getInstance().getCards()[1]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card3), this, (TextView) findViewById(R.id.card3text), UserData.getInstance().getCards()[2]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card4), this, (TextView) findViewById(R.id.card4text), UserData.getInstance().getCards()[3]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card5), this, (TextView) findViewById(R.id.card5text), UserData.getInstance().getCards()[4]));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text), UserData.getInstance().getCards()[5]));
+                UserData.getInstance().getCards().get(1)));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card3), this, (TextView) findViewById(R.id.card3text), UserData.getInstance().getCards().get(2)));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card4), this, (TextView) findViewById(R.id.card4text), UserData.getInstance().getCards().get(3)));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card5), this, (TextView) findViewById(R.id.card5text), UserData.getInstance().getCards().get(4)));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text), UserData.getInstance().getCards().get(5)));
     }
 
     private void setAllCards(int w, int h) {
@@ -481,33 +525,32 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         return false;
     }
 
-    private class OnClose extends AsyncTask<String, String, String> {
+    private class OnClose extends BaseTask {
+
+        public OnClose(Context context) {
+            super(context);
+        }
 
         @Override
         protected String doInBackground(String... params) {
-            JSONObject jobj = new JSONObject();
             try {
-                jobj.put(Constants.ROOM_FIELD, UserData.getInstance().getCurrRoom(context));
-                jobj.put(Constants.NAME_FIELD, UserData.getInstance().getNickName(context));
+                Requests.doPost(Constants.REMOVE_PLAYER, getBasicInfoJSON());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Requests.getInstance().doPost(Constants.REMOVE_PLAYER, jobj);
-
             return null;
         }
     }
 
-    private void registerReceiver() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
+    private void registerGCMReceiver() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(googleCloudBroadcastReceiver,
                 new IntentFilter(QuickstartPreferences.ROOM_MESSAGE_RECEIVED));
     }
-
-    public void setAllPlayers() {
-        for (Player p : GameState.getGame().players) {
-
-        }
+    private void registerInAppReceiver() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(inApplicationBroadcastReceiver,
+                new IntentFilter(QuickstartPreferences.IN_APP_MESSAGE));
     }
+
 
     public boolean amITheTeller() {
 //        return GameState.getGame().currentStoryTeller.index == UserData.getInstance().getMyIndex();
@@ -535,8 +578,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         }
 
     }
-
-
 }
 
 
