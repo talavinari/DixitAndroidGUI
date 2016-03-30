@@ -1,8 +1,11 @@
 package com.example.tal.myfirstapplication;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,8 +15,11 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +31,11 @@ import org.json.JSONObject;
 public class JoinRoom extends Activity implements View.OnClickListener {
 
     TableLayout tableLayout;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,17 +43,23 @@ public class JoinRoom extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_join_room);
 
         new GetRooms().execute();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
     public void onClick(View v) {
+
         if (v.getClass() == ImageButton.class) {
             displayRoom(v);
         } else {
             String roomName = ((TextView) ((TableRow) v).getVirtualChildAt(0)).getText().toString();
+
             UserData.getInstance().setCurrRoom(roomName, this);
 
             new AddMeToRoom(this).execute();
+
 
             if (checkPlayServices()) {
                 // Start IntentService to register this application with GCM.
@@ -51,6 +68,46 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                 startService(intent);
             }
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "JoinRoom Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.tal.myfirstapplication/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "JoinRoom Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.tal.myfirstapplication/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 
     public class AddMeToRoom extends BaseTask {
@@ -76,19 +133,52 @@ public class JoinRoom extends Activity implements View.OnClickListener {
             try {
 
                 JSONObject response = new JSONObject(json);
-                String cards = (String) response.get("cards");
-                UserData.getInstance().setCards(cards);
+                if (!response.has("error")) {
 
-                JSONArray players = ((JSONArray) response.get("players"));
-                for (int i = 0; i < players.length(); i++) {
-                    JSONObject playerJSON = players.getJSONObject(i);
-                    String playerName = playerJSON.getString("name");
-                    Player p = new Player(playerName,
-                            playerJSON.getInt("index"), playerName.equals(GameState.getGame().getDevicePlayer().name));
-                    GameState.getGame().addPlayer(p);
+                    String cards = (String) response.get("cards");
+                    UserData.getInstance().setCards(cards);
+
+                    JSONArray players = ((JSONArray) response.get("players"));
+                    for (int i = 0; i < players.length(); i++) {
+                        JSONObject playerJSON = players.getJSONObject(i);
+                        String playerName = playerJSON.getString("name");
+                        Player p = new Player(playerName,
+                                playerJSON.getInt("index"), playerName.equals(UserData.getInstance().getNickName(context)));
+                        GameState.getGame().addPlayer(p);
+                    }
+
+                    GameState.getGame().setFirstStoryTeller();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("The name you have chosen is already in use. What next?")
+                            .setCancelable(false)
+                            .setPositiveButton(("Pick another room"),
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+//                                            new ChangeName(context).execute();
+
+                                            // Close Application method called
+
+                                            dialog.cancel();
+                                        }
+                                    })
+                            .setNegativeButton(("Pick another name"),
+                                    new DialogInterface.OnClickListener() {
+                                        // On
+                                        // clicking
+                                        // "No"
+                                        // button
+                                        public void onClick(DialogInterface dialog, int id) {
+
+                                            Intent intent = new Intent(context,FirstLogIn.class);
+                                            startService(intent);
+                                        }
+                                    });
+
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
                 }
-
-                GameState.getGame().setFirstStoryTeller();
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -101,6 +191,19 @@ public class JoinRoom extends Activity implements View.OnClickListener {
 
             Intent intent = new Intent(context, GameMain.class);
             startActivity(intent);
+        }
+    }
+
+    private class ChangeName extends BaseTask {
+        public ChangeName(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+
+            return null;
         }
     }
 
