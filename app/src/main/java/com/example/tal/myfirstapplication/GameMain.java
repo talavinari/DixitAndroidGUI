@@ -78,6 +78,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         setCardsInPosition();
         tmpPlayers = new ArrayList<>();
+
+
+        for (Player player : GameState.getGame().players){
+            if (!player.name.equals(UserData.getInstance().getNickName(this))){
+                attachImageToPlayer(player);
+            }
+        }
     }
 
     private void findViews() {
@@ -478,15 +485,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void rearrangeCards() {
-
-        for (Card card : cardsInHand){
-            for (String str :UserData.getInstance().getCards()){
-                if (!String.valueOf(card.imageNum).equals(str)){
-                    // TODO might be wrong -- maybe need to remove all cards.
-                    cardsInHand.add(new Card(cardsInHand.size(),Integer.parseInt(str),new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text), str));
-                }
-            }
-        }
+//
+//        for (Card card : cardsInHand){
+//            for (String str :UserData.getInstance().getCards()){
+//                if (!String.valueOf(card.imageNum).equals(str)){
+//                    // TODO might be wrong -- maybe need to remove all cards.
+//                    cardsInHand.add(new Card(cardsInHand.size(),Integer.parseInt(str),new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text), str));
+//                }
+//            }
+//        }
 
         calcSize();
 
