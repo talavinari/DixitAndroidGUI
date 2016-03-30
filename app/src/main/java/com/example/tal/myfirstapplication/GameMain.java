@@ -25,6 +25,8 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +66,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     ImageView userImageView2;
     ImageView userImageView3;
     EditText association;
+    TextView cardText1;
+    TextView cardText2;
+    TextView cardText3;
+
 
     BroadcastReceiver googleCloudBroadcastReceiver;
     BroadcastReceiver inApplicationBroadcastReceiver;
@@ -98,6 +104,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         userImageView2 = (ImageView) findViewById(R.id.user2);
         userImageView3 = (ImageView) findViewById(R.id.user3);
         association = (EditText) findViewById(R.id.association);
+        cardText1 = (TextView) findViewById(R.id.user3cardtext);
+        cardText2 = (TextView) findViewById(R.id.user2cardtext);
+        cardText3 = (TextView) findViewById(R.id.user1cardtext);
     }
 
     private void initReceivers() {
@@ -204,17 +213,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
 
     private void handlePickedCardsGUI() {
+        List<Integer> values = new ArrayList<>(GameState.getGame().pickedCards.values());
+        Collections.shuffle(values);
 
-        for (Map.Entry <Player,Integer> pickedCards : GameState.getGame().pickedCards.entrySet()){
-            if (((TextView)findViewById(R.id.username3)).getText().toString().equals(pickedCards.getKey().name)){
-                ((TextView)findViewById(R.id.user3cardtext)).setText(pickedCards.getValue());
-            }else if(((TextView)findViewById(R.id.username2)).getText().toString().equals(pickedCards.getKey().name)){
-                ((TextView)findViewById(R.id.user2cardtext)).setText(pickedCards.getValue());
-            }else if(((TextView)findViewById(R.id.username1)).getText().toString().equals(pickedCards.getKey().name)){
-                ((TextView)findViewById(R.id.user1cardtext)).setText(pickedCards.getValue());
-            }
-        }
-
+        cardText1.setText(values.get(0));
+        cardText2.setText(values.get(1));
+        cardText3.setText(values.get(2));
 
         findViewById(R.id.user1card).setVisibility(View.VISIBLE);
         findViewById(R.id.user2card).setVisibility(View.VISIBLE);
