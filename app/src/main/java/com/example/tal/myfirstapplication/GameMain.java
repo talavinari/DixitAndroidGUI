@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.os.DropBoxManager;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
@@ -25,10 +24,8 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -194,8 +191,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void notifyAssociation(Bundle data) {
         //Maybe player name is redundant?
         String playerName = data.getString(Constants.PLAYER_NAME);
-        GameState.getGame().currentWinningCard = Integer.valueOf(data.getString(Constants.WINNING_CARD));
+        int pickedWinner = Integer.valueOf(data.getString(Constants.WINNING_CARD));
+        GameState.getGame().currentWinningCard = pickedWinner;
         GameState.getGame().currentAssociation = data.getString(Constants.ASSOCIATION);
+        GameState.getGame().setPickedCardForPlayer(playerName, pickedWinner);
         handleAssociationGUI();
     }
 
@@ -205,6 +204,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         association.setText(GameState.getGame().currentAssociation);
         association.setVisibility(View.VISIBLE);
         association.setKeyListener(null);
+
 
         if (!amITheTeller()){
             isCardOnTable = false;
@@ -331,7 +331,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                         findViewById(R.id.association).setVisibility(View.VISIBLE);
                     }else{
                         String card = draggedView.tv.getText().toString();
-                        GameState.getGame().setPickedCardForPlayer(UserData.getInstance().getNickName(context), Integer.parseInt(card));
                         new PickCardTask(this).execute(card, "Association") ;
                     }
                     return true;
