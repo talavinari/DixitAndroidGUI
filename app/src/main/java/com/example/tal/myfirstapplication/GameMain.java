@@ -193,7 +193,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         // Excluding self notification
         if (checkNotSelfNotification(playerName)) {
             int index = Integer.valueOf(data.getString(Constants.INDEX));
-            GameState.getGame().addPlayer(new Player(playerName, index, false,null));
+            GameState.getGame().addPlayer(attachImageToPlayer(new Player(playerName, index, false)));
+
         }
 
         if (GameState.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
@@ -301,6 +302,22 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         }
     }
 
+    private Player attachImageToPlayer(Player player){
+        if(((TextView)findViewById(R.id.username1)).getText().equals("username1")){
+            ((TextView)findViewById(R.id.username1)).setText(player.name);
+            player.userPic = (ImageView) findViewById(R.id.user1);
+            player.setVisibility(View.VISIBLE);
+        }else if(((TextView)findViewById(R.id.username2)).getText().equals("username2")){
+            ((TextView)findViewById(R.id.username3)).setText(player.name);
+            player.userPic = (ImageView) findViewById(R.id.user3);
+            player.setVisibility(View.VISIBLE);
+        }else if(((TextView)findViewById(R.id.username3)).getText().equals("username3")){
+            ((TextView)findViewById(R.id.username3)).setText(player.name);
+            player.userPic = (ImageView) findViewById(R.id.user3);
+            player.setVisibility(View.VISIBLE);
+        }
+        return player;
+    }
     public void setCardsInPosition() {
 
         handleCards();
@@ -309,6 +326,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         findViewById(R.id.user1card).setOnClickListener(this);
         findViewById(R.id.user2card).setOnClickListener(this);
         findViewById(R.id.user3card).setOnClickListener(this);
+
+
+
 
 //        findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
 //        findViewById(R.id.user2card).setVisibility(View.INVISIBLE);

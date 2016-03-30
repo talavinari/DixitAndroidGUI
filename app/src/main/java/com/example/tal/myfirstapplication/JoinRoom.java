@@ -187,8 +187,8 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                         JSONObject playerJSON = players.getJSONObject(i);
                         String playerName = playerJSON.getString("name");
 
-                        Player p = attachImageToPlayer(new Player(playerName,
-                                playerJSON.getInt("index"), playerName.equals(UserData.getInstance().getNickName(context)), null));
+                        Player p = new Player(playerName,
+                                playerJSON.getInt("index"), playerName.equals(UserData.getInstance().getNickName(context)));
                         GameState.getGame().addPlayer(p);
                     }
 
@@ -212,22 +212,6 @@ public class JoinRoom extends Activity implements View.OnClickListener {
         }
     }
 
-    private Player attachImageToPlayer(Player player){
-        if(((TextView)findViewById(R.id.username1)).getText().equals("username1")){
-            ((TextView)findViewById(R.id.username1)).setText(player.name);
-            player.userPic = (ImageView) findViewById(R.id.user1);
-            player.setVisibility(View.VISIBLE);
-        }else if(((TextView)findViewById(R.id.username2)).getText().equals("username2")){
-            ((TextView)findViewById(R.id.username3)).setText(player.name);
-            player.userPic = (ImageView) findViewById(R.id.user3);
-            player.setVisibility(View.VISIBLE);
-        }else if(((TextView)findViewById(R.id.username3)).getText().equals("username3")){
-            ((TextView)findViewById(R.id.username3)).setText(player.name);
-            player.userPic = (ImageView) findViewById(R.id.user3);
-            player.setVisibility(View.VISIBLE);
-        }
-        return player;
-    }
 
     private class ChangeName extends BaseTask {
         public ChangeName(Context context) {

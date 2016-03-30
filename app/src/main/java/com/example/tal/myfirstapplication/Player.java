@@ -16,11 +16,10 @@ public class Player {
     int score = 0;
     boolean currentAndroidUserIndication;
 
-    public Player(String name, int index, boolean isCurrentUser,ImageView userPic) {
+    public Player(String name, int index, boolean isCurrentUser) {
         this.name = name;
         this.index = index;
         this.currentAndroidUserIndication = isCurrentUser;
-        this.userPic = userPic;
     }
 
     public void setVisibility(int i){
