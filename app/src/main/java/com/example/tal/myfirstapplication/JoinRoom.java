@@ -14,7 +14,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -187,8 +186,7 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                         JSONObject playerJSON = players.getJSONObject(i);
                         String playerName = playerJSON.getString("name");
 
-                        Player p = new Player(playerName,
-                                playerJSON.getInt("index"), playerName.equals(UserData.getInstance().getNickName(context)));
+                        Player p = new Player(playerName, playerJSON.getInt("index"));
                         GameState.getGame().addPlayer(p);
                     }
 

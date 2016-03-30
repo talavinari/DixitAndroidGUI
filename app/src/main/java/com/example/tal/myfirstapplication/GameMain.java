@@ -123,7 +123,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private boolean checkNotSelfNotification(String playerName) {
-        return !GameState.getGame().getDevicePlayer().name.equals(playerName);
+        return !playerName.equals(UserData.getInstance().getNickName(context));
     }
 
     private void notifyVote(Bundle data) {
@@ -193,8 +193,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         // Excluding self notification
         if (checkNotSelfNotification(playerName)) {
             int index = Integer.valueOf(data.getString(Constants.INDEX));
-            GameState.getGame().addPlayer(attachImageToPlayer(new Player(playerName, index, false)));
-
+            GameState.getGame().addPlayer(attachImageToPlayer(new Player(playerName, index)));
         }
 
         if (GameState.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {

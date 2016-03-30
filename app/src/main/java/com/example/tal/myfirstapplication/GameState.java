@@ -11,14 +11,12 @@ import java.util.Map;
  * Created by gront on 24/03/2016.
  */
 public class GameState {
-
     List<Player> players;
     Map<Player,Integer> votes;
     Map<Player,Integer> pickedCards;
     Player currentStoryTeller;
     String currentAssociation;
     int currentWinningCard;
-    Player currentDevicePlayer;
     List<Player> winners;
 
     private static GameState game = new GameState();
@@ -118,6 +116,7 @@ public class GameState {
 
         return null;
     }
+
     public Player getPlayerByIndex(int index) {
         for (Player p : players){
             if (p.index == index){
@@ -135,18 +134,6 @@ public class GameState {
 
     public boolean allPlayersPicked() {
         return pickedCards.size() == (Constants.NUMBER_OF_PLAYERS_IN_DIXIT);
-    }
-
-
-    public Player getDevicePlayer() {
-        if (currentDevicePlayer == null){
-            for (Player player : players) {
-                if (player.currentAndroidUserIndication) {
-                    currentDevicePlayer = player;
-                }
-            }
-        }
-        return currentDevicePlayer;
     }
 
     public static void initGame() {

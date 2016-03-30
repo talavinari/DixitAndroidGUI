@@ -14,12 +14,10 @@ public class Player {
     ImageView userPic;
     int index;
     int score = 0;
-    boolean currentAndroidUserIndication;
 
-    public Player(String name, int index, boolean isCurrentUser) {
+    public Player(String name, int index) {
         this.name = name;
         this.index = index;
-        this.currentAndroidUserIndication = isCurrentUser;
     }
 
     public void setVisibility(int i){

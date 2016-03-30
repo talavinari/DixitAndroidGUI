@@ -53,7 +53,7 @@ public class CreateRoom extends Activity {
                 String cards = (String) response.get("cards");
                 UserData.getInstance().setCards(cards);
 
-                GameState.getGame().addPlayer(new Player(nickName, 1, true));
+                GameState.getGame().addPlayer(new Player(nickName, 1));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
