@@ -316,6 +316,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             player.userPic = (ImageView) findViewById(R.id.user3);
             player.setVisibility(View.VISIBLE);
         }
+        player.setVisibility(View.VISIBLE);
         return player;
     }
     public void setCardsInPosition() {
@@ -327,6 +328,14 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         findViewById(R.id.user2card).setOnClickListener(this);
         findViewById(R.id.user3card).setOnClickListener(this);
 
+        findViewById(R.id.teller).setVisibility(View.INVISIBLE);
+
+        findViewById(R.id.user1).setVisibility(View.INVISIBLE);
+        findViewById(R.id.user2).setVisibility(View.INVISIBLE);
+        findViewById(R.id.user3).setVisibility(View.INVISIBLE);
+        findViewById(R.id.username1).setVisibility(View.INVISIBLE);
+        findViewById(R.id.username2).setVisibility(View.INVISIBLE);
+        findViewById(R.id.username3).setVisibility(View.INVISIBLE);
 
 
 
@@ -336,7 +345,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         setRegularCard(findViewById(R.id.user1card));
         setRegularCard(findViewById(R.id.user2card));
-        setRegularCard(findViewById(R.id.user3card));
+       // setRegularCard(findViewById(R.id.user3card));
 
         findViewById(R.id.association).setOnKeyListener(this);
 
