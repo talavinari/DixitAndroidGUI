@@ -68,8 +68,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        findViews();
         setContentView(R.layout.activity_game_main);
+        findViews();
         initReceivers();
         draggedView = new Card();
         cardSize = 0;
@@ -318,17 +318,17 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private Player attachImageToPlayer(Player player){
-        if(userTextView1.getText().toString().equals(R.string.noNameUser)){
+        if(userTextView1.getText().toString().equals(getString(R.string.noNameUser))){
             userTextView1.setText(player.name);
             player.userPic = userImageView1;
             player.username = userTextView1;
             player.setVisibility(View.VISIBLE);
-        }else if(userTextView2.getText().toString().equals(R.string.noNameUser)){
+        }else if(userTextView2.getText().toString().equals(getString(R.string.noNameUser))){
             userTextView2.setText(player.name);
             player.userPic = userImageView2;
             player.username = userTextView2;
             player.setVisibility(View.VISIBLE);
-        }else if(userTextView3.getText().toString().equals(R.string.noNameUser)){
+        }else if(userTextView3.getText().toString().equals(getString(R.string.noNameUser))){
             userTextView3.setText(player.name);
             player.userPic = userImageView3;
             player.username = userTextView3;
