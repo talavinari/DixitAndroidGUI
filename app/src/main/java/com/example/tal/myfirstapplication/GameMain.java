@@ -206,12 +206,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void handlePickedCardsGUI() {
 
         for (Map.Entry <Player,Integer> pickedCards : GameState.getGame().pickedCards.entrySet()){
-            if (((TextView)findViewById(R.id.username3)).getText().toString().equals(pickedCards.getValue())){
-                ((TextView)findViewById(R.id.user3cardtext)).setText(pickedCards.getKey().toString());
-            }else if(((TextView)findViewById(R.id.username2)).getText().toString().equals(pickedCards.getValue())){
-                ((TextView)findViewById(R.id.user2cardtext)).setText(pickedCards.getKey().toString());
-            }else if(((TextView)findViewById(R.id.username1)).getText().toString().equals(pickedCards.getValue())){
-                ((TextView)findViewById(R.id.user1cardtext)).setText(pickedCards.getKey().toString());
+            if (((TextView)findViewById(R.id.username3)).getText().toString().equals(pickedCards.getKey().name)){
+                ((TextView)findViewById(R.id.user3cardtext)).setText(pickedCards.getValue());
+            }else if(((TextView)findViewById(R.id.username2)).getText().toString().equals(pickedCards.getKey().name)){
+                ((TextView)findViewById(R.id.user2cardtext)).setText(pickedCards.getValue());
+            }else if(((TextView)findViewById(R.id.username1)).getText().toString().equals(pickedCards.getKey().name)){
+                ((TextView)findViewById(R.id.user1cardtext)).setText(pickedCards.getValue());
             }
         }
 
