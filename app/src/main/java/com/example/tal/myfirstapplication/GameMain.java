@@ -216,9 +216,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         List<Integer> values = new ArrayList<>(GameState.getGame().pickedCards.values());
         Collections.shuffle(values);
 
-        cardText1.setText(values.get(0));
-        cardText2.setText(values.get(1));
-        cardText3.setText(values.get(2));
+        cardText1.setText(String.valueOf(values.get(0)));
+        cardText2.setText(String.valueOf(values.get(1)));
+        cardText3.setText(String.valueOf(values.get(2)));
 
         findViewById(R.id.user1card).setVisibility(View.VISIBLE);
         findViewById(R.id.user2card).setVisibility(View.VISIBLE);
