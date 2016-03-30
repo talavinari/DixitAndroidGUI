@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.DropBoxManager;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
@@ -25,6 +26,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -203,9 +205,23 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void handlePickedCardsGUI() {
 
+        for (Map.Entry <Player,Integer> pickedCards : GameState.getGame().pickedCards.entrySet()){
+            if (((TextView)findViewById(R.id.username3)).getText().toString().equals(pickedCards.getValue())){
+                ((TextView)findViewById(R.id.user3cardtext)).setText(pickedCards.getKey().toString());
+            }else if(((TextView)findViewById(R.id.username2)).getText().toString().equals(pickedCards.getValue())){
+                ((TextView)findViewById(R.id.user2cardtext)).setText(pickedCards.getKey().toString());
+            }else if(((TextView)findViewById(R.id.username1)).getText().toString().equals(pickedCards.getValue())){
+                ((TextView)findViewById(R.id.user1cardtext)).setText(pickedCards.getKey().toString());
+            }
+        }
+
+
         findViewById(R.id.user1card).setVisibility(View.VISIBLE);
         findViewById(R.id.user2card).setVisibility(View.VISIBLE);
         findViewById(R.id.user3card).setVisibility(View.VISIBLE);
+        findViewById(R.id.user1cardtext).setVisibility(View.VISIBLE);
+        findViewById(R.id.user2cardtext).setVisibility(View.VISIBLE);
+        findViewById(R.id.user3cardtext).setVisibility(View.VISIBLE);
 
     }
 
@@ -374,6 +390,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         findViewById(R.id.username2).setVisibility(View.INVISIBLE);
         findViewById(R.id.username3).setVisibility(View.INVISIBLE);
 
+
+        findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
+        findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
+        findViewById(R.id.user3card).setVisibility(View.INVISIBLE);
+        findViewById(R.id.user1cardtext).setVisibility(View.INVISIBLE);
+        findViewById(R.id.user2cardtext).setVisibility(View.INVISIBLE);
+        findViewById(R.id.user3cardtext).setVisibility(View.INVISIBLE);
 
 
 //        findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
