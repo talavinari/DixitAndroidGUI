@@ -4,13 +4,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
 
 /**
  * Created by gront on 24/03/2016.
  */
 public class Player {
-    List<Card> cardsInHand;
     String name;
     TextView username;
     ImageView userPic;
