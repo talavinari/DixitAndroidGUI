@@ -15,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -226,9 +227,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                         v == findViewById(R.id.user2card) ||
                         v == findViewById(R.id.user3card)) {
             if (v.getLayoutParams().height < cardSize * 5){
-                setRegularCard(v);
-            }else{
                 setBigCard(v);
+            }else{
+                setRegularCard(v);
             }
         }
     }
@@ -257,6 +258,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             case DragEvent.ACTION_DRAG_ENTERED:
                 return false;
             case DragEvent.ACTION_DRAG_EXITED:
+                targetCard.setVisibility(View.INVISIBLE);
                 draggedView.setVisibility(View.VISIBLE);
 //                cardsInHand.get(draggedCardNum).cardPic.setVisibility(View.VISIBLE);
                 isCardOnTable = false;
@@ -445,7 +447,18 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void rearrangeCards() {
+
+        for (Card card : cardsInHand){
+            for (String str :UserData.getInstance().getCards()){
+                if (!String.valueOf(card.imageNum).equals(str)){
+                    // TODO might be wrong -- maybe need to remove all cards.
+                    cardsInHand.add(new Card(cardsInHand.size(),Integer.parseInt(str),new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text), str));
+                }
+            }
+        }
+
         calcSize();
+
         setAllCards(cardSize, cardSize * 2);
     }
 
@@ -520,8 +533,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
             findViewById(R.id.association).setVisibility(View.INVISIBLE);
-        }
 
+
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+        }
         return false;
     }
 

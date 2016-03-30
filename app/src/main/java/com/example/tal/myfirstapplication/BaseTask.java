@@ -18,7 +18,7 @@ public abstract class BaseTask extends AsyncTask<String, String, String> {
 
     protected JSONObject getBasicInfoJSON() throws JSONException {
         JSONObject subJson = new JSONObject();
-        subJson.put(Constants.NAME_FIELD, GameState.getGame().getDevicePlayer().name);
+        subJson.put(Constants.NAME_FIELD, UserData.getInstance().getCurrRoom(context));
         subJson.put(Constants.ROOM_FIELD, UserData.getInstance().getCurrRoom(context));
         return subJson;
     }
