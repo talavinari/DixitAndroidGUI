@@ -61,6 +61,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     ImageView userImageView1;
     ImageView userImageView2;
     ImageView userImageView3;
+    EditText association;
 
     BroadcastReceiver googleCloudBroadcastReceiver;
     BroadcastReceiver inApplicationBroadcastReceiver;
@@ -94,6 +95,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         userImageView1 = (ImageView) findViewById(R.id.user1);
         userImageView2 = (ImageView) findViewById(R.id.user2);
         userImageView3 = (ImageView) findViewById(R.id.user3);
+        association = (EditText) findViewById(R.id.association);
     }
 
     private void initReceivers() {
@@ -188,6 +190,14 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void handleAssociationGUI() {
         // TODO handle association received GUI
+
+        association.setText(GameState.getGame().currentAssociation);
+        association.setVisibility(View.VISIBLE);
+        association.setKeyListener(null);
+
+        if (!amITheTeller()){
+            isCardOnTable = false;
+        }
     }
 
 
@@ -575,7 +585,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             String association = associationEditText.getText().toString();
             GameState.getGame().currentAssociation = association;
             GameState.getGame().currentWinningCard = draggedCardNum;
-            new SendAssociationTask(context).execute(String.valueOf(draggedCardNum),
+            new SendAssociationTask(context).execute(draggedView.tv.getText().toString(),
                     association);
 
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);

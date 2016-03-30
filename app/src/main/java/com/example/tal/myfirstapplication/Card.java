@@ -13,7 +13,7 @@ public class Card {
     int cardNum;
     RelativeLayout.LayoutParams layoutParams;
     ImageView cardPic;
-    private TextView tv;
+    TextView tv;
 
     public Card(int cardNum, int imageNum, RelativeLayout.LayoutParams layoutParams, ImageView cardPic,Object obj, TextView tv, String tvText) {
         this.cardNum = cardNum;
