@@ -15,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -520,7 +521,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-            findViewById(R.id.association).setVisibility(View.INVISIBLE);
+            EditText associationEditText = (EditText)findViewById(R.id.association);
+            associationEditText.setVisibility(View.INVISIBLE);
+            String association = associationEditText.getText().toString();
+            GameState.getGame().currentAssociation = association;
+            GameState.getGame().currentWinningCard = draggedCardNum;
+            new SendAssociationTask(context).execute(String.valueOf(draggedCardNum),
+                    association);
         }
 
         return false;
