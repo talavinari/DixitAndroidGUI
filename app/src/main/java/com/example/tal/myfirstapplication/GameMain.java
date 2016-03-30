@@ -55,6 +55,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     AnimatorSet antext3;
     int draggedCardNum;
     List<Player> tmpPlayers;
+    TextView userTextView1;
+    TextView userTextView2;
+    TextView userTextView3;
+    ImageView userImageView1;
+    ImageView userImageView2;
+    ImageView userImageView3;
 
     BroadcastReceiver googleCloudBroadcastReceiver;
     BroadcastReceiver inApplicationBroadcastReceiver;
@@ -62,6 +68,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        findViews();
         setContentView(R.layout.activity_game_main);
         initReceivers();
         draggedView = new Card();
@@ -71,6 +78,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         setCardsInPosition();
         tmpPlayers = new ArrayList<>();
+    }
+
+    private void findViews() {
+        userTextView1 = (TextView) findViewById(R.id.username1);
+        userTextView2 = (TextView) findViewById(R.id.username2);
+        userTextView3 = (TextView) findViewById(R.id.username3);
+        userImageView1 = (ImageView) findViewById(R.id.user1);
+        userImageView2 = (ImageView) findViewById(R.id.user2);
+        userImageView3 = (ImageView) findViewById(R.id.user3);
     }
 
     private void initReceivers() {
@@ -208,9 +224,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         new OnClose(this).execute();
-        super.onStop();
+        super.onDestroy();
     }
 
 
@@ -302,17 +318,20 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private Player attachImageToPlayer(Player player){
-        if(((TextView)findViewById(R.id.username1)).getText().equals("username1")){
-            ((TextView)findViewById(R.id.username1)).setText(player.name);
-            player.userPic = (ImageView) findViewById(R.id.user1);
+        if(userTextView1.getText().toString().equals(R.string.noNameUser)){
+            userTextView1.setText(player.name);
+            player.userPic = userImageView1;
+            player.username = userTextView1;
             player.setVisibility(View.VISIBLE);
-        }else if(((TextView)findViewById(R.id.username2)).getText().equals("username2")){
-            ((TextView)findViewById(R.id.username3)).setText(player.name);
-            player.userPic = (ImageView) findViewById(R.id.user3);
+        }else if(userTextView2.getText().toString().equals(R.string.noNameUser)){
+            userTextView2.setText(player.name);
+            player.userPic = userImageView2;
+            player.username = userTextView2;
             player.setVisibility(View.VISIBLE);
-        }else if(((TextView)findViewById(R.id.username3)).getText().equals("username3")){
-            ((TextView)findViewById(R.id.username3)).setText(player.name);
-            player.userPic = (ImageView) findViewById(R.id.user3);
+        }else if(userTextView3.getText().toString().equals(R.string.noNameUser)){
+            userTextView3.setText(player.name);
+            player.userPic = userImageView3;
+            player.username = userTextView3;
             player.setVisibility(View.VISIBLE);
         }
         player.setVisibility(View.VISIBLE);

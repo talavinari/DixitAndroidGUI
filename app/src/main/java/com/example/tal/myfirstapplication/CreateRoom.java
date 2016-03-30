@@ -54,9 +54,19 @@ public class CreateRoom extends Activity {
                 UserData.getInstance().setCards(cards);
 
                 GameState.getGame().addPlayer(new Player(nickName, 1));
+
+
+//                if (checkPlayServices()) {
+                    // Start IntentService to register this application with GCM.
+                    Intent intent = new Intent(context, RegistrationIntentService.class);
+                    intent.putExtra(Constants.TOPIC_ROOM_NAME, roomName);
+                    startService(intent);
+//                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+
 
             return "";
         }

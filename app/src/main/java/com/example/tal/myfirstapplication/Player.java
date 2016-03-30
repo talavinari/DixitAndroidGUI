@@ -22,7 +22,7 @@ public class Player {
 
     public void setVisibility(int i){
         username.setVisibility(i);
-        username.setVisibility(i);
+        userPic.setVisibility(i);
     }
 
     public void hideText(){

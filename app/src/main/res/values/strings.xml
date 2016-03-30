@@ -13,4 +13,5 @@
     <string name="title_activity_first_log_in">FirstLogIn</string>
 
     <string name="title_activity_game_main">GameMain</string>
+    <string name="noNameUser">notInitialized</string>
 </resources>

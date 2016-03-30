@@ -157,7 +157,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="user1"
+        android:text="@string/noNameUser"
         android:id="@+id/username1"
         android:gravity="center"
         android:textColor="@color/Black"
@@ -180,7 +180,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="user2"
+        android:text="@string/noNameUser"
         android:id="@+id/username2"
         android:textColor="@color/Black"
         android:gravity="center"
@@ -204,7 +204,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="user3"
+        android:text="@string/noNameUser"
         android:textColor="@color/Black"
         android:id="@+id/username3"
         android:gravity="center"

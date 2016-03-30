@@ -1,5 +1,11 @@
 package com.example.tal.myfirstapplication;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -97,6 +103,22 @@ public class Requests{
             return e.getMessage();
         }
     }
+//
+//    private static boolean checkPlayServices(Context context) {
+//        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+//        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+//        if (resultCode != ConnectionResult.SUCCESS) {
+//            if (apiAvailability.isUserResolvableError(resultCode)) {
+//                apiAvailability.getErrorDialog(context, resultCode, Constants.PLAY_SERVICES_RESOLUTION_REQUEST)
+//                        .show();
+//            } else {
+//                Log.i(Constants.TAG_MAIN_CLASS, "This device is not supported.");
+////                finish();
+//            }
+//            return false;
+//        }
+//        return true;
+//    }
 
     public static String doPostWithResponse(String urlString, JSONObject var){
         StringBuilder res = new StringBuilder();
