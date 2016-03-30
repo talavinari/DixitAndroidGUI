@@ -310,7 +310,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     if (amITheTeller()) {
                         findViewById(R.id.association).setVisibility(View.VISIBLE);
                     }else{
-                        new PickCardTask(this).execute(String.valueOf(draggedCardNum), "Association") ;
+                        new PickCardTask(this).execute(draggedView.tv.getText().toString(), "Association") ;
                     }
                     return true;
                 }
