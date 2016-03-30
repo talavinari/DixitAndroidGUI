@@ -2,15 +2,19 @@ package com.example.tal.myfirstapplication;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -37,15 +41,55 @@ public class JoinRoom extends Activity implements View.OnClickListener {
      */
     private GoogleApiClient client;
 
+    BroadcastReceiver reciver;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_room);
 
+        reciver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(final Context context, Intent intent) {
+                handleError(context);
+            }
+        };
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(reciver,new IntentFilter(QuickstartPreferences.ERROR_IN_JOIN_ROOM));
+
         new GetRooms().execute();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    private void handleError(final Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("The name you have chosen is already in use. What next?")
+                .setCancelable(false)
+                .setPositiveButton(("Pick another room"),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                dialog.cancel();
+                            }
+                        })
+                .setNegativeButton(("Pick another name"),
+                        new DialogInterface.OnClickListener() {
+                            // On
+                            // clicking
+                            // "No"
+                            // button
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                Intent intent = new Intent(context, FirstLogIn.class);
+                                startService(intent);
+                            }
+                        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
@@ -142,42 +186,16 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                     for (int i = 0; i < players.length(); i++) {
                         JSONObject playerJSON = players.getJSONObject(i);
                         String playerName = playerJSON.getString("name");
-                        Player p = new Player(playerName,
-                                playerJSON.getInt("index"), playerName.equals(UserData.getInstance().getNickName(context)));
+
+                        Player p = attachImageToPlayer(new Player(playerName,
+                                playerJSON.getInt("index"), playerName.equals(UserData.getInstance().getNickName(context)), null));
                         GameState.getGame().addPlayer(p);
                     }
 
                     GameState.getGame().setFirstStoryTeller();
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setMessage("The name you have chosen is already in use. What next?")
-                            .setCancelable(false)
-                            .setPositiveButton(("Pick another room"),
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-//                                            new ChangeName(context).execute();
-
-                                            // Close Application method called
-
-                                            dialog.cancel();
-                                        }
-                                    })
-                            .setNegativeButton(("Pick another name"),
-                                    new DialogInterface.OnClickListener() {
-                                        // On
-                                        // clicking
-                                        // "No"
-                                        // button
-                                        public void onClick(DialogInterface dialog, int id) {
-
-                                            Intent intent = new Intent(context,FirstLogIn.class);
-                                            startService(intent);
-                                        }
-                                    });
-
-                    AlertDialog alert = builder.create();
-                    alert.show();
-
+                    Intent intent = new Intent(QuickstartPreferences.ERROR_IN_JOIN_ROOM);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 }
 
             } catch (JSONException e) {
@@ -192,6 +210,23 @@ public class JoinRoom extends Activity implements View.OnClickListener {
             Intent intent = new Intent(context, GameMain.class);
             startActivity(intent);
         }
+    }
+
+    private Player attachImageToPlayer(Player player){
+        if(((TextView)findViewById(R.id.username1)).getText().equals("username1")){
+            ((TextView)findViewById(R.id.username1)).setText(player.name);
+            player.userPic = (ImageView) findViewById(R.id.user1);
+            player.setVisibility(View.VISIBLE);
+        }else if(((TextView)findViewById(R.id.username2)).getText().equals("username2")){
+            ((TextView)findViewById(R.id.username3)).setText(player.name);
+            player.userPic = (ImageView) findViewById(R.id.user3);
+            player.setVisibility(View.VISIBLE);
+        }else if(((TextView)findViewById(R.id.username3)).getText().equals("username3")){
+            ((TextView)findViewById(R.id.username3)).setText(player.name);
+            player.userPic = (ImageView) findViewById(R.id.user3);
+            player.setVisibility(View.VISIBLE);
+        }
+        return player;
     }
 
     private class ChangeName extends BaseTask {
@@ -223,7 +258,7 @@ public class JoinRoom extends Activity implements View.OnClickListener {
 
             tableLayout = (TableLayout) findViewById(R.id.AllRooms);
             tableLayout.removeAllViews();
-            if (result != null) {
+            if (!result.equals("[]")) {
                 String[] rooms = result.split(",");
                 rooms[0] = rooms[0].substring(1);
                 rooms[rooms.length - 1] = rooms[rooms.length - 1].substring(0, rooms[rooms.length - 1].length() - 1);

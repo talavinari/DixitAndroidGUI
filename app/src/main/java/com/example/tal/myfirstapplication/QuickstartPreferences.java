@@ -22,5 +22,6 @@ public class QuickstartPreferences {
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String ROOM_MESSAGE_RECEIVED = "roomMessageReceived";
     public static final String IN_APP_MESSAGE = "inAppMessage";
+    public static final String ERROR_IN_JOIN_ROOM = "error in join room";
 
 }

@@ -193,7 +193,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         // Excluding self notification
         if (checkNotSelfNotification(playerName)) {
             int index = Integer.valueOf(data.getString(Constants.INDEX));
-            GameState.getGame().addPlayer(new Player(playerName, index, false));
+            GameState.getGame().addPlayer(new Player(playerName, index, false,null));
         }
 
         if (GameState.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
@@ -203,8 +203,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void startGameGUI() {
         // TODO handle GUI of start
-
-
+        GameState.getGame().setFirstStoryTeller();
+        setTellerPic();
     }
 
     @Override
@@ -302,24 +302,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     public void setCardsInPosition() {
-//        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username1), (ImageView) findViewById(R.id.user1), "", 1));
-//        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username2), (ImageView) findViewById(R.id.user2), "", 2));
-//        GameState.getGame().addPlayer(new Player((TextView) findViewById(R.id.username3), (ImageView) findViewById(R.id.user3), "", 3));
-//        GameState.getGame().addPlayer(new Player(null, (ImageView)findViewById(R.id.table), UserData.getInstance().getNickName(this), 0));
-
-        anset1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
-        anset2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
-        anset3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user3movement);
-
-        antext1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
-        antext2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
-        antext3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user3movement);
-
-        anset1.setTarget(GameState.getGame().players.get(1));
-        anset2.setTarget(GameState.getGame().players.get(2));
-        anset3.setTarget(GameState.getGame().players.get(3));
-
-        setTellerPic();
 
         handleCards();
         calcSize();
@@ -576,23 +558,17 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
 
-    public boolean amITheTeller() {
-//        return GameState.getGame().currentStoryTeller.index == UserData.getInstance().getMyIndex();
-
-        // TODO: erase!!!
-        return true;
-    }
-
     private void setTellerPic() {
-        if(GameState.getGame().currentStoryTeller.userPic!=null) {
+        if(!amITheTeller()) {
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) GameState.getGame().currentStoryTeller.userPic.getLayoutParams();
 
+            if(GameState.getGame().currentStoryTeller.userPic.getX() - 200 > po.x/2){
 
-            if (!amITheTeller()) {
-                lp.leftMargin = 100;
-                lp.leftMargin = 350;
-                lp.leftMargin = 350;
+                lp.leftMargin = (int) GameState.getGame().currentStoryTeller.userPic.getX();
+            }else{
+                lp.leftMargin = (int) GameState.getGame().currentStoryTeller.userPic.getX() + 300;
             }
+            lp.bottomMargin = (int) GameState.getGame().currentStoryTeller.userPic.getY();
             findViewById(R.id.teller).setLayoutParams(lp);
         }else{
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) findViewById(R.id.teller).getLayoutParams();
@@ -601,6 +577,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         }
 
+    }
+
+    private boolean amITheTeller() {
+        return GameState.getGame().currentStoryTeller.name.equals(UserData.getInstance().getNickName(this));
     }
 }
 
