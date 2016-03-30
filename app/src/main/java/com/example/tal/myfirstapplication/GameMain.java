@@ -267,7 +267,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             case DragEvent.ACTION_DROP:
                 if (findViewById(R.id.table) == v) {
                     cardsInHand.remove(draggedCardNum);
-                    new PickCardTask(this).execute(String.valueOf(draggedCardNum), "Association") ;
                     draggedView.cardPic.setLayoutParams(getOutgoingCardLayoutParams());
                     rearrangeCards();
                     draggedView.setVisibility(View.VISIBLE);
@@ -276,6 +275,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 //                    draggedView.setVisibility(View.VISIBLE);
                     if (amITheTeller()) {
                         findViewById(R.id.association).setVisibility(View.VISIBLE);
+                    }else{
+                        new PickCardTask(this).execute(String.valueOf(draggedCardNum), "Association") ;
                     }
                     return true;
                 }
