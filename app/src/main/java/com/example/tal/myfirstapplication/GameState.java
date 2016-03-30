@@ -133,7 +133,7 @@ public class GameState {
     }
 
     public boolean allPlayersPicked() {
-        return pickedCards.size() == (Constants.NUMBER_OF_PLAYERS_IN_DIXIT);
+        return pickedCards.size() == (Constants.NUMBER_OF_PLAYERS_IN_DIXIT -1);
     }
 
     public static void initGame() {
