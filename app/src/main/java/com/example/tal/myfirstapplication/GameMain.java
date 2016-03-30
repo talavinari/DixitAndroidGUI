@@ -15,8 +15,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -541,13 +541,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             GameState.getGame().currentWinningCard = draggedCardNum;
             new SendAssociationTask(context).execute(String.valueOf(draggedCardNum),
                     association);
-        }
-
 
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
         }
+
         return false;
     }
 
