@@ -25,6 +25,7 @@ public class Constants {
     public static final String NAME_FIELD = "nickName";
     public static final String BASIC_INFO_FIELD = "basicInfo";
     public static final String NEW_CARD = "newCard";
+    public static final String IMG_PREFIX = "img";
 
     public static final String TOPIC_ROOM_NAME = "roomName";
 
