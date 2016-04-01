@@ -134,7 +134,7 @@ public class Game {
     }
 
     public boolean allPlayersPicked() {
-        return pickedCards.size() == (Constants.NUMBER_OF_PLAYERS_IN_DIXIT -1);
+        return pickedCards.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT;
     }
 
     public static void initGame() {

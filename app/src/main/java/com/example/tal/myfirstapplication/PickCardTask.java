@@ -20,7 +20,7 @@ public class PickCardTask extends BaseTask {
         try {
             json.put(Constants.BASIC_INFO_FIELD, getBasicInfoJSON());
             json.put(Constants.WINNING_CARD , params[0]);
-            json.put(Constants.ASSOCIATION, params[1]);
+            json.put(Constants.ASSOCIATION, Game.getGame().currentAssociation);
         } catch (JSONException e) {
             e.printStackTrace();
         }

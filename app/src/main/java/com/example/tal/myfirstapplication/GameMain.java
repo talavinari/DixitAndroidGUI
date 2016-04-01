@@ -25,6 +25,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -81,6 +82,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     BroadcastReceiver googleCloudBroadcastReceiver;
     BroadcastReceiver inApplicationBroadcastReceiver;
+
+    int myPickedCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,9 +220,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             Game.getGame().currentWinningCard = pickedWinner;
             Game.getGame().currentAssociation = data.getString(Constants.ASSOCIATION);
             Game.getGame().setPickedCardForPlayer(playerName, pickedWinner);
-            handleAssociationGUI();
+
             Game.getGame().gameState = GameState.PICKING_CARDS;
         }
+        handleAssociationGUI();
     }
 
     private void handleAssociationGUI() {
@@ -236,8 +240,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
 
+    private Collection<Integer> getOtherCardsPicked(){
+        Collection<Integer> values = Game.getGame().pickedCards.values();
+        values.remove(myPickedCard);
+        return  values;
+    }
+
     private void handlePickedCardsGUI() {
-        List<Integer> values = new ArrayList<>(Game.getGame().pickedCards.values());
+        List<Integer> values = new ArrayList<>(getOtherCardsPicked());
+
         Collections.shuffle(values);
 
         cardText1.setText(String.valueOf(values.get(0)));
@@ -419,8 +430,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     if (amITheTeller()) {
                         findViewById(R.id.association).setVisibility(View.VISIBLE);
                     }else{
-                        String card = draggedView.tv.getText().toString();
-                        new PickCardTask(this).execute(card, "Association") ;
+                        String pickedCard = draggedView.tv.getText().toString();
+                        myPickedCard = Integer.valueOf(pickedCard);
+                        Game.getGame().setPickedCardForPlayer(UserData.getInstance().getNickName(context), myPickedCard);
+                        new PickCardTask(this).execute(pickedCard) ;
                     }
                     return true;
                 }
