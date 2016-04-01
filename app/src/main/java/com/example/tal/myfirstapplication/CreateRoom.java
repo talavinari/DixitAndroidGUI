@@ -54,6 +54,7 @@ public class CreateRoom extends Activity {
                 UserData.getInstance().setCards(cards);
 
                 Game.getGame().addPlayer(new Player(nickName, 1));
+                Game.getGame().setFirstStoryTeller();
 
 
 //                if (checkPlayServices()) {
