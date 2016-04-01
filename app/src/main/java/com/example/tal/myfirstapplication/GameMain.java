@@ -270,15 +270,17 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
 
     private void handlePickedCardsGUI() {
-        List<Integer> source = new ArrayList<>(Game.getGame().pickedCards.values());
-        List<Integer> destination = new ArrayList<>();
-         Collections.copy(destination, source);
-        destination.remove(Integer.valueOf(myPickedCard));
-        Collections.shuffle(destination);
+        List<Integer> values = new ArrayList<>();
+        for (Integer picked : Game.getGame().pickedCards.values()){
+            if (picked != myPickedCard){
+                values.add(picked);
+            }
+        }
+        Collections.shuffle(values);
 
-        cardText1.setText(String.valueOf(destination.get(0)));
-        cardText2.setText(String.valueOf(destination.get(1)));
-        cardText3.setText(String.valueOf(destination.get(2)));
+        cardText1.setText(String.valueOf(values.get(0)));
+        cardText2.setText(String.valueOf(values.get(1)));
+        cardText3.setText(String.valueOf(values.get(2)));
 
         cardText1.setVisibility(View.VISIBLE);
         cardText2.setVisibility(View.VISIBLE);
