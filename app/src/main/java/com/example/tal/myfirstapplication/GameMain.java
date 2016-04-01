@@ -57,6 +57,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     AnimatorSet antext1;
     AnimatorSet antext2;
     AnimatorSet antext3;
+    AnimatorSet score1;
+    AnimatorSet score2;
+    AnimatorSet score3;
     AlphaAnimation flashingCardAnim;
     Boolean isFlashingCard = false;
     int draggedCardNum;
@@ -198,6 +201,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         Game game = Game.getGame();
         if (game.votes.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1) {
             game.calculateScore();
+            ((TextView)findViewById(R.id.myscore)).setText("My Score: " + game.players.get(0).score);
+            ((TextView)findViewById(R.id.score1)).setText("Score: " + game.players.get(1).score);
+            ((TextView)findViewById(R.id.score1)).setText("Score: " + game.players.get(2).score);
+            ((TextView)findViewById(R.id.score1)).setText("Score: " + game.players.get(3).score);
             if (game.noWinner()) {
                 game.continueToNextStory();
             }
@@ -659,56 +666,74 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public void moveUser1(View view) {
         if (usr1) {
             findViewById(R.id.username1).setVisibility(View.INVISIBLE);
+            findViewById(R.id.score1).setVisibility(View.INVISIBLE);
             anset1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1moveback);
             antext1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1moveback);
+            score1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1moveback);
             usr1 = false;
         } else {
             findViewById(R.id.username1).setVisibility(View.VISIBLE);
+            findViewById(R.id.score1).setVisibility(View.VISIBLE);
             anset1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
             antext1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
+            score1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
             usr1 = true;
         }
         anset1.setTarget(findViewById(R.id.user1));
         antext1.setTarget(findViewById(R.id.username1));
+        score1.setTarget(findViewById(R.id.score1));
         anset1.start();
         antext1.start();
+        score1.start();
     }
 
     public void moveUser2(View view) {
         if (usr2) {
             findViewById(R.id.username2).setVisibility(View.INVISIBLE);
+            findViewById(R.id.score2).setVisibility(View.INVISIBLE);
             anset2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2moveback);
             antext2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2moveback);
+            score2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2moveback);
             usr2 = false;
         } else {
             findViewById(R.id.username2).setVisibility(View.VISIBLE);
+            findViewById(R.id.score2).setVisibility(View.VISIBLE);
             anset2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
             antext2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
+            score2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
             usr2 = true;
         }
         anset2.setTarget(findViewById(R.id.user2));
         antext2.setTarget(findViewById(R.id.username2));
+        score2.setTarget(findViewById(R.id.score2));
         anset2.start();
         antext2.start();
+        score2.start();
     }
 
     public void moveUser3(View view) {
         if (usr3) {
             findViewById(R.id.username3).setVisibility(View.INVISIBLE);
+            findViewById(R.id.score3).setVisibility(View.INVISIBLE);
             anset3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user3moveback);
             antext3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.text3moveback);
+            score3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.score3moveback);
             usr3 = false;
         } else {
             findViewById(R.id.username3).setVisibility(View.VISIBLE);
+            findViewById(R.id.score3).setVisibility(View.VISIBLE);
             anset3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user3movement);
             antext3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.text3movement);
+            score3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.score3movement);
             usr3 = true;
         }
 
         anset3.setTarget(findViewById(R.id.user3));
         antext3.setTarget(findViewById(R.id.username3));
+        score3.setTarget(findViewById(R.id.score3));
         anset3.start();
         antext3.start();
+        score3.start();
     }
 
     private void calcSize() {

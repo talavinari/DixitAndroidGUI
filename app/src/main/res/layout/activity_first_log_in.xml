@@ -21,7 +21,9 @@
             android:text="Enter your nickname:"
             android:id="@+id/textView3"
             android:layout_gravity="center" />
+
     </TableRow>
+
     <TableRow>
         <EditText
             android:layout_width="wrap_content"
@@ -31,6 +33,15 @@
             android:ems="10"
             android:id="@+id/editText"
             android:layout_gravity="left|center_vertical"/>
+
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/imageButton"
+            android:src="@drawable/camera_icon"
+            android:layout_gravity="right|top"
+            android:scaleType="fitXY"
+            android:onClick="takePic"/>
     </TableRow>
     <TableRow>
 
@@ -45,5 +56,12 @@
 
     </TableRow>
 </TableLayout>
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:id="@+id/mypic"
+        android:layout_gravity="left|center_vertical"
+        android:scaleType="fitXY"/>
 
 </FrameLayout>

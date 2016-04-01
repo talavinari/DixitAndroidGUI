@@ -300,4 +300,47 @@
         android:layout_alignBottom="@+id/user2card"
         android:gravity="center" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="score: 0"
+        android:id="@+id/score1"
+        android:layout_alignLeft="@+id/user1"
+        android:layout_alignTop="@+id/user1"
+        android:layout_alignRight="@+id/user1"
+        android:layout_alignBottom="@+id/user1"
+        android:gravity="center"
+        android:visibility="invisible"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="score: 0"
+        android:id="@+id/score2"
+        android:layout_alignLeft="@+id/user2"
+        android:layout_alignTop="@+id/user2"
+        android:layout_alignRight="@+id/user2"
+        android:layout_alignBottom="@+id/user2"
+        android:gravity="center"
+        android:visibility="invisible"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="score: 0"
+        android:id="@+id/score3"
+        android:layout_alignLeft="@+id/user3"
+        android:layout_alignTop="@+id/user3"
+        android:layout_alignRight="@+id/user3"
+        android:layout_alignBottom="@+id/user3"
+        android:gravity="center"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My score: 0"
+        android:id="@+id/myscore"
+        android:textColor="@color/Black"
+        android:layout_alignBottom="@+id/table"
+        android:layout_alignParentStart="true"/>
+
 </RelativeLayout>
