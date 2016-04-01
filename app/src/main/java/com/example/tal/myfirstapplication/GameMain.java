@@ -208,16 +208,16 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     }
 
-
     private void notifyAssociation(Bundle data) {
-        //Maybe player name is redundant?
         String playerName = data.getString(Constants.PLAYER_NAME);
-        int pickedWinner = Integer.valueOf(data.getString(Constants.WINNING_CARD));
-        Game.getGame().currentWinningCard = pickedWinner;
-        Game.getGame().currentAssociation = data.getString(Constants.ASSOCIATION);
-        Game.getGame().setPickedCardForPlayer(playerName, pickedWinner);
-        handleAssociationGUI();
-        Game.getGame().gameState = GameState.PICKING_CARDS;
+        if (checkNotSelfNotification(playerName)) {
+            int pickedWinner = Integer.valueOf(data.getString(Constants.WINNING_CARD));
+            Game.getGame().currentWinningCard = pickedWinner;
+            Game.getGame().currentAssociation = data.getString(Constants.ASSOCIATION);
+            Game.getGame().setPickedCardForPlayer(playerName, pickedWinner);
+            handleAssociationGUI();
+            Game.getGame().gameState = GameState.PICKING_CARDS;
+        }
     }
 
     private void handleAssociationGUI() {
@@ -249,6 +249,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageCardOpponentUser1.setVisibility(View.VISIBLE);
         imageCardOpponentUser2.setVisibility(View.VISIBLE);
         imageCardOpponentUser3.setVisibility(View.VISIBLE);
+
+        imageCardOpponentUser1.setOnLongClickListener(this);
+        imageCardOpponentUser2.setOnLongClickListener(this);
+        imageCardOpponentUser3.setOnLongClickListener(this);
 
     }
 
@@ -739,16 +743,16 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void setTellerPic() {
         if(!amITheTeller()) {
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) Game.getGame().currentStoryTeller.userPic.getLayoutParams();
-
-            if(Game.getGame().currentStoryTeller.userPic.getX() - 200 > po.x/2){
-
-                lp.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX();
-            }else{
-                lp.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX() + 300;
-            }
-            lp.bottomMargin = (int) Game.getGame().currentStoryTeller.userPic.getY();
-            findViewById(R.id.teller).setLayoutParams(lp);
+//            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) Game.getGame().currentStoryTeller.userPic.getLayoutParams();
+//
+//            if(Game.getGame().currentStoryTeller.userPic.getX() - 200 > po.x/2){
+//
+//                lp.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX();
+//            }else{
+//                lp.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX() + 300;
+//            }
+//            lp.bottomMargin = (int) Game.getGame().currentStoryTeller.userPic.getY();
+//            findViewById(R.id.teller).setLayoutParams(lp);
         }else{
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) findViewById(R.id.teller).getLayoutParams();
             lp.leftMargin = (int) (po.x - (lp.width * 1.5));
