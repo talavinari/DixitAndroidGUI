@@ -16,7 +16,6 @@ import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -725,8 +724,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+    public boolean dispatchKeyEvent(KeyEvent e) {
+        if (e.getAction() == KeyEvent.ACTION_DOWN && e.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
             EditText associationEditText = (EditText)findViewById(R.id.association);
             associationEditText.setVisibility(View.INVISIBLE);
             String association = associationEditText.getText().toString();
@@ -735,11 +734,30 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             new SendAssociationTask(context).execute(String.valueOf(myPickedCard),
                     association);
             notifySelfPicked();
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+//            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             Game.getGame().gameState = GameState.PICKING_CARDS;
         }
 
+        return super.dispatchKeyEvent(e);
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+//        if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+//            EditText associationEditText = (EditText)findViewById(R.id.association);
+//            associationEditText.setVisibility(View.INVISIBLE);
+//            String association = associationEditText.getText().toString();
+//            Game.getGame().currentAssociation = association;
+//            Game.getGame().currentWinningCard = myPickedCard;
+//            new SendAssociationTask(context).execute(String.valueOf(myPickedCard),
+//                    association);
+//            notifySelfPicked();
+//            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+//            Game.getGame().gameState = GameState.PICKING_CARDS;
+//        }
+//
         return false;
     }
 
