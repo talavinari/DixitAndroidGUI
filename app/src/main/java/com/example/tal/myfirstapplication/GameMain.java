@@ -92,7 +92,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         setCardsInPosition();
         tmpPlayers = new ArrayList<>();
-
+        context = this;
 
         for (Player player : Game.getGame().players){
             if (!player.name.equals(UserData.getInstance().getNickName(this))){
