@@ -8,12 +8,10 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Xml;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,7 +21,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -195,9 +195,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     return;
                 }
                 Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
+                // TODO -- after 2 second delay - for show the winner and score
+                updateGUI();
             }
 
-            updateGUI();
+
         }
     }
 
@@ -258,7 +260,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void updateGUI() {
         //TODO gui of next trun
-        setTellerPic();
+        //setTellerPic();
         // TODO get card.
 
         findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
@@ -285,7 +287,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void startGameGUI() {
         // TODO handle GUI of start
         Game.getGame().setFirstStoryTeller();
-        setTellerPic();
+        //setTellerPic();
     }
 
     @Override
@@ -302,7 +304,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 if (isOneOfOpponentsCards(v) && v.getAnimation() != null){
                     flashingCardAnim.cancel();
                     isFlashingCard = false;
-                    new VoteTask(this).execute(imageToTextViewMap.get(v).getText().toString());
+                    String votedCard = imageToTextViewMap.get(v).getText().toString();
+                    Game.getGame().setVoteForPlayer(UserData.getInstance().getNickName(context), Integer.valueOf(votedCard));
+                    new VoteTask(this).execute(votedCard);
                 }
                 break;
             case PICKING_CARDS:
@@ -345,7 +349,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public boolean onLongClick(View v) {
         switch (Game.getGame().gameState){
             case VOTING:
-                if (isOneOfOpponentsCards(v)) {
+                if (isOneOfOpponentsCards(v) && !amITheTeller()) {
                     setRegularCard(v);
                     v.startAnimation(flashingCardAnim);
                         //flashingCardAnim.start();
@@ -754,9 +758,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 //            lp.bottomMargin = (int) Game.getGame().currentStoryTeller.userPic.getY();
 //            findViewById(R.id.teller).setLayoutParams(lp);
         }else{
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) findViewById(R.id.teller).getLayoutParams();
-            lp.leftMargin = (int) (po.x - (lp.width * 1.5));
-            lp.bottomMargin = (po.y - findViewById(R.id.table).getHeight());
+//            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) findViewById(R.id.teller).getLayoutParams();
+//            lp.leftMargin = (int) (po.x - (lp.width * 1.5));
+//            lp.bottomMargin = (po.y - findViewById(R.id.table).getHeight());
 
         }
 
