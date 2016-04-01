@@ -55,7 +55,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     AnimatorSet antext2;
     AnimatorSet antext3;
     AnimatorSet flashingCardAnim;
-    View flashingCard;
+    Boolean isFlashingCard = false;
     int draggedCardNum;
     List<Player> tmpPlayers;
     TextView opponentUserNameTextView1;
@@ -292,12 +292,20 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public void onClick(View v) {
         switch (Game.getGame().gameState){
             case VOTING:
-                if (isOneOfOpponentsCards(v)){
+                if (isOneOfOpponentsCards(v) ){
                     flashingCardAnim.end();
+                    isFlashingCard = false;
                     new VoteTask(this).execute(imageToTextViewMap.get(v).getText().toString());
                 }
                 break;
             case PICKING_CARDS:
+                if (isOneOfOpponentsCards(v) && !isFlashingCard){
+                    if (v.getLayoutParams().height < cardSize * 5){
+                        setBigCard(v);
+                    }else{
+                        setRegularCard(v);
+                    }
+                }
 
                 break;
 
@@ -331,8 +339,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         switch (Game.getGame().gameState){
             case VOTING:
                 if (isOneOfOpponentsCards(v)) {
-                    flashingCardAnim = (AnimatorSet) AnimatorInflater.loadAnimator(context,R.animator.flashingcard);
+                    setRegularCard(v);
+                    flashingCardAnim.setTarget(v);
                     flashingCardAnim.start();
+                    isFlashingCard = true;
                 }
                 break;
             case PICKING_CARDS:
@@ -461,6 +471,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         findViewById(R.id.username2).setVisibility(View.INVISIBLE);
         findViewById(R.id.username3).setVisibility(View.INVISIBLE);
 
+        flashingCardAnim = (AnimatorSet) AnimatorInflater.loadAnimator(context,R.animator.flashingcard);
 
         findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
         findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
