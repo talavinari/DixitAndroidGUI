@@ -220,6 +220,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             ((TextView) findViewById(R.id.score1)).setText("Score: " + game.players.get(1).score);
             ((TextView) findViewById(R.id.score2)).setText("Score: " + game.players.get(2).score);
             ((TextView) findViewById(R.id.score3)).setText("Score: " + game.players.get(3).score);
+
+            association.setVisibility(View.INVISIBLE);
             if (game.noWinner()) {
                 game.continueToNextStory();
             } else {
@@ -296,14 +298,19 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void updateGUI() {
-        //TODO gui of next trun
-        //setTellerPic();
-        // TODO get card.
+        setTellerPic();
+        cardsInHand.clear();
+        handleCards();
+        setOpponentsCardVisibility(View.INVISIBLE);
+    }
 
-        imageCardOpponentUser1.setVisibility(View.INVISIBLE);
-        imageCardOpponentUser2.setVisibility(View.INVISIBLE);
-        imageCardOpponentUser3.setVisibility(View.INVISIBLE);
-
+    private void setOpponentsCardVisibility(int visibility) {
+        imageCardOpponentUser1.setVisibility(visibility);
+        imageCardOpponentUser2.setVisibility(visibility);
+        imageCardOpponentUser3.setVisibility(visibility);
+        cardText1.setVisibility(visibility);
+        cardText2.setVisibility(visibility);
+        cardText3.setVisibility(visibility);
     }
 
     private void notifyJoinedToRoom(Bundle data) {
@@ -324,7 +331,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void startGameGUI() {
         // TODO handle GUI of start
         Game.getGame().setFirstStoryTeller();
-        //setTellerPic();
+        setTellerPic();
     }
 
     @Override
@@ -538,13 +545,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         flashingCardAnim.setRepeatMode(AlphaAnimation.REVERSE);
         flashingCardAnim.setRepeatCount(AlphaAnimation.INFINITE);
 
-        imageCardOpponentUser1.setVisibility(View.INVISIBLE);
-        imageCardOpponentUser2.setVisibility(View.INVISIBLE);
-        imageCardOpponentUser3.setVisibility(View.INVISIBLE);
-
-        findViewById(R.id.user1cardtext).setVisibility(View.INVISIBLE);
-        findViewById(R.id.user2cardtext).setVisibility(View.INVISIBLE);
-        findViewById(R.id.user3cardtext).setVisibility(View.INVISIBLE);
+        setOpponentsCardVisibility(View.INVISIBLE);
 
         setRegularCard(imageCardOpponentUser1);
         setRegularCard(imageCardOpponentUser2);
@@ -674,16 +675,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         return labelLayoutParams;
     }
 
+
+
+
     private void rearrangeCards() {
-//
-//        for (Card card : cardsInHand){
-//            for (String str :UserData.getInstance().getCards()){
-//                if (!String.valueOf(card.imageNum).equals(str)){
-//                    // TODO might be wrong -- maybe need to remove all cards.
-//                    cardsInHand.add(new Card(cardsInHand.size(),Integer.parseInt(str),new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text), str));
-//                }
-//            }
-//        }
+
 
         calcSize();
 
@@ -842,24 +838,18 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
 
     private void setTellerPic() {
+        RelativeLayout.LayoutParams userPicLayeout = (RelativeLayout.LayoutParams) findViewById(R.id.teller).getLayoutParams();
         if (!amITheTeller()) {
-//            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) Game.getGame().currentStoryTeller.userPic.getLayoutParams();
-//
-//            if(Game.getGame().currentStoryTeller.userPic.getX() - 200 > po.x/2){
-//
-//                lp.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX();
-//            }else{
-//                lp.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX() + 300;
-//            }
-//            lp.bottomMargin = (int) Game.getGame().currentStoryTeller.userPic.getY();
-//            findViewById(R.id.teller).setLayoutParams(lp);
+            if(Game.getGame().currentStoryTeller.userPic.getX() - 200 > po.x/2){
+                userPicLayeout.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX();
+            }else{
+                userPicLayeout.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX() + 300;
+            }
+            userPicLayeout.bottomMargin = (int) Game.getGame().currentStoryTeller.userPic.getY();
         } else {
-//            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) findViewById(R.id.teller).getLayoutParams();
-//            lp.leftMargin = (int) (po.x - (lp.width * 1.5));
-//            lp.bottomMargin = (po.y - findViewById(R.id.table).getHeight());
-
+            userPicLayeout .leftMargin = (int) (po.x - (userPicLayeout.width * 1.5));
+            userPicLayeout .bottomMargin = (po.y - findViewById(R.id.table).getHeight());
         }
-
     }
 
     private boolean amITheTeller() {
