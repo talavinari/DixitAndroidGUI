@@ -484,9 +484,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
 //        flashingCardAnim = new AlphaAnimation(context,Xml.asAttributeSet(getResources().getXml(R.animator.flashingcard)));
         flashingCardAnim = new AlphaAnimation(1.0f,0.2f);
-        flashingCardAnim.setDuration(1000);
-        flashingCardAnim.setStartOffset(5000);
-        flashingCardAnim.setFillAfter(true);
+        flashingCardAnim.setDuration(3000);
+        flashingCardAnim.setRepeatMode(AlphaAnimation.REVERSE);
+        flashingCardAnim.setRepeatCount(AlphaAnimation.INFINITE);
 
         findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
         findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
