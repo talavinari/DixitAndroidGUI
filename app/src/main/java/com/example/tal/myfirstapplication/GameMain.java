@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,7 +62,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     AlphaAnimation flashingCardAnim;
     Boolean isFlashingCard = false;
     int draggedCardNum;
-    List<Player> tmpPlayers;
     TextView opponentUserNameTextView1;
     TextView opponentUserNameTextView2;
     TextView opponentUserNameTextView3;
@@ -68,9 +69,16 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     ImageView opponentUserImageView2;
     ImageView opponentUserImageView3;
 
+    ImageView cardImage1;
+    ImageView cardImage2;
+    ImageView cardImage3;
+    ImageView cardImage4;
+    ImageView cardImage5;
+    ImageView cardImage6;
+    List<ImageView> cardsImages;
+
     EditText association;
     Map<ImageView, TextView> imageToTextViewMap = new HashMap<>();
-
 
     TextView cardText1;
     TextView cardText2;
@@ -97,7 +105,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         context = this;
         setCardsInPosition();
-        tmpPlayers = new ArrayList<>();
 
         for (Player player : Game.getGame().players){
             if (!player.name.equals(UserData.getInstance().getNickName(this))){
@@ -125,6 +132,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageToTextViewMap.put(imageCardOpponentUser1, cardText1);
         imageToTextViewMap.put(imageCardOpponentUser2, cardText2);
         imageToTextViewMap.put(imageCardOpponentUser3, cardText3);
+
+        cardImage1 = (ImageView) findViewById(R.id.card1);
+        cardImage2 = (ImageView) findViewById(R.id.card2);
+        cardImage3 = (ImageView) findViewById(R.id.card3);
+        cardImage4 = (ImageView) findViewById(R.id.card4);
+        cardImage5 = (ImageView) findViewById(R.id.card5);
+        cardImage6 = (ImageView) findViewById(R.id.card6);
+        cardsImages = new ArrayList<>(Arrays.asList(new ImageView[]{cardImage1, cardImage2, cardImage3,
+                                                        cardImage4, cardImage5, cardImage6}));
     }
 
     private void initReceivers() {
@@ -245,20 +261,17 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
 
-    private Collection<Integer> getOtherCardsPicked(){
-        Collection<Integer> values = Game.getGame().pickedCards.values();
-        values.remove(myPickedCard);
-        return  values;
-    }
 
     private void handlePickedCardsGUI() {
-        List<Integer> values = new ArrayList<>(getOtherCardsPicked());
+        List<Integer> source = new ArrayList<>(Game.getGame().pickedCards.values());
+        List<Integer> destination = new ArrayList<>();
+         Collections.copy(source, destination);
+        destination.remove(Integer.valueOf(myPickedCard));
+        Collections.shuffle(destination);
 
-        Collections.shuffle(values);
-
-        cardText1.setText(String.valueOf(values.get(0)));
-        cardText2.setText(String.valueOf(values.get(1)));
-        cardText3.setText(String.valueOf(values.get(2)));
+        cardText1.setText(String.valueOf(destination.get(0)));
+        cardText2.setText(String.valueOf(destination.get(1)));
+        cardText3.setText(String.valueOf(destination.get(2)));
 
         cardText1.setVisibility(View.VISIBLE);
         cardText2.setVisibility(View.VISIBLE);
@@ -550,18 +563,32 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void handleCards() {
+
+        for (int i=0; i<cardsImages.size() ; i++){
+            cardsImages.get(i).setImageDrawable(
+                    getImageByCardNumber(UserData.getInstance().getCards().get(i)));
+        }
+
         cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1),
-                (ImageView) findViewById(R.id.card1), this,
+                cardImage1, this,
                 (TextView) findViewById(R.id.card1text),
                 UserData.getInstance().getCards().get(0)));
         cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1),
-                (ImageView) findViewById(R.id.card2), this,
+                cardImage2, this,
                 (TextView) findViewById(R.id.card2text),
                 UserData.getInstance().getCards().get(1)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card3), this, (TextView) findViewById(R.id.card3text), UserData.getInstance().getCards().get(2)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card4), this, (TextView) findViewById(R.id.card4text), UserData.getInstance().getCards().get(3)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card5), this, (TextView) findViewById(R.id.card5text), UserData.getInstance().getCards().get(4)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), (ImageView) findViewById(R.id.card6), this, (TextView) findViewById(R.id.card6text), UserData.getInstance().getCards().get(5)));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), cardImage3, this, (TextView) findViewById(R.id.card3text), UserData.getInstance().getCards().get(2)));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), cardImage4, this, (TextView) findViewById(R.id.card4text), UserData.getInstance().getCards().get(3)));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), cardImage5, this, (TextView) findViewById(R.id.card5text), UserData.getInstance().getCards().get(4)));
+        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), cardImage6, this, (TextView) findViewById(R.id.card6text), UserData.getInstance().getCards().get(5)));
+    }
+
+    private Drawable getImageByCardNumber(String cardNumber) {
+        return getResources().getDrawable(getDrawableID(cardNumber), getApplicationContext().getTheme());
+    }
+
+    private int getDrawableID(String cardNumber) {
+        return  this.getResources().getIdentifier(Constants.IMG_PREFIX+cardNumber, "drawable", this.getPackageName());
     }
 
     private void setAllCards(int w, int h) {

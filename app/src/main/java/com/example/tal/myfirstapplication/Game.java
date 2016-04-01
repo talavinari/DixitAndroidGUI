@@ -18,7 +18,7 @@ public class Game {
     String currentAssociation;
     int currentWinningCard;
     List<Player> winners;
-    GameState gameState;
+    GameState gameState = GameState.WAITING_FOR_ASSOCIATION;
 
     private static Game game = new Game();
 
@@ -80,8 +80,20 @@ public class Game {
             }
         }
 
+        if (countCorrect == 0){
+            add2PointToAllExceptTeller();
+        }
+
         if (countCorrect != 0 && countCorrect !=Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1){
             currentStoryTeller.score += 3;
+        }
+    }
+
+    private void add2PointToAllExceptTeller() {
+        for (Player p: players){
+            if (!p.equals(currentStoryTeller)){
+                p.score += 2;
+            }
         }
     }
 
