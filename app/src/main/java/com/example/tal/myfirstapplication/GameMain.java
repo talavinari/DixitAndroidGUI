@@ -302,7 +302,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 break;
 
             case WAITING_FOR_ASSOCIATION:
-                if (getListPlaceByView(v) != -1 && amITheTeller()) {
+                if (getListPlaceByView(v) != -1) {
                     int i = getListPlaceByView(v);
                     if (v.getLayoutParams().height < cardSize * 5 && i >= 0) {
                         setBigCardLayout(getListPlaceByView(v));
