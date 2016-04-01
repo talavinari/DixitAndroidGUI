@@ -33,7 +33,6 @@ public class Requests{
             URL url = new URL(urlString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.disconnect();
-
             System.setProperty("http.keepAlive", "false");
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoInput(true);

@@ -336,6 +336,16 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 }
                 break;
             case PICKING_CARDS:
+                if (!amITheTeller() || !isCardOnTable) {
+                    draggedCardNum = getListPlaceByView(v);
+                    draggedView = cardsInHand.get(draggedCardNum);
+                    View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+                    v.startDrag(data, shadowBuilder, v, 0);
+                    GameMain.vib.vibrate(20);
+                    targetCard.setVisibility(View.VISIBLE);
+                    targetCard.bringToFront();
+                    return true;
+                }
                 break;
 
             case WAITING_FOR_ASSOCIATION:
