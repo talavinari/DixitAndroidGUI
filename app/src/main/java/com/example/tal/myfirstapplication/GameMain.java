@@ -23,7 +23,9 @@ import android.widget.TextView;
 import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -64,6 +66,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     ImageView opponentUserImageView3;
 
     EditText association;
+    Map<ImageView, TextView> imageToTextViewMap = new HashMap<>();
 
 
     TextView cardText1;
@@ -112,6 +115,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageCardOpponentUser1 = (ImageView) findViewById(R.id.user1card);
         imageCardOpponentUser2 = (ImageView) findViewById(R.id.user2card);
         imageCardOpponentUser3 = (ImageView) findViewById(R.id.user3card);
+
+        imageToTextViewMap = new HashMap<>();
+        imageToTextViewMap.put(imageCardOpponentUser1, cardText1);
+        imageToTextViewMap.put(imageCardOpponentUser2, cardText2);
+        imageToTextViewMap.put(imageCardOpponentUser3, cardText3);
     }
 
     private void initReceivers() {
@@ -284,8 +292,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public void onClick(View v) {
         switch (Game.getGame().gameState){
             case VOTING:
-                flashingCardAnim.end();
-
+                if (isOneOfOpponentsCards(v)){
+                    flashingCardAnim.end();
+                    new VoteTask(this).execute(imageToTextViewMap.get(v).getText().toString());
+                }
                 break;
             case PICKING_CARDS:
 
@@ -320,9 +330,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public boolean onLongClick(View v) {
         switch (Game.getGame().gameState){
             case VOTING:
-                flashingCardAnim = (AnimatorSet) AnimatorInflater.loadAnimator(context,R.animator.flashingcard);
-                flashingCardAnim.start();
-// TODO
+                if (isOneOfOpponentsCards(v)) {
+                    flashingCardAnim = (AnimatorSet) AnimatorInflater.loadAnimator(context,R.animator.flashingcard);
+                    flashingCardAnim.start();
+                }
                 break;
             case PICKING_CARDS:
 
@@ -344,6 +355,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 break;
         }
         return false;
+    }
+
+    private boolean isOneOfOpponentsCards(View v) {
+        return v.equals(imageCardOpponentUser1) ||v.equals(imageCardOpponentUser2) ||v.equals(imageCardOpponentUser3);
     }
 
     @Override
