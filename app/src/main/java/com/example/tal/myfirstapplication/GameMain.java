@@ -426,13 +426,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     draggedView.setVisibility(View.VISIBLE);
                     draggedView.bringToFront();
                     isCardOnTable = true;
+                    String pickedCard = draggedView.tv.getText().toString();
+                    myPickedCard = Integer.valueOf(pickedCard);
 //                    draggedView.setVisibility(View.VISIBLE);
                     if (amITheTeller()) {
                         findViewById(R.id.association).setVisibility(View.VISIBLE);
                     }else{
-                        String pickedCard = draggedView.tv.getText().toString();
-                        myPickedCard = Integer.valueOf(pickedCard);
-                        Game.getGame().setPickedCardForPlayer(UserData.getInstance().getNickName(context), myPickedCard);
+                        notiySelfPicked();
                         new PickCardTask(this).execute(pickedCard) ;
                     }
                     return true;
@@ -455,6 +455,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             default:
                 return true;
         }
+    }
+
+    private void notiySelfPicked() {
+        Game.getGame().setPickedCardForPlayer(UserData.getInstance().getNickName(context), myPickedCard);
     }
 
     private Player attachImageToPlayer(Player player){
@@ -720,6 +724,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             String association = associationEditText.getText().toString();
             Game.getGame().currentAssociation = association;
             Game.getGame().currentWinningCard = draggedCardNum;
+            notiySelfPicked();
             new SendAssociationTask(context).execute(draggedView.tv.getText().toString(),
                     association);
 
