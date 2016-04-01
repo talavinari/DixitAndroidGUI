@@ -26,7 +26,6 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -267,8 +266,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         }
     }
 
-
-
     private void handlePickedCardsGUI() {
         List<Integer> values = new ArrayList<>();
         for (Integer picked : Game.getGame().pickedCards.values()){
@@ -290,10 +287,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageCardOpponentUser2.setVisibility(View.VISIBLE);
         imageCardOpponentUser3.setVisibility(View.VISIBLE);
 
+        imageCardOpponentUser1.setImageDrawable(getImageByCardNumber(String.valueOf(values.get(0))));
+        imageCardOpponentUser2.setImageDrawable(getImageByCardNumber(String.valueOf(values.get(1))));
+        imageCardOpponentUser3.setImageDrawable(getImageByCardNumber(String.valueOf(values.get(2))));
+
         imageCardOpponentUser1.setOnLongClickListener(this);
         imageCardOpponentUser2.setOnLongClickListener(this);
         imageCardOpponentUser3.setOnLongClickListener(this);
-
     }
 
     private void updateGUI() {
@@ -301,9 +301,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         //setTellerPic();
         // TODO get card.
 
-        findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
-        findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
-        findViewById(R.id.user3card).setVisibility(View.INVISIBLE);
+        imageCardOpponentUser1.setVisibility(View.INVISIBLE);
+        imageCardOpponentUser2.setVisibility(View.INVISIBLE);
+        imageCardOpponentUser3.setVisibility(View.INVISIBLE);
 
     }
 
@@ -368,9 +368,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                         setAllCards(cardSize, cardSize * 2);
                     }
                 } else if (
-                        v == findViewById(R.id.user1card) ||
-                                v == findViewById(R.id.user2card) ||
-                                v == findViewById(R.id.user3card)) {
+                        oneOfOpponentPickedCards(v)) {
                     if (v.getLayoutParams().height < cardSize * 5){
                         setBigCard(v);
                     }else{
@@ -382,6 +380,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 break;
         }
 
+    }
+
+    private boolean oneOfOpponentPickedCards(View v) {
+        return v == imageCardOpponentUser1 ||
+                v == imageCardOpponentUser2 ||
+                v == imageCardOpponentUser3;
     }
 
     @Override
@@ -515,9 +519,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         handleCards();
         calcSize();
 
-        findViewById(R.id.user1card).setOnClickListener(this);
-        findViewById(R.id.user2card).setOnClickListener(this);
-        findViewById(R.id.user3card).setOnClickListener(this);
+        imageCardOpponentUser1.setOnClickListener(this);
+        imageCardOpponentUser2.setOnClickListener(this);
+        imageCardOpponentUser3.setOnClickListener(this);
 
         findViewById(R.id.teller).setVisibility(View.INVISIBLE);
 
@@ -534,21 +538,17 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         flashingCardAnim.setRepeatMode(AlphaAnimation.REVERSE);
         flashingCardAnim.setRepeatCount(AlphaAnimation.INFINITE);
 
-        findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
-        findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
-        findViewById(R.id.user3card).setVisibility(View.INVISIBLE);
+        imageCardOpponentUser1.setVisibility(View.INVISIBLE);
+        imageCardOpponentUser2.setVisibility(View.INVISIBLE);
+        imageCardOpponentUser3.setVisibility(View.INVISIBLE);
+
         findViewById(R.id.user1cardtext).setVisibility(View.INVISIBLE);
         findViewById(R.id.user2cardtext).setVisibility(View.INVISIBLE);
         findViewById(R.id.user3cardtext).setVisibility(View.INVISIBLE);
 
-
-//        findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
-//        findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
-//        findViewById(R.id.user3card).setVisibility(View.INVISIBLE);
-
-        setRegularCard(findViewById(R.id.user1card));
-        setRegularCard(findViewById(R.id.user2card));
-       // setRegularCard(findViewById(R.id.user3card));
+        setRegularCard(imageCardOpponentUser1);
+        setRegularCard(imageCardOpponentUser2);
+        setRegularCard(imageCardOpponentUser3);
 
         findViewById(R.id.association).setOnKeyListener(this);
 
@@ -572,7 +572,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void handleCards() {
-
         for (int i=0; i<cardsImages.size() ; i++){
             cardsImages.get(i).setImageDrawable(
                     getImageByCardNumber(UserData.getInstance().getCards().get(i)));
