@@ -480,9 +480,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         flashingCardAnim.setStartOffset(5000);
         flashingCardAnim.setFillAfter(true);
 
-
-        AnimatorInflater.loadAnimator(context,R.animator.flashingcard);
-
         findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
         findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
         findViewById(R.id.user3card).setVisibility(View.INVISIBLE);
