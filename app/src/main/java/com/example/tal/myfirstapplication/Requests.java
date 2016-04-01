@@ -1,6 +1,8 @@
 package com.example.tal.myfirstapplication;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -11,6 +13,7 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -29,8 +32,12 @@ public class Requests{
         try {
             URL url = new URL(urlString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.disconnect();
+
+            System.setProperty("http.keepAlive", "false");
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoInput(true);
+            urlConnection.connect();
             InputStream is = new BufferedInputStream(urlConnection.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
@@ -51,6 +58,8 @@ public class Requests{
         try {
             URL url = new URL(urlString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("connection", "close");
+            System.setProperty("http.keepAlive", "false");
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setDoInput(true);
@@ -80,6 +89,8 @@ public class Requests{
         try {
             URL url = new URL(urlString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("connection", "close");
+            System.setProperty("http.keepAlive", "false");
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "text/plain");
             urlConnection.setDoInput(true);
@@ -126,6 +137,8 @@ public class Requests{
         try {
             URL url = new URL(urlString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("connection", "close");
+            System.setProperty("http.keepAlive", "false");
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setDoInput(true);

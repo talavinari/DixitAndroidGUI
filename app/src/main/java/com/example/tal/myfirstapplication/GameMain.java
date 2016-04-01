@@ -20,9 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,6 +52,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     AnimatorSet antext1;
     AnimatorSet antext2;
     AnimatorSet antext3;
+    AnimatorSet flashingCardAnim;
+    View flashingCard;
     int draggedCardNum;
     List<Player> tmpPlayers;
     TextView userTextView1;
@@ -86,7 +86,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         tmpPlayers = new ArrayList<>();
 
 
-        for (Player player : GameState.getGame().players){
+        for (Player player : Game.getGame().players){
             if (!player.name.equals(UserData.getInstance().getNickName(this))){
                 attachImageToPlayer(player);
             }
@@ -148,8 +148,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         String playerName = data.getString(Constants.PLAYER_NAME);
         if (checkNotSelfNotification(playerName)) {
             int pickedCard = Integer.parseInt(data.getString(Constants.WINNING_CARD));
-            GameState.getGame().setPickedCardForPlayer(playerName, pickedCard);
-            if (GameState.getGame().allPlayersPicked()) {
+            Game.getGame().setPickedCardForPlayer(playerName, pickedCard);
+            if (Game.getGame().allPlayersPicked()) {
+                Game.getGame().gameState = GameState.VOTING;
                 handlePickedCardsGUI();
             }
         }
@@ -163,7 +164,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         String playerName = data.getString(Constants.PLAYER_NAME);
         if (checkNotSelfNotification(playerName)) {
             int votedCard = data.getInt(Constants.VOTED_CARD);
-            GameState game = GameState.getGame();
+            Game game = Game.getGame();
             game.setVoteForPlayer(playerName, votedCard);
             if (game.votes.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1) {
                 game.calculateScore();
@@ -174,6 +175,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     handleWinningGUI();
                     return;
                 }
+                Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
             }
 
             updateGUI();
@@ -182,7 +184,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void handleWinningGUI() {
         // TODO winnig GUI - Unsubscribe from topic + cant touch anything
-        List<Player> winners = GameState.getGame().winners;
+        List<Player> winners = Game.getGame().winners;
 
 
     }
@@ -192,16 +194,17 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         //Maybe player name is redundant?
         String playerName = data.getString(Constants.PLAYER_NAME);
         int pickedWinner = Integer.valueOf(data.getString(Constants.WINNING_CARD));
-        GameState.getGame().currentWinningCard = pickedWinner;
-        GameState.getGame().currentAssociation = data.getString(Constants.ASSOCIATION);
-        GameState.getGame().setPickedCardForPlayer(playerName, pickedWinner);
+        Game.getGame().currentWinningCard = pickedWinner;
+        Game.getGame().currentAssociation = data.getString(Constants.ASSOCIATION);
+        Game.getGame().setPickedCardForPlayer(playerName, pickedWinner);
         handleAssociationGUI();
+        Game.getGame().gameState = GameState.PICKING_CARDS;
     }
 
     private void handleAssociationGUI() {
         // TODO handle association received GUI
 
-        association.setText(GameState.getGame().currentAssociation);
+        association.setText(Game.getGame().currentAssociation);
         association.setVisibility(View.VISIBLE);
         association.setKeyListener(null);
 
@@ -213,7 +216,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
 
     private void handlePickedCardsGUI() {
-        List<Integer> values = new ArrayList<>(GameState.getGame().pickedCards.values());
+        List<Integer> values = new ArrayList<>(Game.getGame().pickedCards.values());
         Collections.shuffle(values);
 
         cardText1.setText(String.valueOf(values.get(0)));
@@ -226,6 +229,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         findViewById(R.id.user1cardtext).setVisibility(View.VISIBLE);
         findViewById(R.id.user2cardtext).setVisibility(View.VISIBLE);
         findViewById(R.id.user3cardtext).setVisibility(View.VISIBLE);
+
 
     }
 
@@ -246,17 +250,18 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         // Excluding self notification
         if (checkNotSelfNotification(playerName)) {
             int index = Integer.valueOf(data.getString(Constants.INDEX));
-            GameState.getGame().addPlayer(attachImageToPlayer(new Player(playerName, index)));
+            Game.getGame().addPlayer(attachImageToPlayer(new Player(playerName, index)));
         }
 
-        if (GameState.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
+        if (Game.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
             startGameGUI();
+            Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
         }
     }
 
     private void startGameGUI() {
         // TODO handle GUI of start
-        GameState.getGame().setFirstStoryTeller();
+        Game.getGame().setFirstStoryTeller();
         setTellerPic();
     }
 
@@ -269,36 +274,66 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     @Override
     public void onClick(View v) {
-        if (getListPlaceByView(v) != -1) {
-            int i = getListPlaceByView(v);
-            if (v.getLayoutParams().height < cardSize * 5 && i >= 0) {
-                setBigCardLayout(getListPlaceByView(v));
-            } else {
-                setAllCards(cardSize, cardSize * 2);
-            }
-        } else if (
-                v == findViewById(R.id.user1card) ||
-                        v == findViewById(R.id.user2card) ||
-                        v == findViewById(R.id.user3card)) {
-            if (v.getLayoutParams().height < cardSize * 5){
-                setBigCard(v);
-            }else{
-                setRegularCard(v);
-            }
+        switch (Game.getGame().gameState){
+            case VOTING:
+                flashingCardAnim.end();
+
+                break;
+            case PICKING_CARDS:
+
+                break;
+
+            case WAITING_FOR_ASSOCIATION:
+                if (getListPlaceByView(v) != -1 && amITheTeller()) {
+                    int i = getListPlaceByView(v);
+                    if (v.getLayoutParams().height < cardSize * 5 && i >= 0) {
+                        setBigCardLayout(getListPlaceByView(v));
+                    } else {
+                        setAllCards(cardSize, cardSize * 2);
+                    }
+                } else if (
+                        v == findViewById(R.id.user1card) ||
+                                v == findViewById(R.id.user2card) ||
+                                v == findViewById(R.id.user3card)) {
+                    if (v.getLayoutParams().height < cardSize * 5){
+                        setBigCard(v);
+                    }else{
+                        setRegularCard(v);
+                    }
+                }
+                break;
+            default:
+                break;
         }
+
     }
 
     @Override
     public boolean onLongClick(View v) {
-        if (!isCardOnTable) {
-            draggedCardNum = getListPlaceByView(v);
-            draggedView = cardsInHand.get(draggedCardNum);
-            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
-            v.startDrag(data, shadowBuilder, v, 0);
-            GameMain.vib.vibrate(20);
-            targetCard.setVisibility(View.VISIBLE);
-            targetCard.bringToFront();
-            return true;
+        switch (Game.getGame().gameState){
+            case VOTING:
+                flashingCardAnim = (AnimatorSet) AnimatorInflater.loadAnimator(context,R.animator.flashingcard);
+                flashingCardAnim.start();
+// TODO
+                break;
+            case PICKING_CARDS:
+
+                if (!isCardOnTable) {
+                    draggedCardNum = getListPlaceByView(v);
+                    draggedView = cardsInHand.get(draggedCardNum);
+                    View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+                    v.startDrag(data, shadowBuilder, v, 0);
+                    GameMain.vib.vibrate(20);
+                    targetCard.setVisibility(View.VISIBLE);
+                    targetCard.bringToFront();
+                    return true;
+                }
+                break;
+
+            case WAITING_FOR_ASSOCIATION:
+                break;
+            default:
+                break;
         }
         return false;
     }
@@ -611,13 +646,14 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             EditText associationEditText = (EditText)findViewById(R.id.association);
             associationEditText.setVisibility(View.INVISIBLE);
             String association = associationEditText.getText().toString();
-            GameState.getGame().currentAssociation = association;
-            GameState.getGame().currentWinningCard = draggedCardNum;
+            Game.getGame().currentAssociation = association;
+            Game.getGame().currentWinningCard = draggedCardNum;
             new SendAssociationTask(context).execute(draggedView.tv.getText().toString(),
                     association);
 
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            Game.getGame().gameState = GameState.PICKING_CARDS;
         }
 
         return false;
@@ -652,15 +688,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void setTellerPic() {
         if(!amITheTeller()) {
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) GameState.getGame().currentStoryTeller.userPic.getLayoutParams();
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) Game.getGame().currentStoryTeller.userPic.getLayoutParams();
 
-            if(GameState.getGame().currentStoryTeller.userPic.getX() - 200 > po.x/2){
+            if(Game.getGame().currentStoryTeller.userPic.getX() - 200 > po.x/2){
 
-                lp.leftMargin = (int) GameState.getGame().currentStoryTeller.userPic.getX();
+                lp.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX();
             }else{
-                lp.leftMargin = (int) GameState.getGame().currentStoryTeller.userPic.getX() + 300;
+                lp.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX() + 300;
             }
-            lp.bottomMargin = (int) GameState.getGame().currentStoryTeller.userPic.getY();
+            lp.bottomMargin = (int) Game.getGame().currentStoryTeller.userPic.getY();
             findViewById(R.id.teller).setLayoutParams(lp);
         }else{
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) findViewById(R.id.teller).getLayoutParams();
@@ -672,7 +708,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private boolean amITheTeller() {
-        return GameState.getGame().currentStoryTeller.name.equals(UserData.getInstance().getNickName(this));
+        return Game.getGame().currentStoryTeller.name.equals(UserData.getInstance().getNickName(this));
     }
 }
 

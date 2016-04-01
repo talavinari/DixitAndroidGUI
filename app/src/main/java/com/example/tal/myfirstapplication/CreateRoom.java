@@ -47,13 +47,13 @@ public class CreateRoom extends Activity {
                 sendingJSON.put(Constants.NAME_FIELD, nickName);
                 sendingJSON.put(Constants.ROOM_FIELD, roomName);
 
-                GameState.initGame();
+                Game.initGame();
                 String responseJSON = Requests.doPostWithResponse(Constants.ADD_ROOM_API_URL, sendingJSON);
                 JSONObject response = new JSONObject(responseJSON);
                 String cards = (String) response.get("cards");
                 UserData.getInstance().setCards(cards);
 
-                GameState.getGame().addPlayer(new Player(nickName, 1));
+                Game.getGame().addPlayer(new Player(nickName, 1));
 
 
 //                if (checkPlayServices()) {

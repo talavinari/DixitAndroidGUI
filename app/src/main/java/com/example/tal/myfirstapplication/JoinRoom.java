@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
@@ -20,8 +19,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONArray;
@@ -162,7 +159,7 @@ public class JoinRoom extends Activity implements View.OnClickListener {
         @Override
         protected String doInBackground(String... params) {
             try {
-                GameState.initGame();
+                Game.initGame();
                 String responseJSON = Requests.doPostWithResponse(Constants.ADD_PLAYER_TO_ROOM_API_URL, getBasicInfoJSON());
                 parseJsonResponse(responseJSON);
 
@@ -187,10 +184,10 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                         String playerName = playerJSON.getString("name");
 
                         Player p = new Player(playerName, playerJSON.getInt("index"));
-                        GameState.getGame().addPlayer(p);
+                        Game.getGame().addPlayer(p);
                     }
 
-                    GameState.getGame().setFirstStoryTeller();
+                    Game.getGame().setFirstStoryTeller();
                 } else {
                     Intent intent = new Intent(QuickstartPreferences.ERROR_IN_JOIN_ROOM);
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
