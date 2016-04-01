@@ -8,13 +8,16 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Xml;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -54,7 +57,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     AnimatorSet antext1;
     AnimatorSet antext2;
     AnimatorSet antext3;
-    AnimatorSet flashingCardAnim;
+    AlphaAnimation flashingCardAnim;
     Boolean isFlashingCard = false;
     int draggedCardNum;
     List<Player> tmpPlayers;
@@ -90,9 +93,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         po = new Point();
         data = ClipData.newPlainText("", "");
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        context = this;
         setCardsInPosition();
         tmpPlayers = new ArrayList<>();
-        context = this;
 
         for (Player player : Game.getGame().players){
             if (!player.name.equals(UserData.getInstance().getNickName(this))){
@@ -292,8 +295,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public void onClick(View v) {
         switch (Game.getGame().gameState){
             case VOTING:
-                if (isOneOfOpponentsCards(v) ){
-                    flashingCardAnim.end();
+                if (isOneOfOpponentsCards(v) && v.getAnimation() != null){
+                    flashingCardAnim.cancel();
                     isFlashingCard = false;
                     new VoteTask(this).execute(imageToTextViewMap.get(v).getText().toString());
                 }
@@ -340,8 +343,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             case VOTING:
                 if (isOneOfOpponentsCards(v)) {
                     setRegularCard(v);
-                    flashingCardAnim.setTarget(v);
-                    flashingCardAnim.start();
+                    v.startAnimation(flashingCardAnim);
+                        //flashingCardAnim.start();
                     isFlashingCard = true;
                 }
                 break;
@@ -471,7 +474,14 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         findViewById(R.id.username2).setVisibility(View.INVISIBLE);
         findViewById(R.id.username3).setVisibility(View.INVISIBLE);
 
-        flashingCardAnim = (AnimatorSet) AnimatorInflater.loadAnimator(context,R.animator.flashingcard);
+//        flashingCardAnim = new AlphaAnimation(context,Xml.asAttributeSet(getResources().getXml(R.animator.flashingcard)));
+        flashingCardAnim = new AlphaAnimation(1.0f,0.2f);
+        flashingCardAnim.setDuration(1000);
+        flashingCardAnim.setStartOffset(5000);
+        flashingCardAnim.setFillAfter(true);
+
+
+        AnimatorInflater.loadAnimator(context,R.animator.flashingcard);
 
         findViewById(R.id.user1card).setVisibility(View.INVISIBLE);
         findViewById(R.id.user2card).setVisibility(View.INVISIBLE);
