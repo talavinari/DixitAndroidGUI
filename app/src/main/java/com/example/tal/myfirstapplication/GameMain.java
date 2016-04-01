@@ -171,10 +171,14 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         if (checkNotSelfNotification(playerName)) {
             int pickedCard = Integer.parseInt(data.getString(Constants.WINNING_CARD));
             Game.getGame().setPickedCardForPlayer(playerName, pickedCard);
-            if (Game.getGame().allPlayersPicked()) {
-                Game.getGame().gameState = GameState.VOTING;
-                handlePickedCardsGUI();
-            }
+            handleAfterAllPickedCrads();
+        }
+    }
+
+    private void handleAfterAllPickedCrads() {
+        if (Game.getGame().allPlayersPicked()) {
+            Game.getGame().gameState = GameState.VOTING;
+            handlePickedCardsGUI();
         }
     }
 
@@ -186,23 +190,25 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         String playerName = data.getString(Constants.PLAYER_NAME);
         if (checkNotSelfNotification(playerName)) {
             int votedCard = Integer.valueOf(data.getString(Constants.VOTED_CARD));
-            Game game = Game.getGame();
-            game.setVoteForPlayer(playerName, votedCard);
-            if (game.votes.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1) {
-                game.calculateScore();
-                if (game.noWinner()) {
-                    game.continueToNextStory();
-                }
-                else{
-                    handleWinningGUI();
-                    return;
-                }
-                Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
-                // TODO -- after 2 second delay - for show the winner and score
-                updateGUI();
+            Game.getGame().setVoteForPlayer(playerName, votedCard);
+            handleAfterAllVotes();
+        }
+    }
+
+    private void handleAfterAllVotes() {
+        Game game = Game.getGame();
+        if (game.votes.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1) {
+            game.calculateScore();
+            if (game.noWinner()) {
+                game.continueToNextStory();
             }
-
-
+            else{
+                handleWinningGUI();
+                return;
+            }
+            Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
+            // TODO -- after 2 second delay - for show the winner and score
+            updateGUI();
         }
     }
 
@@ -317,6 +323,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     isFlashingCard = false;
                     String votedCard = imageToTextViewMap.get(v).getText().toString();
                     Game.getGame().setVoteForPlayer(UserData.getInstance().getNickName(context), Integer.valueOf(votedCard));
+                    handleAfterAllVotes();
                     new VoteTask(this).execute(votedCard);
                 }
                 break;
@@ -433,6 +440,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                         findViewById(R.id.association).setVisibility(View.VISIBLE);
                     }else{
                         notifySelfPicked();
+                        handleAfterAllPickedCrads();
                         new PickCardTask(this).execute(pickedCard) ;
                     }
                     return true;
