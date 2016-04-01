@@ -336,8 +336,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 }
                 break;
             case PICKING_CARDS:
+                break;
 
-                if (!isCardOnTable) {
+            case WAITING_FOR_ASSOCIATION:
+//
+                if (amITheTeller() || !isCardOnTable) {
                     draggedCardNum = getListPlaceByView(v);
                     draggedView = cardsInHand.get(draggedCardNum);
                     View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
@@ -347,9 +350,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     targetCard.bringToFront();
                     return true;
                 }
-                break;
-
-            case WAITING_FOR_ASSOCIATION:
                 break;
             default:
                 break;
