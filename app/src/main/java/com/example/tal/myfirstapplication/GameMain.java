@@ -182,7 +182,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void notifyVote(Bundle data) {
         String playerName = data.getString(Constants.PLAYER_NAME);
         if (checkNotSelfNotification(playerName)) {
-            int votedCard = data.getInt(Constants.VOTED_CARD);
+            int votedCard = Integer.valueOf(data.getString(Constants.VOTED_CARD));
             Game game = Game.getGame();
             game.setVoteForPlayer(playerName, votedCard);
             if (game.votes.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1) {
