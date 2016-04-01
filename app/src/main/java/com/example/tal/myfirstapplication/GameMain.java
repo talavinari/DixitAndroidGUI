@@ -432,7 +432,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     if (amITheTeller()) {
                         findViewById(R.id.association).setVisibility(View.VISIBLE);
                     }else{
-                        notiySelfPicked();
+                        notifySelfPicked();
                         new PickCardTask(this).execute(pickedCard) ;
                     }
                     return true;
@@ -457,7 +457,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         }
     }
 
-    private void notiySelfPicked() {
+    private void notifySelfPicked() {
         Game.getGame().setPickedCardForPlayer(UserData.getInstance().getNickName(context), myPickedCard);
     }
 
@@ -723,11 +723,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             associationEditText.setVisibility(View.INVISIBLE);
             String association = associationEditText.getText().toString();
             Game.getGame().currentAssociation = association;
-            Game.getGame().currentWinningCard = draggedCardNum;
-            notiySelfPicked();
-            new SendAssociationTask(context).execute(draggedView.tv.getText().toString(),
+            Game.getGame().currentWinningCard = myPickedCard;
+            new SendAssociationTask(context).execute(String.valueOf(myPickedCard),
                     association);
-
+            notifySelfPicked();
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             Game.getGame().gameState = GameState.PICKING_CARDS;
