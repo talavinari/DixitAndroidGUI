@@ -480,7 +480,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
 //        flashingCardAnim = new AlphaAnimation(context,Xml.asAttributeSet(getResources().getXml(R.animator.flashingcard)));
         flashingCardAnim = new AlphaAnimation(1.0f,0.2f);
-        flashingCardAnim.setDuration(3000);
+        flashingCardAnim.setDuration(300);
         flashingCardAnim.setRepeatMode(AlphaAnimation.REVERSE);
         flashingCardAnim.setRepeatCount(AlphaAnimation.INFINITE);
 
