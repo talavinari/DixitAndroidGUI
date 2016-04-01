@@ -56,17 +56,22 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     View flashingCard;
     int draggedCardNum;
     List<Player> tmpPlayers;
-    TextView userTextView1;
-    TextView userTextView2;
-    TextView userTextView3;
-    ImageView userImageView1;
-    ImageView userImageView2;
-    ImageView userImageView3;
+    TextView opponentUserNameTextView1;
+    TextView opponentUserNameTextView2;
+    TextView opponentUserNameTextView3;
+    ImageView opponentUserImageView1;
+    ImageView opponentUserImageView2;
+    ImageView opponentUserImageView3;
+
     EditText association;
+
+
     TextView cardText1;
     TextView cardText2;
     TextView cardText3;
-
+    ImageView imageCardOpponentUser1;
+    ImageView imageCardOpponentUser2;
+    ImageView imageCardOpponentUser3;
 
     BroadcastReceiver googleCloudBroadcastReceiver;
     BroadcastReceiver inApplicationBroadcastReceiver;
@@ -94,16 +99,19 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void findViews() {
-        userTextView1 = (TextView) findViewById(R.id.username1);
-        userTextView2 = (TextView) findViewById(R.id.username2);
-        userTextView3 = (TextView) findViewById(R.id.username3);
-        userImageView1 = (ImageView) findViewById(R.id.user1);
-        userImageView2 = (ImageView) findViewById(R.id.user2);
-        userImageView3 = (ImageView) findViewById(R.id.user3);
+        opponentUserNameTextView1 = (TextView) findViewById(R.id.username1);
+        opponentUserNameTextView2 = (TextView) findViewById(R.id.username2);
+        opponentUserNameTextView3 = (TextView) findViewById(R.id.username3);
+        opponentUserImageView1 = (ImageView) findViewById(R.id.user1);
+        opponentUserImageView2 = (ImageView) findViewById(R.id.user2);
+        opponentUserImageView3 = (ImageView) findViewById(R.id.user3);
         association = (EditText) findViewById(R.id.association);
-        cardText1 = (TextView) findViewById(R.id.user3cardtext);
+        cardText1 = (TextView) findViewById(R.id.user1cardtext);
         cardText2 = (TextView) findViewById(R.id.user2cardtext);
-        cardText3 = (TextView) findViewById(R.id.user1cardtext);
+        cardText3 = (TextView) findViewById(R.id.user3cardtext);
+        imageCardOpponentUser1 = (ImageView) findViewById(R.id.user1card);
+        imageCardOpponentUser2 = (ImageView) findViewById(R.id.user2card);
+        imageCardOpponentUser3 = (ImageView) findViewById(R.id.user3card);
     }
 
     private void initReceivers() {
@@ -223,13 +231,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         cardText2.setText(String.valueOf(values.get(1)));
         cardText3.setText(String.valueOf(values.get(2)));
 
-        findViewById(R.id.user1card).setVisibility(View.VISIBLE);
-        findViewById(R.id.user2card).setVisibility(View.VISIBLE);
-        findViewById(R.id.user3card).setVisibility(View.VISIBLE);
-        findViewById(R.id.user1cardtext).setVisibility(View.VISIBLE);
-        findViewById(R.id.user2cardtext).setVisibility(View.VISIBLE);
-        findViewById(R.id.user3cardtext).setVisibility(View.VISIBLE);
+        cardText1.setVisibility(View.VISIBLE);
+        cardText2.setVisibility(View.VISIBLE);
+        cardText3.setVisibility(View.VISIBLE);
 
+        imageCardOpponentUser1.setVisibility(View.VISIBLE);
+        imageCardOpponentUser2.setVisibility(View.VISIBLE);
+        imageCardOpponentUser3.setVisibility(View.VISIBLE);
 
     }
 
@@ -391,20 +399,20 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private Player attachImageToPlayer(Player player){
-        if(userTextView1.getText().toString().equals(getString(R.string.noNameUser))){
-            userTextView1.setText(player.name);
-            player.userPic = userImageView1;
-            player.username = userTextView1;
+        if(opponentUserNameTextView1.getText().toString().equals(getString(R.string.noNameUser))){
+            opponentUserNameTextView1.setText(player.name);
+            player.userPic = opponentUserImageView1;
+            player.username = opponentUserNameTextView1;
             player.setVisibility(View.VISIBLE);
-        }else if(userTextView2.getText().toString().equals(getString(R.string.noNameUser))){
-            userTextView2.setText(player.name);
-            player.userPic = userImageView2;
-            player.username = userTextView2;
+        }else if(opponentUserNameTextView2.getText().toString().equals(getString(R.string.noNameUser))){
+            opponentUserNameTextView2.setText(player.name);
+            player.userPic = opponentUserImageView2;
+            player.username = opponentUserNameTextView2;
             player.setVisibility(View.VISIBLE);
-        }else if(userTextView3.getText().toString().equals(getString(R.string.noNameUser))){
-            userTextView3.setText(player.name);
-            player.userPic = userImageView3;
-            player.username = userTextView3;
+        }else if(opponentUserNameTextView3.getText().toString().equals(getString(R.string.noNameUser))){
+            opponentUserNameTextView3.setText(player.name);
+            player.userPic = opponentUserImageView3;
+            player.username = opponentUserNameTextView3;
             player.setVisibility(View.VISIBLE);
         }
         player.setVisibility(View.VISIBLE);
