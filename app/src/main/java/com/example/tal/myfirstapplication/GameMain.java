@@ -272,7 +272,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void handlePickedCardsGUI() {
         List<Integer> source = new ArrayList<>(Game.getGame().pickedCards.values());
         List<Integer> destination = new ArrayList<>();
-         Collections.copy(source, destination);
+         Collections.copy(destination, source);
         destination.remove(Integer.valueOf(myPickedCard));
         Collections.shuffle(destination);
 
