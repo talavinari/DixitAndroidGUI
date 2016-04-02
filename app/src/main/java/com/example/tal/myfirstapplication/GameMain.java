@@ -27,6 +27,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -289,7 +292,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         if (checkNotSelfNotification(playerName)) {
             int pickedWinner = Integer.valueOf(data.getString(Constants.WINNING_CARD));
             Game.getGame().currentWinningCard = pickedWinner;
-            Game.getGame().currentAssociation = data.getString(Constants.ASSOCIATION);
+            String association;
+            try {
+                association = URLDecoder.decode(data.getString(Constants.ASSOCIATION), "UTF8");
+            } catch (UnsupportedEncodingException e) {
+                association = data.getString(Constants.ASSOCIATION);
+            }
+            Game.getGame().currentAssociation = association;
             Game.getGame().setPickedCardForPlayer(playerName, pickedWinner);
 
             Game.getGame().gameState = GameState.PICKING_CARDS;
