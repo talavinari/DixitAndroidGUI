@@ -3,6 +3,7 @@ package com.example.tal.myfirstapplication;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -97,6 +98,17 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     TextView scorePlayer1;
     TextView scorePlayer2;
     TextView scorePlayer3;
+
+
+    // Property animation
+    int user1Startx;
+    int user2Startx;
+    int user3Starty;;
+    int user1Endx;
+    int user2Endx;
+    int user3Endy;
+
+
 
     BroadcastReceiver googleCloudBroadcastReceiver;
     BroadcastReceiver inApplicationBroadcastReceiver;
@@ -600,6 +612,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         handleCards();
         calcSize();
 
+        setPropertyAnimation();
+
+
+
         imageCardOpponentUser1.setOnClickListener(this);
         imageCardOpponentUser2.setOnClickListener(this);
         imageCardOpponentUser3.setOnClickListener(this);
@@ -640,6 +656,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         r.addRule(RelativeLayout.ALIGN_PARENT_START);
         table.setLayoutParams(r);
         table.setOnDragListener(this);
+    }
+
+    private void setPropertyAnimation() {
+            user1Endx = (int) (opponentUserImageView1.getWidth() * -0.5);
+            user1Startx = (int) (opponentUserImageView1.getWidth() *0.5);
+            user2Endx = (int) (po.x - opponentUserImageView2.getWidth() *-0.5);
+            user2Startx = (int) (po.x - opponentUserImageView2.getWidth() *1.5);
+            user3Starty = (int) (po.y + opponentUserImageView3.getWidth() *0.5);
+            user3Endy = (int) (po.y - opponentUserImageView3.getWidth() *1.5);
     }
 
     private void handleCards() {
@@ -750,75 +775,93 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     public void moveUser1(View view) {
+
+        setPropertyAnimation();
+        ObjectAnimator userPicAnimation;
+        ObjectAnimator userTextAnimation;
+        ObjectAnimator userScoreAnimation;
+
         if (usr1) {
-            findViewById(R.id.username1).setVisibility(View.INVISIBLE);
-            findViewById(R.id.score1).setVisibility(View.INVISIBLE);
-            anset1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1moveback);
-            antext1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1moveback);
-            score1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1moveback);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView1, "x", user1Startx, user1Endx);
+            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView1, "x", user1Startx, user1Endx);
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer1, "x", user1Startx, user1Endx);
+            opponentUserNameTextView1.setVisibility(View.INVISIBLE);
+            scorePlayer1.setVisibility(View.INVISIBLE);
             usr1 = false;
         } else {
-            findViewById(R.id.username1).setVisibility(View.VISIBLE);
-            findViewById(R.id.score1).setVisibility(View.VISIBLE);
-            anset1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
-            antext1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
-            score1 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user1movement);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView1, "x", user1Endx, user1Startx);
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView1, "x", user1Endx, user1Startx);
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer1, "x", user1Endx, user1Startx);
+            opponentUserNameTextView1.setVisibility(View.VISIBLE);
+            scorePlayer1.setVisibility(View.VISIBLE);
             usr1 = true;
         }
-        anset1.setTarget(findViewById(R.id.user1));
-        antext1.setTarget(findViewById(R.id.username1));
-        score1.setTarget(findViewById(R.id.score1));
-        anset1.start();
-        antext1.start();
-        score1.start();
+        userPicAnimation.setDuration(300);
+        userTextAnimation.setDuration(300);
+        userScoreAnimation.setDuration(300);
+        userPicAnimation.start();
+        userTextAnimation.start();
+        userScoreAnimation.start();
     }
 
     public void moveUser2(View view) {
+
+        setPropertyAnimation();
+        ObjectAnimator userPicAnimation;
+        ObjectAnimator userTextAnimation;
+        ObjectAnimator userScoreAnimation;
+
         if (usr2) {
-            findViewById(R.id.username2).setVisibility(View.INVISIBLE);
-            findViewById(R.id.score2).setVisibility(View.INVISIBLE);
-            anset2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2moveback);
-            antext2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2moveback);
-            score2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2moveback);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView2, "x", user2Startx, user2Endx);
+            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView2, "x", user2Startx, user2Endx);
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer2, "x", user2Startx, user2Endx);
+            opponentUserNameTextView2.setVisibility(View.INVISIBLE);
+            scorePlayer2.setVisibility(View.INVISIBLE);
             usr2 = false;
         } else {
-            findViewById(R.id.username2).setVisibility(View.VISIBLE);
-            findViewById(R.id.score2).setVisibility(View.VISIBLE);
-            anset2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
-            antext2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
-            score2 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user2movement);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView2, "x", user2Endx, user2Startx);
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView2, "x", user2Endx, user2Startx);
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer2, "x", user2Endx, user2Startx);
+            opponentUserNameTextView2.setVisibility(View.VISIBLE);
+            scorePlayer2.setVisibility(View.VISIBLE);
             usr2 = true;
         }
-        anset2.setTarget(findViewById(R.id.user2));
-        antext2.setTarget(findViewById(R.id.username2));
-        score2.setTarget(findViewById(R.id.score2));
-        anset2.start();
-        antext2.start();
-        score2.start();
+        userPicAnimation.setDuration(300);
+        userTextAnimation.setDuration(300);
+        userScoreAnimation.setDuration(300);
+        userPicAnimation.start();
+        userTextAnimation.start();
+        userScoreAnimation.start();
     }
 
     public void moveUser3(View view) {
+
+        setPropertyAnimation();
+        ObjectAnimator userPicAnimation;
+        ObjectAnimator userTextAnimation;
+        ObjectAnimator userScoreAnimation;
+
         if (usr3) {
-            findViewById(R.id.username3).setVisibility(View.INVISIBLE);
-            findViewById(R.id.score3).setVisibility(View.INVISIBLE);
-            anset3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user3moveback);
-            antext3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.text3moveback);
-            score3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.score3moveback);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "x", user3Starty, user3Endy);
+            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView1, "x", user3Starty, user3Endy);
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "x", user3Starty, user3Endy);
+            opponentUserNameTextView3.setVisibility(View.INVISIBLE);
+            scorePlayer3.setVisibility(View.INVISIBLE);
             usr3 = false;
         } else {
-            findViewById(R.id.username3).setVisibility(View.VISIBLE);
-            findViewById(R.id.score3).setVisibility(View.VISIBLE);
-            anset3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user3movement);
-            antext3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.text3movement);
-            score3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.score3movement);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "x", user3Endy, user3Starty);
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "x", user3Endy, user3Starty);
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "x", user3Endy, user3Starty);
+            opponentUserNameTextView3.setVisibility(View.VISIBLE);
+            scorePlayer3.setVisibility(View.VISIBLE);
+            usr3 = true;
         }
-
-        anset3.setTarget(findViewById(R.id.user3));
-        antext3.setTarget(findViewById(R.id.username3));
-        score3.setTarget(findViewById(R.id.score3));
-        anset3.start();
-        antext3.start();
-        score3.start();
+        userPicAnimation.setDuration(300);
+        userTextAnimation.setDuration(300);
+        userScoreAnimation.setDuration(300);
+        userPicAnimation.start();
+        userTextAnimation.start();
+        userScoreAnimation.start();
     }
 
     private void calcSize() {
