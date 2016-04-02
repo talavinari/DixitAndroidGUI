@@ -21,17 +21,14 @@ public class SendAssociationTask extends BaseTask {
         JSONObject json = new JSONObject();
         try {
             json.put(Constants.BASIC_INFO_FIELD, getBasicInfoJSON());
-            json.put(Constants.WINNING_CARD, params[0]);
+            String associationCard = params[0];
+            json.put(Constants.WINNING_CARD, associationCard);
             json.put(Constants.ASSOCIATION, params[1]);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        String responseJSON = Requests.doPostWithResponse(Constants.SEND_ASSOCIATION_API_URL, json);
-        try {
+            String responseJSON = Requests.doPostWithResponse(Constants.SEND_ASSOCIATION_API_URL, json);
             JSONObject response = new JSONObject(responseJSON);
             String card = (String) response.get(Constants.NEW_CARD);
-            UserData.getInstance().removeCard(card);
+            UserData.getInstance().removeCard(associationCard);
             UserData.getInstance().addCard(card);
             Intent intent = new Intent(QuickstartPreferences.IN_APP_MESSAGE);
             intent.putExtra(Constants.IN_APP_MESSAGE_TYPE, Constants.CARD_RECEIVED_EVENT);
