@@ -865,10 +865,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             } else {
                 tellerPicLayout.leftMargin = (int) userTellerPic.getX() + userTellerPic.getWidth();
             }
-            tellerPicLayout.topMargin = (int) userTellerPic.getY() -userTellerPic.getHeight() + teller.getHeight();
+            tellerPicLayout.topMargin = (int) userTellerPic.getY() +userTellerPic.getHeight() - teller.getHeight();
         } else {
             tellerPicLayout.leftMargin = (int) (po.x - (teller.getWidth() * 1.5));
-            tellerPicLayout.topMargin = (findViewById(R.id.table).getHeight() + (teller.getHeight()/2));
+            tellerPicLayout.topMargin = (findViewById(R.id.table).getHeight() - (teller.getHeight()/2));
         }
     }
 
