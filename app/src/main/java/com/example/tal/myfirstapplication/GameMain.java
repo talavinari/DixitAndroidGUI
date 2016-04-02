@@ -120,6 +120,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_main);
         findViews();
+        initListeners();
+
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
         ActionBar ac = getActionBar();
@@ -146,6 +148,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
         }
 
+    }
+
+    private void initListeners() {
+        imageCardOpponentUser1.setOnLongClickListener(this);
+        imageCardOpponentUser2.setOnLongClickListener(this);
+        imageCardOpponentUser3.setOnLongClickListener(this);
     }
 
     @Override
@@ -373,33 +381,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageCardOpponentUser2.setImageDrawable(getImageByCardNumber(String.valueOf(values.get(1))));
         imageCardOpponentUser3.setImageDrawable(getImageByCardNumber(String.valueOf(values.get(2))));
 
-        imageCardOpponentUser1.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                setRegularCard(v);
-                v.startAnimation(flashingCardAnim);
-                isFlashingCard = true;
-                return false;
-            }
-        });
-        imageCardOpponentUser2.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                setRegularCard(v);
-                v.startAnimation(flashingCardAnim);
-                isFlashingCard = true;
-                return false;
-            }
-        });
-        imageCardOpponentUser3.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                setRegularCard(v);
-                v.startAnimation(flashingCardAnim);
-                isFlashingCard = true;
-                return false;
-            }
-        });
+
     }
 
     private void newRound(){
