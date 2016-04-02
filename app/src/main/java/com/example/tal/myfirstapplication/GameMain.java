@@ -13,6 +13,7 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -41,7 +42,7 @@ import java.util.Map;
 
 public class GameMain extends Activity implements View.OnClickListener, View.OnLongClickListener, View.OnDragListener {
 
-
+    MediaPlayer mediaPlayer;
     int sizeW;
     int sizeH;
     int cardSize;
@@ -175,6 +176,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         associationButton = (ImageView) findViewById(R.id.association_button);
 
         teller = (ImageView) findViewById(R.id.teller);
+
+        mediaPlayer = MediaPlayer.create(this, R.animator.round_end);
 
         imageToTextViewMap = new HashMap<>();
         imageToTextViewMap.put(imageCardOpponentUser1, cardText1);
@@ -401,12 +404,32 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         });
     }
 
+    private void newRound(){
+        usr1 = false;
+        usr2 = false;
+        usr3 = false;
+        moveUser1(opponentUserImageView1);
+        moveUser2(opponentUserImageView2);
+        moveUser3(opponentUserImageView3);
+
+        mediaPlayer.start();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void updateGUI() {
+        newRound();
+
         setTellerPic();
         cardsInHand.clear();
         handleCards();
         rearrangeCards();
         setTargetCardEmpty();
+        isCardOnTable = false;
         setOpponentsCardVisibility(View.GONE);
     }
 
@@ -688,7 +711,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void setTargetCardEmpty() {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.RECTANGLE);
-        shape.setStroke(5, Color.parseColor("#CCCC00"), 15, 8);
+        shape.setStroke(5, Color.parseColor("#111111"), 15, 8);
         targetCard.setBackground(shape);
         targetCard.setLayoutParams(getOutgoingCardLayoutParams());
         targetCard.setVisibility(View.INVISIBLE);
@@ -930,8 +953,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(association.getWindowToken(), 0);
             Game.getGame().gameState = GameState.PICKING_CARDS;
-
-
         }
         return true;
     }
@@ -971,27 +992,22 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         float toX;
         float fromY = teller.getY();
         float  toY;
-
-
         teller.setVisibility(View.VISIBLE);
         RelativeLayout.LayoutParams tellerPicLayout = (RelativeLayout.LayoutParams) teller.getLayoutParams();
+
         if (!amITheTeller()) {
             ImageView userTellerPic = Game.getGame().currentStoryTeller.userPic;
             if (userTellerPic.getX() - 200 > po.x / 2) {
-//                tellerPicLayout.leftMargin = (int) userTellerPic.getX();
                 toX = userTellerPic.getX();
             } else {
-//                tellerPicLayout.leftMargin = (int) userTellerPic.getX() + userTellerPic.getWidth();
                 toX = userTellerPic.getX() + userTellerPic.getWidth();
             }
-//            tellerPicLayout.topMargin = (int) userTellerPic.getY() + userTellerPic.getHeight() - teller.getHeight();
             toY  = userTellerPic.getY() + userTellerPic.getHeight() - teller.getHeight();
         } else {
-//            tellerPicLayout.leftMargin = (int) (po.x - (teller.getWidth() * 1.5));
             toX = (float) (po.x - (teller.getWidth() * 1.5));
-//             tellerPicLayout.topMargin = (tableImage.getHeight() - (teller.getHeight() / 2));
             toY = (tableImage.getHeight() - (teller.getHeight() / 2));
         }
+
         tellerAnimationX = ObjectAnimator.ofFloat(teller,"x",fromX,toX);
         tellerAnimationY = ObjectAnimator.ofFloat(teller,"y",fromY,toY);
         tellerAnimationX.setDuration(800);
@@ -1007,7 +1023,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public void hideAndShowAssociation(View view){
         ObjectAnimator buttonAnimation = null;
         ObjectAnimator associationAnimation = null;
-        if (view.getX() < 10){
+        if (view.getX() > 10){
             buttonAnimation= ObjectAnimator.ofFloat(view,"x",view.getX(),0);
             associationAnimation = ObjectAnimator.ofFloat(association,"x",association.getX(),-(association.getWidth()-view.getWidth()));
         }else{

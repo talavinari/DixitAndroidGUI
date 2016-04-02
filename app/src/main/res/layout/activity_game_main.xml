@@ -220,7 +220,7 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="50px"
+        android:layout_height="150px"
         android:id="@+id/association"
         android:layout_alignParentTop="true"
         android:hint="Enter your association (50 characters)"
@@ -354,8 +354,8 @@
         android:layout_marginLeft="10dp" />
 
     <ImageView
-        android:layout_width="50px"
-        android:layout_height="50px"
+        android:layout_width="150px"
+        android:layout_height="150px"
         android:id="@+id/association_button"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
