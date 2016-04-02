@@ -233,9 +233,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/teller"
-        android:id="@+id/teller"
-        android:layout_alignBottom="@+id/table"
-        android:layout_alignParentEnd="true" />
+        android:id="@+id/teller"/>
 
     <ImageView
         android:id="@+id/user1card"
