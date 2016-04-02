@@ -177,7 +177,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         teller = (ImageView) findViewById(R.id.teller);
 
-        mediaPlayer = MediaPlayer.create(this, R.animator.round_end);
+        mediaPlayer = MediaPlayer.create(this, R.raw.round_end);
 
         imageToTextViewMap = new HashMap<>();
         imageToTextViewMap.put(imageCardOpponentUser1, cardText1);
