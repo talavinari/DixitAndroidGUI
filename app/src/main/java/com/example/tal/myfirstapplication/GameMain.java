@@ -71,7 +71,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     ImageView opponentUserImageView1;
     ImageView opponentUserImageView2;
     ImageView opponentUserImageView3;
-
+    Boolean isVoted;
     ImageView cardImage1;
     ImageView cardImage2;
     ImageView cardImage3;
@@ -196,6 +196,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void handleAfterAllPickedCrads() {
         if (Game.getGame().allPlayersPicked()) {
             Game.getGame().gameState = GameState.VOTING;
+            isVoted = false;
             handlePickedCardsGUI();
         }
     }
@@ -353,6 +354,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     Game.getGame().setVoteForPlayer(UserData.getInstance().getNickName(context), Integer.valueOf(votedCard));
                     handleAfterAllVotes();
                     new VoteTask(this).execute(votedCard);
+                    isVoted = true;
                 }
                 break;
             case PICKING_CARDS:
@@ -386,7 +388,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             default:
                 break;
         }
-
     }
 
     private boolean oneOfOpponentPickedCards(View v) {
@@ -399,10 +400,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public boolean onLongClick(View v) {
         switch (Game.getGame().gameState) {
             case VOTING:
-                if (isOneOfOpponentsCards(v) && !amITheTeller()) {
+                if (isOneOfOpponentsCards(v) && !amITheTeller() && !isVoted) {
                     setRegularCard(v);
                     v.startAnimation(flashingCardAnim);
-                    //flashingCardAnim.start();
                     isFlashingCard = true;
                 }
                 break;

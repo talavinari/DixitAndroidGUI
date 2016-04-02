@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
@@ -28,8 +30,9 @@ import org.json.JSONObject;
 /**
  * Created by tal on 3/11/2016.
  */
-public class JoinRoom extends Activity implements View.OnClickListener {
+public class JoinRoom extends Activity implements View.OnClickListener, View.OnTouchListener {
 
+    int backColor;
     TableLayout tableLayout;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -61,7 +64,7 @@ public class JoinRoom extends Activity implements View.OnClickListener {
     }
 
     private void handleError(final Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("The name you have chosen is already in use. What next?")
                 .setCancelable(false)
                 .setPositiveButton(("Pick another room"),
@@ -73,10 +76,6 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                         })
                 .setNegativeButton(("Pick another name"),
                         new DialogInterface.OnClickListener() {
-                            // On
-                            // clicking
-                            // "No"
-                            // button
                             public void onClick(DialogInterface dialog, int id) {
 
                                 Intent intent = new Intent(context, FirstLogIn.class);
@@ -150,6 +149,18 @@ public class JoinRoom extends Activity implements View.OnClickListener {
         client.disconnect();
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN){
+            backColor = v.getSolidColor();
+            v.setBackgroundColor(Color.LTGRAY);
+        }else if (event.getAction() == MotionEvent.ACTION_UP){
+            v.setBackgroundColor(backColor);
+        }
+
+        return false;
+    }
+
     public class AddMeToRoom extends BaseTask {
 
         public AddMeToRoom(Context context) {
@@ -158,18 +169,19 @@ public class JoinRoom extends Activity implements View.OnClickListener {
 
         @Override
         protected String doInBackground(String... params) {
-            try {
                 Game.initGame();
-                String responseJSON = Requests.doPostWithResponse(Constants.ADD_PLAYER_TO_ROOM_API_URL, getBasicInfoJSON());
-                parseJsonResponse(responseJSON);
+            String responseJSON;
+            try {
+                responseJSON = Requests.doPostWithResponse(Constants.ADD_PLAYER_TO_ROOM_API_URL, getBasicInfoJSON());
+                return Boolean.toString(parseJsonResponse(responseJSON));
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                return Boolean.toString(false);
             }
-            return "";
         }
 
-        private void parseJsonResponse(String json) {
+        private boolean parseJsonResponse(String json) {
             try {
 
                 JSONObject response = new JSONObject(json);
@@ -188,22 +200,28 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                     }
 
                     Game.getGame().setFirstStoryTeller();
+                    return true;
                 } else {
                     Intent intent = new Intent(QuickstartPreferences.ERROR_IN_JOIN_ROOM);
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    return false;
                 }
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                return false;
             }
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-
-            Intent intent = new Intent(context, GameMain.class);
-            startActivity(intent);
+            if (Boolean.parseBoolean(s)){
+                Intent intent = new Intent(context, GameMain.class);
+                startActivity(intent);
+            }else{
+                handleError(JoinRoom.this);
+            }
         }
     }
 
@@ -258,6 +276,7 @@ public class JoinRoom extends Activity implements View.OnClickListener {
                     row.addView(name);
                     row.addView(but);
                     row.setOnClickListener(JoinRoom.this);
+                    row.setOnTouchListener(JoinRoom.this);
                     tableLayout.addView(row);
                 }
             } else {
