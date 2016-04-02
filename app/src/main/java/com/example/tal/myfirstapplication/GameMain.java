@@ -332,14 +332,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
             Game.getGame().gameState = GameState.PICKING_CARDS;
         }
-        handleAssociationGUI(null);
+        handleAssociationGUI(false);
     }
 
-    private void handleAssociationGUI(KeyListener listener) {
+    private void handleAssociationGUI(boolean editable) {
         association.setText(Game.getGame().currentAssociation);
         association.setVisibility(View.VISIBLE);
         associationButton.setVisibility(View.VISIBLE);
-        association.setKeyListener(listener);
+        association.setFocusable(editable);
+        association.setClickable(editable);
 
         if (!amITheTeller()) {
             isCardOnTable = false;
@@ -589,7 +590,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 //                    draggedView.setVisibility(View.VISIBLE);
                     if (amITheTeller()) {
                         Game.getGame().currentAssociation = "";
-                        handleAssociationGUI((KeyListener) this);
+                        handleAssociationGUI(true);
                     } else {
                         notifySelfPicked();
                         handleAfterAllPickedCards();
@@ -993,8 +994,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         }
         tellerAnimationX = ObjectAnimator.ofFloat(teller,"x",fromX,toX);
         tellerAnimationY = ObjectAnimator.ofFloat(teller,"y",fromY,toY);
-        tellerAnimationX.setDuration(300);
-        tellerAnimationY.setDuration(300);
+        tellerAnimationX.setDuration(800);
+        tellerAnimationY.setDuration(800);
         tellerAnimationX.start();
         tellerAnimationY.start();
     }
