@@ -226,8 +226,8 @@
         android:textColor="@color/Black"
         android:imeActionLabel="SEND"
         android:visibility="invisible"
-        android:lines="2"
-        android:imeOptions="actionSend"
+        android:imeOptions="actionGo|actionDone|actionSend"
+        android:singleLine="true"
         />
     <ImageView
         android:layout_width="wrap_content"
