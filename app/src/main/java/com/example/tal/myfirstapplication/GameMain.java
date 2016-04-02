@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import org.json.JSONException;
 
 import java.io.UnsupportedEncodingException;
@@ -146,7 +147,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         opponentUserImageView1 = (ImageView) findViewById(R.id.user1);
         opponentUserImageView2 = (ImageView) findViewById(R.id.user2);
         opponentUserImageView3 = (ImageView) findViewById(R.id.user3);
-        association = (EditText) findViewById(R.id.association);
+
         cardText1 = (TextView) findViewById(R.id.user1cardtext);
         cardText2 = (TextView) findViewById(R.id.user2cardtext);
         cardText3 = (TextView) findViewById(R.id.user3cardtext);
@@ -174,6 +175,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         scorePlayer1 = ((TextView) findViewById(R.id.score1));
         scorePlayer2 = ((TextView) findViewById(R.id.score2));
         scorePlayer3 = ((TextView) findViewById(R.id.score3));
+
+        association = (EditText) findViewById(R.id.association);
     }
 
     private void initReceivers() {
@@ -551,7 +554,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     myPickedCard = Integer.valueOf(pickedCard);
 //                    draggedView.setVisibility(View.VISIBLE);
                     if (amITheTeller()) {
-                        findViewById(R.id.association).setVisibility(View.VISIBLE);
+                        association.setVisibility(View.VISIBLE);
                     } else {
                         notifySelfPicked();
                         handleAfterAllPickedCrads();
@@ -844,20 +847,22 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e) {
+        super.dispatchKeyEvent(e);
         if (e.getAction() == KeyEvent.ACTION_DOWN && e.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            EditText associationEditText = (EditText) findViewById(R.id.association);
-            associationEditText.setVisibility(View.INVISIBLE);
-            String association = associationEditText.getText().toString();
-            Game.getGame().currentAssociation = association;
+            association.setVisibility(View.INVISIBLE);
+            String associationString = association.getText().toString();
+            Game.getGame().currentAssociation = associationString;
             Game.getGame().currentWinningCard = myPickedCard;
             new SendAssociationTask(context).execute(String.valueOf(myPickedCard),
-                    association);
+                    associationString);
             notifySelfPicked();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(findViewById(R.id.association).getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(association.getWindowToken(), 0);
             Game.getGame().gameState = GameState.PICKING_CARDS;
+
+
         }
-        return super.dispatchKeyEvent(e);
+        return true;
     }
 
     private class OnClose extends BaseTask {
