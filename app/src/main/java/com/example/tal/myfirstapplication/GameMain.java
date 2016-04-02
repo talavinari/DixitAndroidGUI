@@ -17,6 +17,7 @@ import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -639,7 +640,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         view.setLayoutParams(labelLayoutParams);
     }
 
-
     private void setBigCardLayout(int i) {
         int tmpCardSize = cardSize / 2;
         int bigCardSize = cardSize * 5;
@@ -675,14 +675,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         return labelLayoutParams;
     }
 
-
-
-
     private void rearrangeCards() {
-
-
         calcSize();
-
         setAllCards(cardSize, cardSize * 2);
     }
 
@@ -748,7 +742,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             anset3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.user3movement);
             antext3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.text3movement);
             score3 = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.score3movement);
-            usr3 = true;
         }
 
         anset3.setTarget(findViewById(R.id.user3));
@@ -782,16 +775,22 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             new SendAssociationTask(context).execute(String.valueOf(myPickedCard),
                     association);
             notifySelfPicked();
-//            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             Game.getGame().gameState = GameState.PICKING_CARDS;
         }
-
+        onKey(getCurrentFocus(), e.getKeyCode(), e);
         return super.dispatchKeyEvent(e);
     }
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
+        int s;
+        s =1;
+        s++;
+        int f = s;
+
+
 //        if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
 //            EditText associationEditText = (EditText)findViewById(R.id.association);
 //            associationEditText.setVisibility(View.INVISIBLE);
@@ -840,15 +839,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void setTellerPic() {
         RelativeLayout.LayoutParams userPicLayeout = (RelativeLayout.LayoutParams) findViewById(R.id.teller).getLayoutParams();
         if (!amITheTeller()) {
-            if(Game.getGame().currentStoryTeller.userPic.getX() - 200 > po.x/2){
+            if (Game.getGame().currentStoryTeller.userPic.getX() - 200 > po.x / 2) {
                 userPicLayeout.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX();
-            }else{
+            } else {
                 userPicLayeout.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX() + 300;
             }
             userPicLayeout.bottomMargin = (int) Game.getGame().currentStoryTeller.userPic.getY();
         } else {
-            userPicLayeout .leftMargin = (int) (po.x - (userPicLayeout.width * 1.5));
-            userPicLayeout .bottomMargin = (po.y - findViewById(R.id.table).getHeight());
+            userPicLayeout.leftMargin = (int) (po.x - (userPicLayeout.width * 1.5));
+            userPicLayeout.bottomMargin = (po.y - findViewById(R.id.table).getHeight());
         }
     }
 
