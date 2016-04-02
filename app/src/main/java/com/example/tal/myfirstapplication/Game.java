@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by gront on 24/03/2016.
- */
 public class Game {
     List<Player> players;
     Map<Player,Integer> votes;

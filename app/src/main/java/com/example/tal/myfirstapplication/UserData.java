@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Created by gront on 19/03/2016.
- */
 public class UserData extends Activity {
 
     private static UserData userData;

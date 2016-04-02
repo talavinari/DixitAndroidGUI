@@ -16,4 +16,5 @@
     <string name="noNameUser">notInitialized</string>
     <string name="myScore">"My Score: "</string>
     <string name="score">"Score: "</string>
+    <string name="noRoomToShow">No Rooms To Show!</string>
 </resources>
