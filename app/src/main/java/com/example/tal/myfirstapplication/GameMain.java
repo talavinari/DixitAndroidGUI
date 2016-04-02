@@ -2,7 +2,6 @@ package com.example.tal.myfirstapplication;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -60,15 +59,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     boolean usr1 = false;
     boolean usr2 = false;
     boolean usr3 = false;
-    AnimatorSet anset1;
-    AnimatorSet anset2;
-    AnimatorSet anset3;
-    AnimatorSet antext1;
-    AnimatorSet antext2;
-    AnimatorSet antext3;
-    AnimatorSet score1;
-    AnimatorSet score2;
-    AnimatorSet score3;
     AlphaAnimation flashingCardAnim;
     Boolean isFlashingCard = false;
     int draggedCardNum;
@@ -107,7 +97,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     // Property animation
     int user1Startx;
     int user2Startx;
-    int user3Starty;;
+    int user3Starty;
     int user1Endx;
     int user2Endx;
     int user3Endy;
@@ -322,12 +312,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void handleAssociationGUI() {
-        // TODO handle association received GUI
-
         association.setText(Game.getGame().currentAssociation);
         association.setVisibility(View.VISIBLE);
         association.setKeyListener(null);
-
 
         if (!amITheTeller()) {
             isCardOnTable = false;
@@ -857,7 +844,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         if (usr3) {
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3Starty, user3Endy);
-            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView1, "y", user3Starty, user3Endy);
+            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3Starty, user3Endy);
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3Starty, user3Endy);
             opponentUserNameTextView3.setVisibility(View.INVISIBLE);
             scorePlayer3.setVisibility(View.INVISIBLE);
