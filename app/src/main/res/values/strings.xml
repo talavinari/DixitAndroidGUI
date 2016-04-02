@@ -14,4 +14,6 @@
 
     <string name="title_activity_game_main">GameMain</string>
     <string name="noNameUser">notInitialized</string>
+    <string name="myScore">"My Score: "</string>
+    <string name="score">"Score: "</string>
 </resources>

@@ -13,6 +13,7 @@ import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
 import android.view.GestureDetector;
@@ -96,6 +97,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     ImageView imageCardOpponentUser3;
     GestureListener gestureListener;
 
+    TextView myScore = ((TextView) findViewById(R.id.myscore));
+    TextView scorePlayer1 = ((TextView) findViewById(R.id.score1));
+    TextView scorePlayer2 = ((TextView) findViewById(R.id.score2));
+    TextView scorePlayer3 = ((TextView) findViewById(R.id.score3));
+
     BroadcastReceiver googleCloudBroadcastReceiver;
     BroadcastReceiver inApplicationBroadcastReceiver;
 
@@ -159,6 +165,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         cardImage6 = (ImageView) findViewById(R.id.card6);
         cardsImages = new ArrayList<>(Arrays.asList(new ImageView[]{cardImage1, cardImage2, cardImage3,
                 cardImage4, cardImage5, cardImage6}));
+
+        myScore = ((TextView) findViewById(R.id.myscore));
+        scorePlayer1 = ((TextView) findViewById(R.id.score1));
+        scorePlayer2 = ((TextView) findViewById(R.id.score2));
+        scorePlayer3 = ((TextView) findViewById(R.id.score3));
     }
 
     private void initReceivers() {
@@ -233,10 +244,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         Game game = Game.getGame();
         if (game.votes.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1) {
             game.calculateScore();
-            ((TextView) findViewById(R.id.myscore)).setText("My Score: " + game.players.get(0).score);
-            ((TextView) findViewById(R.id.score1)).setText("Score: " + game.players.get(1).score);
-            ((TextView) findViewById(R.id.score2)).setText("Score: " + game.players.get(2).score);
-            ((TextView) findViewById(R.id.score3)).setText("Score: " + game.players.get(3).score);
+            handleScoreLabels();
 
             association.setVisibility(View.INVISIBLE);
             if (game.noWinner()) {
@@ -249,6 +257,25 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             // TODO -- after 2 second delay - for show the winner and score
             updateGUI();
         }
+    }
+
+    private void handleScoreLabels() {
+
+        myScore.setText(getPlayerScoreString(UserData.getInstance().getNickName(this),true));
+        scorePlayer1.setText(getPlayerScoreString(opponentUserNameTextView1.getText().toString()));
+        scorePlayer2.setText(getPlayerScoreString(opponentUserNameTextView2.getText().toString()));
+        scorePlayer3.setText(getPlayerScoreString(opponentUserNameTextView3.getText().toString()));
+    }
+
+    @NonNull
+    private String getPlayerScoreString(String playerName) {
+        return getPlayerScoreString(playerName, false);
+    }
+
+    private String getPlayerScoreString(String  playerName, boolean isCurrentPlayer) {
+        Player p = Game.getGame().getPlayerByName(playerName);
+        return (isCurrentPlayer ? getString(R.string.myScore) : getString(R.string.score))
+                +  p.score;
     }
 
     private void handleWinningGUI() {
