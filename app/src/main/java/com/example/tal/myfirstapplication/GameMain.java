@@ -335,9 +335,33 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageCardOpponentUser2.setImageDrawable(getImageByCardNumber(String.valueOf(values.get(1))));
         imageCardOpponentUser3.setImageDrawable(getImageByCardNumber(String.valueOf(values.get(2))));
 
-        imageCardOpponentUser1.setOnLongClickListener(this);
-        imageCardOpponentUser2.setOnLongClickListener(this);
-        imageCardOpponentUser3.setOnLongClickListener(this);
+        imageCardOpponentUser1.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setRegularCard(v);
+                v.startAnimation(flashingCardAnim);
+                isFlashingCard = true;
+                return false;
+            }
+        });
+        imageCardOpponentUser2.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setRegularCard(v);
+                v.startAnimation(flashingCardAnim);
+                isFlashingCard = true;
+                return false;
+            }
+        });
+        imageCardOpponentUser3.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setRegularCard(v);
+                v.startAnimation(flashingCardAnim);
+                isFlashingCard = true;
+                return false;
+            }
+        });
     }
 
     private void updateGUI() {
