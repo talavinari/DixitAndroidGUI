@@ -473,9 +473,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             case VOTING:
                 if (isOneOfOpponentsCards(v) && !amITheTeller()) {
                     if ((v.getAnimation() != null) && (!isVoted)){
-                        v.clearAnimation();
-                        flashingCardAnim.cancel();
-                        isFlashingCard = false;
+                        stopFlash();
                         String votedCard = imageToTextViewMap.get(v).getText().toString();
                         Game.getGame().setVoteForPlayer(UserData.getInstance().getNickName(context), Integer.valueOf(votedCard));
                         handleAfterAllVotes();
@@ -537,14 +535,34 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 v == imageCardOpponentUser3;
     }
 
+    private void flash(View v){
+        v.startAnimation(flashingCardAnim);
+        isFlashingCard = true;
+    }
+
+    private void stopFlash(){
+        flashingCardAnim.cancel();
+        if (imageCardOpponentUser1.getAnimation() != null){
+            imageCardOpponentUser1.clearAnimation();
+            isFlashingCard = false;
+        }
+        if (imageCardOpponentUser2.getAnimation() != null){
+            imageCardOpponentUser2.clearAnimation();
+            isFlashingCard = false;
+        }
+        if (imageCardOpponentUser3.getAnimation() != null){
+            imageCardOpponentUser3.clearAnimation();
+            isFlashingCard = false;
+        }
+    }
+
     @Override
     public boolean onLongClick(View v) {
         switch (Game.getGame().gameState) {
             case VOTING:
-                if (isOneOfOpponentsCards(v) && !amITheTeller() && !isVoted) {
+                if (isOneOfOpponentsCards(v) && !amITheTeller() && !isVoted && !isFlashingCard) {
                     setRegularCard(v);
-                    v.startAnimation(flashingCardAnim);
-                    isFlashingCard = true;
+                    flash(v);
                 }
                 break;
             case PICKING_CARDS:
