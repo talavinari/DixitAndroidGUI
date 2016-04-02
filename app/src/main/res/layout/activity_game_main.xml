@@ -220,17 +220,18 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50px"
         android:id="@+id/association"
         android:layout_alignParentTop="true"
         android:hint="Enter your association (50 characters)"
         android:maxLength="50"
-        android:background="#ccffffff"
+        android:background="#ffffff"
         android:textColor="@color/Black"
         android:imeActionLabel="SEND"
         android:visibility="invisible"
         android:imeOptions="actionSend"
         android:singleLine="true"
+        android:alpha="0.8"
         />
     <ImageView
         android:layout_width="wrap_content"
@@ -351,5 +352,17 @@
         android:password="false"
         android:textSize="20dp"
         android:layout_marginLeft="10dp" />
+
+    <ImageView
+        android:layout_width="50px"
+        android:layout_height="50px"
+        android:id="@+id/association_button"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:scaleType="fitXY"
+        android:onClick="hideAndShowAssociation"
+        android:src="@drawable/association_button"
+        android:contentDescription="association button"
+        android:alpha="0.8"/>
 
 </RelativeLayout>

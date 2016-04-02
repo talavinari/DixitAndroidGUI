@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.method.KeyListener;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
@@ -98,6 +100,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     TextView scorePlayer1;
     TextView scorePlayer2;
 
+    ImageView associationButton;
     TextView scorePlayer3;
     boolean usr1 = false;
     boolean usr2 = false;
@@ -170,6 +173,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageCardOpponentUser1 = (ImageView) findViewById(R.id.user1card);
         imageCardOpponentUser2 = (ImageView) findViewById(R.id.user2card);
         imageCardOpponentUser3 = (ImageView) findViewById(R.id.user3card);
+
+        associationButton = (ImageView) findViewById(R.id.association_button);
 
         teller = (ImageView) findViewById(R.id.teller);
 
@@ -276,7 +281,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         if (game.votes.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT - 1) {
             game.calculateScore();
             handleScoreLabels();
-
+            associationButton.setVisibility(View.INVISIBLE);
             association.setVisibility(View.INVISIBLE);
             if (game.noWinner()) {
                 game.continueToNextStory();
@@ -330,13 +335,14 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
             Game.getGame().gameState = GameState.PICKING_CARDS;
         }
-        handleAssociationGUI();
+        handleAssociationGUI(null);
     }
 
-    private void handleAssociationGUI() {
+    private void handleAssociationGUI(KeyListener listener) {
         association.setText(Game.getGame().currentAssociation);
         association.setVisibility(View.VISIBLE);
-        association.setKeyListener(null);
+        associationButton.setVisibility(View.VISIBLE);
+        association.setKeyListener(listener);
 
         if (!amITheTeller()) {
             isCardOnTable = false;
@@ -403,7 +409,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         handleCards();
         rearrangeCards();
         setTargetCardEmpty();
-        setOpponentsCardVisibility(View.INVISIBLE);
+        setOpponentsCardVisibility(View.GONE);
     }
 
     private void setOpponentsCardVisibility(int visibility) {
@@ -448,6 +454,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             case VOTING:
                 if (isOneOfOpponentsCards(v)) {
                     if (v.getAnimation() != null) {
+                        v.clearAnimation();
                         flashingCardAnim.cancel();
                         isFlashingCard = false;
                         String votedCard = imageToTextViewMap.get(v).getText().toString();
@@ -576,7 +583,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     myPickedCard = Integer.valueOf(pickedCard);
 //                    draggedView.setVisibility(View.VISIBLE);
                     if (amITheTeller()) {
-                        association.setVisibility(View.VISIBLE);
+                        Game.getGame().currentAssociation = "";
+                        handleAssociationGUI((KeyListener) this);
                     } else {
                         notifySelfPicked();
                         handleAfterAllPickedCrads();
@@ -906,6 +914,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         super.dispatchKeyEvent(e);
         if (e.getAction() == KeyEvent.ACTION_DOWN && e.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
             association.setVisibility(View.INVISIBLE);
+            associationButton.setVisibility(View.INVISIBLE);
             String associationString = association.getText().toString();
             Game.getGame().currentAssociation = associationString;
             Game.getGame().currentWinningCard = myPickedCard;
@@ -950,23 +959,60 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
 
     private void setTellerPic() {
+        ObjectAnimator tellerAnimationX;
+        ObjectAnimator tellerAnimationY;
+        float fromX = teller.getX();
+        float toX;
+        float fromY = teller.getY();
+        float  toY;
+
+
         teller.setVisibility(View.VISIBLE);
         RelativeLayout.LayoutParams tellerPicLayout = (RelativeLayout.LayoutParams) teller.getLayoutParams();
         if (!amITheTeller()) {
             ImageView userTellerPic = Game.getGame().currentStoryTeller.userPic;
             if (userTellerPic.getX() - 200 > po.x / 2) {
-                tellerPicLayout.leftMargin = (int) userTellerPic.getX();
+//                tellerPicLayout.leftMargin = (int) userTellerPic.getX();
+                toX = userTellerPic.getX();
             } else {
-                tellerPicLayout.leftMargin = (int) userTellerPic.getX() + userTellerPic.getWidth();
+//                tellerPicLayout.leftMargin = (int) userTellerPic.getX() + userTellerPic.getWidth();
+                toX = userTellerPic.getX() + userTellerPic.getWidth();
             }
-            tellerPicLayout.topMargin = (int) userTellerPic.getY() + userTellerPic.getHeight() - teller.getHeight();
+//            tellerPicLayout.topMargin = (int) userTellerPic.getY() + userTellerPic.getHeight() - teller.getHeight();
+            toY  = userTellerPic.getY() + userTellerPic.getHeight() - teller.getHeight();
         } else {
-            tellerPicLayout.leftMargin = (int) (po.x - (teller.getWidth() * 1.5));
-            tellerPicLayout.topMargin = (tableImage.getHeight() - (teller.getHeight() / 2));
+//            tellerPicLayout.leftMargin = (int) (po.x - (teller.getWidth() * 1.5));
+            toX = (float) (po.x - (teller.getWidth() * 1.5));
+//             tellerPicLayout.topMargin = (tableImage.getHeight() - (teller.getHeight() / 2));
+            toY = (tableImage.getHeight() - (teller.getHeight() / 2));
         }
+        tellerAnimationX = ObjectAnimator.ofFloat(teller,"x",fromX,toX);
+        tellerAnimationY = ObjectAnimator.ofFloat(teller,"y",fromY,toY);
+        tellerAnimationX.setDuration(300);
+        tellerAnimationY.setDuration(300);
+        tellerAnimationX.start();
+        tellerAnimationY.start();
     }
 
     private boolean amITheTeller() {
         return Game.getGame().currentStoryTeller.name.equals(UserData.getInstance().getNickName(this));
     }
+
+    public void hideAndShowAssociation(View view){
+        ObjectAnimator buttonAnimation = null;
+        ObjectAnimator associationAnimation = null;
+        if (view.getX() < 10){
+            buttonAnimation= ObjectAnimator.ofFloat(view,"x",view.getX(),0);
+            associationAnimation = ObjectAnimator.ofFloat(association,"x",association.getX(),-(association.getWidth()-view.getWidth()));
+        }else{
+            buttonAnimation= ObjectAnimator.ofFloat(view,"x",view.getX(),po.x - view.getX());
+            associationAnimation = ObjectAnimator.ofFloat(association,"x",association.getX(),0);
+        }
+        buttonAnimation.setDuration(300);
+        associationAnimation.setDuration(300);
+        buttonAnimation.start();
+        associationAnimation.start();
+
+    }
+
 }
