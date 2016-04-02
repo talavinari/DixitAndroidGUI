@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -18,7 +17,6 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.method.KeyListener;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
@@ -473,7 +471,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public void onClick(View v) {
         switch (Game.getGame().gameState) {
             case VOTING:
-                if (isOneOfOpponentsCards(v)) {
+                if (isOneOfOpponentsCards(v) && !amITheTeller()) {
                     if ((v.getAnimation() != null) && (!isVoted)){
                         v.clearAnimation();
                         flashingCardAnim.cancel();
