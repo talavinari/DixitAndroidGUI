@@ -59,9 +59,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     TextView opponentUserNameTextView1;
     TextView opponentUserNameTextView2;
     TextView opponentUserNameTextView3;
+
     ImageView opponentUserImageView1;
     ImageView opponentUserImageView2;
     ImageView opponentUserImageView3;
+
     Boolean isVoted;
     ImageView cardImage1;
     ImageView cardImage2;
@@ -86,13 +88,16 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     TextView cardText1;
     TextView cardText2;
     TextView cardText3;
+
     ImageView imageCardOpponentUser1;
+    ImageView imageCardOpponentUser3;
     ImageView imageCardOpponentUser2;
+    ImageView flashingCard;
+
 
     BroadcastReceiver googleCloudBroadcastReceiver;
-    BroadcastReceiver inApplicationBroadcastReceiver;
 
-    ImageView imageCardOpponentUser3;
+    BroadcastReceiver inApplicationBroadcastReceiver;
     TextView myScore;
     TextView scorePlayer1;
     TextView scorePlayer2;
@@ -453,8 +458,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public void onClick(View v) {
         switch (Game.getGame().gameState) {
             case VOTING:
-                if (isOneOfOpponentsCards(v) && !amITheTeller()) {
-                    if ((v.getAnimation() != null) && (!isVoted)){
+                if (isOneOfOpponentsCards(v)) {
+                    if ((isFlashingCard) && (!isVoted) && !amITheTeller() && v.equals(flashingCard) ){
                         stopFlash();
                         String votedCard = imageToTextViewMap.get(v).getText().toString();
                         Game.getGame().setVoteForPlayer(UserData.getInstance().getNickName(context), Integer.valueOf(votedCard));
@@ -462,12 +467,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                         new VoteTask(this).execute(votedCard);
                         isVoted = true;
                     } else {
-                        if (v.getLayoutParams().height < cardSize * 5) {
+                        if (v.getHeight() < cardSize * 5) {
                             setBigCard(v);
                         } else {
                             setRegularCard(v);
                         }
                     }
+                    stopFlash();
                 }
                 break;
             case PICKING_CARDS:
@@ -518,23 +524,28 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void flash(View v){
+        stopFlash();
         v.startAnimation(flashingCardAnim);
+        flashingCard = (ImageView) v;
         isFlashingCard = true;
     }
 
     private void stopFlash(){
         flashingCardAnim.cancel();
-        if (imageCardOpponentUser1.getAnimation() != null){
+        if (imageCardOpponentUser1.equals(flashingCard)){
             imageCardOpponentUser1.clearAnimation();
             isFlashingCard = false;
+            flashingCard=null;
         }
-        if (imageCardOpponentUser2.getAnimation() != null){
+        if (imageCardOpponentUser2.equals(flashingCard)){
             imageCardOpponentUser2.clearAnimation();
             isFlashingCard = false;
+            flashingCard=null;
         }
-        if (imageCardOpponentUser3.getAnimation() != null){
+        if (imageCardOpponentUser3.equals(flashingCard)){
             imageCardOpponentUser3.clearAnimation();
             isFlashingCard = false;
+            flashingCard=null;
         }
     }
 
