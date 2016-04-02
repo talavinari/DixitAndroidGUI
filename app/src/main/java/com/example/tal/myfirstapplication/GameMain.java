@@ -178,9 +178,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageToTextViewMap.put(imageCardOpponentUser2, cardText2);
         imageToTextViewMap.put(imageCardOpponentUser3, cardText3);
 
-        targetCard = (ImageView) findViewById(R.id.target);
-
-
         cardImage1 = (ImageView) findViewById(R.id.card1);
         cardImage2 = (ImageView) findViewById(R.id.card2);
         cardImage3 = (ImageView) findViewById(R.id.card3);
