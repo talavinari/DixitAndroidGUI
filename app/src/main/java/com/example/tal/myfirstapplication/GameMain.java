@@ -857,14 +857,14 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         if (usr3) {
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3Starty, user3Endy);
-            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView1, "y", user3Starty, user3Endy);
+            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3Starty + opponentUserImageView3.getHeight(), user3Endy + opponentUserImageView3.getHeight());
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3Starty, user3Endy);
             opponentUserNameTextView3.setVisibility(View.INVISIBLE);
             scorePlayer3.setVisibility(View.INVISIBLE);
             usr3 = false;
         } else {
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3Endy, user3Starty);
-            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3Endy, user3Starty);
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3Endy + opponentUserImageView3.getHeight(), user3Starty + opponentUserImageView3.getHeight());
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3Endy, user3Starty);
             opponentUserNameTextView3.setVisibility(View.VISIBLE);
             scorePlayer3.setVisibility(View.VISIBLE);
