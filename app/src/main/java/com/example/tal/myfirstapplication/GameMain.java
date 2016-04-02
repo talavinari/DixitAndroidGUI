@@ -1,14 +1,18 @@
 package com.example.tal.myfirstapplication;
 
 import android.animation.ObjectAnimator;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -16,6 +20,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -119,6 +124,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_main);
         findViews();
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+        ActionBar ac = getActionBar();
+        if (ac != null) {
+            ac.hide();
+        }
         initReceivers();
         draggedView = new Card();
         cardSize = 0;
@@ -148,7 +159,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void findViews() {
-        tableImage = (ImageView)findViewById(R.id.table);
+        tableImage = (ImageView) findViewById(R.id.table);
 
         opponentUserNameTextView1 = (TextView) findViewById(R.id.username1);
         opponentUserNameTextView2 = (TextView) findViewById(R.id.username2);
@@ -170,6 +181,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageToTextViewMap.put(imageCardOpponentUser1, cardText1);
         imageToTextViewMap.put(imageCardOpponentUser2, cardText2);
         imageToTextViewMap.put(imageCardOpponentUser3, cardText3);
+
+        targetCard = (ImageView) findViewById(R.id.target);
+
 
         cardImage1 = (ImageView) findViewById(R.id.card1);
         cardImage2 = (ImageView) findViewById(R.id.card2);
@@ -285,7 +299,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void handleScoreLabels() {
 
-        myScore.setText(getPlayerScoreString(UserData.getInstance().getNickName(this),true));
+        myScore.setText(getPlayerScoreString(UserData.getInstance().getNickName(this), true));
         scorePlayer1.setText(getPlayerScoreString(opponentUserNameTextView1.getText().toString()));
         scorePlayer2.setText(getPlayerScoreString(opponentUserNameTextView2.getText().toString()));
         scorePlayer3.setText(getPlayerScoreString(opponentUserNameTextView3.getText().toString()));
@@ -296,10 +310,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         return getPlayerScoreString(playerName, false);
     }
 
-    private String getPlayerScoreString(String  playerName, boolean isCurrentPlayer) {
+    private String getPlayerScoreString(String playerName, boolean isCurrentPlayer) {
         Player p = Game.getGame().getPlayerByName(playerName);
         return (isCurrentPlayer ? getString(R.string.myScore) : getString(R.string.score))
-                +  p.score;
+                + p.score;
     }
 
     private void handleWinningGUI() {
@@ -395,6 +409,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         cardsInHand.clear();
         handleCards();
         rearrangeCards();
+        setTargetCardEmpty();
         setOpponentsCardVisibility(View.INVISIBLE);
     }
 
@@ -423,7 +438,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void startGameGUI() {
-        // TODO handle GUI of start
         Game.getGame().setFirstStoryTeller();
         setTellerPic();
     }
@@ -648,10 +662,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         setRegularCard(imageCardOpponentUser2);
         setRegularCard(imageCardOpponentUser3);
 
-        targetCard = (ImageView) findViewById(R.id.target);
-        targetCard.setLayoutParams(getOutgoingCardLayoutParams());
-        targetCard.setVisibility(View.INVISIBLE);
-        targetCard.bringToFront();
+
+        setTargetCardEmpty();
 
         setAllCards(cardSize, (int) (cardSize * 1.5));
         for (int i = 0; i < cardsInHand.size(); i++) {
@@ -666,15 +678,25 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         tableImage.setOnDragListener(this);
     }
 
+    private void setTargetCardEmpty() {
+        GradientDrawable shape = new GradientDrawable();
+        shape.setShape(GradientDrawable.RECTANGLE);
+        shape.setStroke(5, Color.parseColor("#CCCC00"), 15, 8);
+        targetCard.setBackground(shape);
+        targetCard.setLayoutParams(getOutgoingCardLayoutParams());
+        targetCard.setVisibility(View.INVISIBLE);
+        targetCard.bringToFront();
+    }
+
     private void setPropertyAnimation() {
         user1HideX = (int) (opponentUserImageView1.getWidth() * -0.5);
-        user1ShowX = (int) (opponentUserImageView1.getWidth() *0.5);
+        user1ShowX = (int) (opponentUserImageView1.getWidth() * 0.5);
 
-        user2HideX = (int) (po.x - opponentUserImageView2.getWidth() *0.5);
-        user2ShowX = (int) (po.x - opponentUserImageView2.getWidth() *1.5);
+        user2HideX = (int) (po.x - opponentUserImageView2.getWidth() * 0.5);
+        user2ShowX = (int) (po.x - opponentUserImageView2.getWidth() * 1.5);
 
-        user3HideY = (int) (opponentUserImageView3.getHeight() *-0.5);
-        user3ShowY = (int) (opponentUserImageView3.getHeight() *0.5);
+        user3HideY = (int) (opponentUserImageView3.getHeight() * -0.5);
+        user3ShowY = (int) (opponentUserImageView3.getHeight() * 0.5);
     }
 
     private void handleCards() {
@@ -799,7 +821,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         if (usr1) {
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView1, "x", user1ShowX, user1HideX);
-            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView1, "x", user1ShowX, user1HideX);
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView1, "x", user1ShowX, user1HideX);
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer1, "x", user1ShowX, user1HideX);
             scorePlayer1.setVisibility(View.INVISIBLE);
             usr1 = false;
@@ -827,7 +849,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         if (usr2) {
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView2, "x", user2ShowX, user2HideX);
-            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView2, "x", user2ShowX, user2HideX);
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView2, "x", user2ShowX, user2HideX);
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer2, "x", user2ShowX, user2HideX);
             scorePlayer2.setVisibility(View.INVISIBLE);
             usr2 = false;
@@ -855,7 +877,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         if (usr3) {
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3ShowY, user3HideY);
-            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3ShowY + opponentUserImageView3.getHeight(), user3HideY + opponentUserImageView3.getHeight());
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3ShowY + opponentUserImageView3.getHeight(), user3HideY + opponentUserImageView3.getHeight());
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3ShowY, user3HideY);
             scorePlayer3.setVisibility(View.INVISIBLE);
             usr3 = false;
@@ -879,7 +901,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         if (cardSize == 0) {
             sizeW = po.x / (3 * cardsInHand.size() + 1);
-            cardSize = (int) (1.5 * sizeW);
+            cardSize = 2 * sizeW;
         } else {
             sizeW = ((po.x - (cardsInHand.size() * cardSize)) / (cardsInHand.size() + 1));
         }
@@ -944,10 +966,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             } else {
                 tellerPicLayout.leftMargin = (int) userTellerPic.getX() + userTellerPic.getWidth();
             }
-            tellerPicLayout.topMargin = (int) userTellerPic.getY() +userTellerPic.getHeight() - teller.getHeight();
+            tellerPicLayout.topMargin = (int) userTellerPic.getY() + userTellerPic.getHeight() - teller.getHeight();
         } else {
             tellerPicLayout.leftMargin = (int) (po.x - (teller.getWidth() * 1.5));
-            tellerPicLayout.topMargin = (tableImage.getHeight() - (teller.getHeight()/2));
+            tellerPicLayout.topMargin = (tableImage.getHeight() - (teller.getHeight() / 2));
         }
     }
 
