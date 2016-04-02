@@ -786,14 +786,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView1, "x", user1Startx, user1Endx);
             userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView1, "x", user1Startx, user1Endx);
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer1, "x", user1Startx, user1Endx);
-            opponentUserNameTextView1.setVisibility(View.INVISIBLE);
             scorePlayer1.setVisibility(View.INVISIBLE);
             usr1 = false;
         } else {
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView1, "x", user1Endx, user1Startx);
             userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView1, "x", user1Endx, user1Startx);
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer1, "x", user1Endx, user1Startx);
-            opponentUserNameTextView1.setVisibility(View.VISIBLE);
             scorePlayer1.setVisibility(View.VISIBLE);
             usr1 = true;
         }
@@ -816,14 +814,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView2, "x", user2Startx, user2Endx);
             userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView2, "x", user2Startx, user2Endx);
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer2, "x", user2Startx, user2Endx);
-            opponentUserNameTextView2.setVisibility(View.INVISIBLE);
             scorePlayer2.setVisibility(View.INVISIBLE);
             usr2 = false;
         } else {
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView2, "x", user2Endx, user2Startx);
             userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView2, "x", user2Endx, user2Startx);
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer2, "x", user2Endx, user2Startx);
-            opponentUserNameTextView2.setVisibility(View.VISIBLE);
             scorePlayer2.setVisibility(View.VISIBLE);
             usr2 = true;
         }
@@ -846,14 +842,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3Starty, user3Endy);
             userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3Starty + opponentUserImageView3.getHeight(), user3Endy + opponentUserImageView3.getHeight());
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3Starty, user3Endy);
-            opponentUserNameTextView3.setVisibility(View.INVISIBLE);
             scorePlayer3.setVisibility(View.INVISIBLE);
             usr3 = false;
         } else {
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3Endy, user3Starty);
             userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3Endy + opponentUserImageView3.getHeight(), user3Starty + opponentUserImageView3.getHeight());
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3Endy, user3Starty);
-            opponentUserNameTextView3.setVisibility(View.VISIBLE);
             scorePlayer3.setVisibility(View.VISIBLE);
             usr3 = true;
         }
