@@ -671,12 +671,14 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void setPropertyAnimation() {
-            user1Endx = (int) (opponentUserImageView1.getWidth() * -0.5);
-            user1Startx = (int) (opponentUserImageView1.getWidth() *0.5);
-            user2Endx = (int) (po.x - opponentUserImageView2.getWidth() *-0.5);
-            user2Startx = (int) (po.x - opponentUserImageView2.getWidth() *1.5);
-            user3Starty = (int) (po.y + opponentUserImageView3.getWidth() *0.5);
-            user3Endy = (int) (po.y - opponentUserImageView3.getWidth() *1.5);
+        user1Endx = (int) (opponentUserImageView1.getWidth() * -0.5);
+        user1Startx = (int) (opponentUserImageView1.getWidth() *0.5);
+
+        user2Endx = (int) (po.x - opponentUserImageView2.getWidth() *0.5);
+        user2Startx = (int) (po.x - opponentUserImageView2.getWidth() *1.5);
+
+        user3Endy = (int) (opponentUserImageView3.getHeight() *-0.5);
+        user3Starty = (int) (opponentUserImageView3.getHeight() *0.5);
     }
 
     private void handleCards() {
@@ -854,16 +856,16 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         ObjectAnimator userScoreAnimation;
 
         if (usr3) {
-            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "x", user3Starty, user3Endy);
-            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView1, "x", user3Starty, user3Endy);
-            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "x", user3Starty, user3Endy);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3Starty, user3Endy);
+            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView1, "y", user3Starty, user3Endy);
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3Starty, user3Endy);
             opponentUserNameTextView3.setVisibility(View.INVISIBLE);
             scorePlayer3.setVisibility(View.INVISIBLE);
             usr3 = false;
         } else {
-            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "x", user3Endy, user3Starty);
-            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "x", user3Endy, user3Starty);
-            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "x", user3Endy, user3Starty);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3Endy, user3Starty);
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3Endy, user3Starty);
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3Endy, user3Starty);
             opponentUserNameTextView3.setVisibility(View.VISIBLE);
             scorePlayer3.setVisibility(View.VISIBLE);
             usr3 = true;
