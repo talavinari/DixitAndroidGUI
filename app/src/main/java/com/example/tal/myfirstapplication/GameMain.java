@@ -244,11 +244,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         if (checkNotSelfNotification(playerName)) {
             int pickedCard = Integer.parseInt(data.getString(Constants.WINNING_CARD));
             Game.getGame().setPickedCardForPlayer(playerName, pickedCard);
-            handleAfterAllPickedCrads();
+            handleAfterAllPickedCards();
         }
     }
 
-    private void handleAfterAllPickedCrads() {
+    private void handleAfterAllPickedCards() {
         if (Game.getGame().allPlayersPicked()) {
             Game.getGame().gameState = GameState.VOTING;
             isVoted = false;
@@ -289,7 +289,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void handleScoreLabels() {
-
         myScore.setText(getPlayerScoreString(UserData.getInstance().getNickName(this), true));
         scorePlayer1.setText(getPlayerScoreString(opponentUserNameTextView1.getText().toString()));
         scorePlayer2.setText(getPlayerScoreString(opponentUserNameTextView2.getText().toString()));
@@ -445,7 +444,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         switch (Game.getGame().gameState) {
             case VOTING:
                 if (isOneOfOpponentsCards(v)) {
-                    if (v.getAnimation() != null) {
+                    if ((v.getAnimation() != null) && (!isVoted)){
                         flashingCardAnim.cancel();
                         isFlashingCard = false;
                         String votedCard = imageToTextViewMap.get(v).getText().toString();
@@ -585,7 +584,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                         association.setVisibility(View.VISIBLE);
                     } else {
                         notifySelfPicked();
-                        handleAfterAllPickedCrads();
+                        handleAfterAllPickedCards();
                         new PickCardTask(this).execute(pickedCard);
                     }
                     return true;
