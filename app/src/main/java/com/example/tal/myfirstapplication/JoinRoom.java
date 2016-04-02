@@ -2,16 +2,13 @@ package com.example.tal.myfirstapplication;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -27,9 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by tal on 3/11/2016.
- */
 public class JoinRoom extends Activity implements View.OnClickListener, View.OnTouchListener {
 
     int backColor;
@@ -40,22 +34,10 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
      */
     private GoogleApiClient client;
 
-    BroadcastReceiver reciver;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_room);
-
-        reciver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(final Context context, Intent intent) {
-                handleError(context);
-            }
-        };
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(reciver,new IntentFilter(QuickstartPreferences.ERROR_IN_JOIN_ROOM));
 
         new GetRooms().execute();
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -79,7 +61,7 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
                             public void onClick(DialogInterface dialog, int id) {
 
                                 Intent intent = new Intent(context, FirstLogIn.class);
-                                startService(intent);
+                                startActivity(intent);
                             }
                         });
 
@@ -98,14 +80,9 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
             UserData.getInstance().setCurrRoom(roomName, this);
 
             new AddMeToRoom(this).execute();
-
-
-//            if (checkPlayServices()) {
-                // Start IntentService to register this application with GCM.
-                Intent intent = new Intent(this, RegistrationIntentService.class);
-                intent.putExtra(Constants.TOPIC_ROOM_NAME, roomName);
-                startService(intent);
-//            }
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            intent.putExtra(Constants.TOPIC_ROOM_NAME, roomName);
+            startService(intent);
         }
     }
 
@@ -151,10 +128,10 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN){
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
             backColor = v.getSolidColor();
             v.setBackgroundColor(Color.LTGRAY);
-        }else if (event.getAction() == MotionEvent.ACTION_UP){
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
             v.setBackgroundColor(backColor);
         }
 
@@ -169,7 +146,7 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
 
         @Override
         protected String doInBackground(String... params) {
-                Game.initGame();
+            Game.initGame();
             String responseJSON;
             try {
                 responseJSON = Requests.doPostWithResponse(Constants.ADD_PLAYER_TO_ROOM_API_URL, getBasicInfoJSON());
@@ -180,6 +157,18 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
                 return Boolean.toString(false);
             }
         }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (Boolean.parseBoolean(s)) {
+                Intent intent = new Intent(context, GameMain.class);
+                startActivity(intent);
+            } else {
+                handleError(JoinRoom.this);
+            }
+        }
+
 
         private boolean parseJsonResponse(String json) {
             try {
@@ -195,15 +184,13 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
                         JSONObject playerJSON = players.getJSONObject(i);
                         String playerName = playerJSON.getString("name");
 
-                        Player p = new Player(playerName, playerJSON.getInt("index"));
+                        Player p = new Player(playerName, playerJSON.getInt(Constants.INDEX));
                         Game.getGame().addPlayer(p);
                     }
 
                     Game.getGame().setFirstStoryTeller();
                     return true;
                 } else {
-                    Intent intent = new Intent(QuickstartPreferences.ERROR_IN_JOIN_ROOM);
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     return false;
                 }
 
@@ -211,31 +198,6 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
                 e.printStackTrace();
                 return false;
             }
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            if (Boolean.parseBoolean(s)){
-                Intent intent = new Intent(context, GameMain.class);
-                startActivity(intent);
-            }else{
-                handleError(JoinRoom.this);
-            }
-        }
-    }
-
-
-    private class ChangeName extends BaseTask {
-        public ChangeName(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-
-            return null;
         }
     }
 
@@ -285,7 +247,7 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
                 tr.setLayoutParams(lp);
                 TextView tv = new TextView(JoinRoom.this);
                 tv.setTextSize(30);
-                tv.setText("NO ROOMS TO SHOW!");
+                tv.setText(R.string.noRoomToShow);
                 tr.addView(tv);
                 tableLayout.addView(tr);
             }
@@ -300,14 +262,4 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
 
         startActivity(intent);
     }
-
-
-    /**
-     * Check the device to make sure it has the Google Play Services APK. If
-     * it doesn't, display a dialog that allows users to download the APK from
-     * the Google Play Store or enable it in the device's system settings.
-     */
-
-
-
 }

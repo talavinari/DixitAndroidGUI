@@ -1,8 +1,5 @@
 package com.example.tal.myfirstapplication;
 
-/**
- * Created by gront on 12/03/2016.
- */
 public class Constants {
 
     public static final String ID_EXTRA = "extra";
@@ -16,10 +13,8 @@ public class Constants {
     public static final String SEND_ASSOCIATION_API_URL = REST_API_PREFIX + "sendAssociation";
     public static final String GET_ROOMS_API_URL = REST_API_PREFIX + "rooms";
     public static final String REMOVE_PLAYER = REST_API_PREFIX + "removePlayer";
-    public static final String SEND_REGISTARTION_TOKEN = REST_API_PREFIX + "sendToken";
     public static final String GET_ROOM_DETAILS_API_URL = REST_API_PREFIX + "players"; // /players/{roomName}
     public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000; // /players/{roomName}
-    public static final String TAG_MAIN_CLASS = "MainActivity";
     public static final float SCROLL_THRESHOLD = 80;
     public static final String ROOM_FIELD = "roomName";
     public static final String NAME_FIELD = "nickName";
@@ -35,6 +30,7 @@ public class Constants {
     public static final String ASSOCIATION = "association";
     public static final String MESSAGE_TYPE = "messageType";
     public static final String INDEX = "index";
+    public static final String ERROR = "error";
     public static final int NUMBER_OF_CARDS_IN_HAND = 6;
     public static final int NUMBER_OF_PLAYERS_IN_DIXIT = 4;
     public static int WINNING_SCORE_THRESHOLD = 10;

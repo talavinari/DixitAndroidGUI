@@ -39,10 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
 public class GameMain extends Activity implements View.OnClickListener, View.OnLongClickListener, View.OnDragListener {
 
 
@@ -159,8 +155,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void findViews() {
-        tableImage = (ImageView) findViewById(R.id.table);
-
+        tableImage = (ImageView)findViewById(R.id.table);
+        targetCard = (ImageView) findViewById(R.id.target);
         opponentUserNameTextView1 = (TextView) findViewById(R.id.username1);
         opponentUserNameTextView2 = (TextView) findViewById(R.id.username2);
         opponentUserNameTextView3 = (TextView) findViewById(R.id.username3);
