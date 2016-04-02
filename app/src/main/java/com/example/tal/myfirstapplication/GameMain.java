@@ -686,6 +686,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         flashingCardAnim.setRepeatMode(AlphaAnimation.REVERSE);
         flashingCardAnim.setRepeatCount(AlphaAnimation.INFINITE);
 
+        associationButton.setVisibility(View.INVISIBLE);
+
         setOpponentsCardVisibility(View.INVISIBLE);
 
         setRegularCard(imageCardOpponentUser1);
@@ -1025,9 +1027,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         ObjectAnimator associationAnimation = null;
         if (view.getX() > 10){
             buttonAnimation= ObjectAnimator.ofFloat(view,"x",view.getX(),0);
-            associationAnimation = ObjectAnimator.ofFloat(association,"x",association.getX(),-(association.getWidth()-view.getWidth()));
+            associationAnimation = ObjectAnimator.ofFloat(association,"x",association.getX(),-association.getWidth());
         }else{
-            buttonAnimation= ObjectAnimator.ofFloat(view,"x",view.getX(),po.x - view.getX());
+            buttonAnimation= ObjectAnimator.ofFloat(view,"x",view.getX(),po.x - view.getWidth());
             associationAnimation = ObjectAnimator.ofFloat(association,"x",association.getX(),0);
         }
         buttonAnimation.setDuration(300);

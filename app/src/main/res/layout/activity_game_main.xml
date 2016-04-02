@@ -232,7 +232,7 @@
         android:imeOptions="actionSend"
         android:singleLine="true"
         android:alpha="0.8"
-        />
+        android:layout_toStartOf="@+id/association_button" />
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
