@@ -1,5 +1,6 @@
 package com.example.tal.myfirstapplication;
 
+import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.app.Activity;
@@ -14,9 +15,13 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,7 +41,7 @@ import java.util.Map;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class GameMain extends Activity implements View.OnClickListener, View.OnLongClickListener, View.OnDragListener, View.OnKeyListener {
+public class GameMain extends Activity implements View.OnClickListener, View.OnLongClickListener, View.OnDragListener {
 
 
     int sizeW;
@@ -82,13 +87,14 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     EditText association;
     Map<ImageView, TextView> imageToTextViewMap = new HashMap<>();
-
+    ImageView teller;
     TextView cardText1;
     TextView cardText2;
     TextView cardText3;
     ImageView imageCardOpponentUser1;
     ImageView imageCardOpponentUser2;
     ImageView imageCardOpponentUser3;
+    GestureListener gestureListener;
 
     BroadcastReceiver googleCloudBroadcastReceiver;
     BroadcastReceiver inApplicationBroadcastReceiver;
@@ -107,6 +113,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         data = ClipData.newPlainText("", "");
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         context = this;
+
         setCardsInPosition();
 
         for (Player player : Game.getGame().players) {
@@ -136,6 +143,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageCardOpponentUser1 = (ImageView) findViewById(R.id.user1card);
         imageCardOpponentUser2 = (ImageView) findViewById(R.id.user2card);
         imageCardOpponentUser3 = (ImageView) findViewById(R.id.user3card);
+
+        teller = (ImageView) findViewById(R.id.teller);
 
         imageToTextViewMap = new HashMap<>();
         imageToTextViewMap.put(imageCardOpponentUser1, cardText1);
@@ -245,8 +254,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void handleWinningGUI() {
         // TODO winnig GUI - Unsubscribe from topic + cant touch anything
         List<Player> winners = Game.getGame().winners;
-
-
     }
 
     private void notifyAssociation(Bundle data) {
@@ -353,14 +360,22 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public void onClick(View v) {
         switch (Game.getGame().gameState) {
             case VOTING:
-                if (isOneOfOpponentsCards(v) && v.getAnimation() != null) {
-                    flashingCardAnim.cancel();
-                    isFlashingCard = false;
-                    String votedCard = imageToTextViewMap.get(v).getText().toString();
-                    Game.getGame().setVoteForPlayer(UserData.getInstance().getNickName(context), Integer.valueOf(votedCard));
-                    handleAfterAllVotes();
-                    new VoteTask(this).execute(votedCard);
-                    isVoted = true;
+                if (isOneOfOpponentsCards(v)) {
+                    if (v.getAnimation() != null) {
+                        flashingCardAnim.cancel();
+                        isFlashingCard = false;
+                        String votedCard = imageToTextViewMap.get(v).getText().toString();
+                        Game.getGame().setVoteForPlayer(UserData.getInstance().getNickName(context), Integer.valueOf(votedCard));
+                        handleAfterAllVotes();
+                        new VoteTask(this).execute(votedCard);
+                        isVoted = true;
+                    } else {
+                        if (v.getLayoutParams().height < cardSize * 5) {
+                            setBigCard(v);
+                        } else {
+                            setRegularCard(v);
+                        }
+                    }
                 }
                 break;
             case PICKING_CARDS:
@@ -537,7 +552,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageCardOpponentUser2.setOnClickListener(this);
         imageCardOpponentUser3.setOnClickListener(this);
 
-        findViewById(R.id.teller).setVisibility(View.INVISIBLE);
+
 
         findViewById(R.id.user1).setVisibility(View.INVISIBLE);
         findViewById(R.id.user2).setVisibility(View.INVISIBLE);
@@ -557,8 +572,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         setRegularCard(imageCardOpponentUser1);
         setRegularCard(imageCardOpponentUser2);
         setRegularCard(imageCardOpponentUser3);
-
-        findViewById(R.id.association).setOnKeyListener(this);
 
         targetCard = (ImageView) findViewById(R.id.target);
         targetCard.setLayoutParams(getOutgoingCardLayoutParams());
@@ -781,37 +794,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             new SendAssociationTask(context).execute(String.valueOf(myPickedCard),
                     association);
             notifySelfPicked();
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(findViewById(R.id.association).getWindowToken(), 0);
             Game.getGame().gameState = GameState.PICKING_CARDS;
         }
-        onKey(getCurrentFocus(), e.getKeyCode(), e);
         return super.dispatchKeyEvent(e);
-    }
-
-    @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        int s;
-        s =1;
-        s++;
-        int f = s;
-
-
-//        if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-//            EditText associationEditText = (EditText)findViewById(R.id.association);
-//            associationEditText.setVisibility(View.INVISIBLE);
-//            String association = associationEditText.getText().toString();
-//            Game.getGame().currentAssociation = association;
-//            Game.getGame().currentWinningCard = myPickedCard;
-//            new SendAssociationTask(context).execute(String.valueOf(myPickedCard),
-//                    association);
-//            notifySelfPicked();
-//            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-//            Game.getGame().gameState = GameState.PICKING_CARDS;
-//        }
-//
-        return false;
     }
 
     private class OnClose extends BaseTask {
@@ -843,7 +830,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
 
     private void setTellerPic() {
-        RelativeLayout.LayoutParams userPicLayeout = (RelativeLayout.LayoutParams) findViewById(R.id.teller).getLayoutParams();
+        teller.setVisibility(View.VISIBLE);
+        RelativeLayout.LayoutParams userPicLayeout = (RelativeLayout.LayoutParams) teller.getLayoutParams();
         if (!amITheTeller()) {
             if (Game.getGame().currentStoryTeller.userPic.getX() - 200 > po.x / 2) {
                 userPicLayeout.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX();
@@ -860,6 +848,24 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private boolean amITheTeller() {
         return Game.getGame().currentStoryTeller.name.equals(UserData.getInstance().getNickName(this));
     }
+
+    private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+
+            if (e.getY() + 20 < e.getHistoricalY(0) ){
+                Animator animator = AnimatorInflater.loadAnimator(context,R.animator.user3movement);
+                animator.setTarget(association);
+                animator.start();
+
+
+            }else if (e.getY() > e.getHistoricalY(0)+ 20 ){
+
+                Animator animator = AnimatorInflater.loadAnimator(context,R.animator.user3moveback);
+                animator.setTarget(association);
+                animator.start();
+            }
+            return super.onDown(e);
+        }
+    }
 }
-
-
