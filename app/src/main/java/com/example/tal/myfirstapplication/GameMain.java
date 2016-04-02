@@ -12,7 +12,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -20,7 +19,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -465,13 +463,21 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 }
                 break;
             case PICKING_CARDS:
-                if (isOneOfOpponentsCards(v) && !isFlashingCard) {
-                    if (v.getLayoutParams().height < cardSize * 5) {
-                        setBigCard(v);
+                if (getListPlaceByView(v) != -1) {
+                    int i = getListPlaceByView(v);
+                    if (v.getLayoutParams().height < cardSize * 5 && i >= 0) {
+                        setBigCardLayout(getListPlaceByView(v));
                     } else {
-                        setRegularCard(v);
+                        setAllCards(cardSize, (int) (cardSize * 1.5));
                     }
                 }
+//                if (isOneOfOpponentsCards(v) && !isFlashingCard) {
+//                    if (v.getLayoutParams().height < cardSize * 5) {
+//                        setBigCard(v);
+//                    } else {
+//                        setRegularCard(v);
+//                    }
+//                }
 
                 break;
 
@@ -514,7 +520,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 }
                 break;
             case PICKING_CARDS:
-                if (!amITheTeller() || !isCardOnTable) {
+                if (!amITheTeller() && !isCardOnTable) {
                     draggedCardNum = getListPlaceByView(v);
                     draggedView = cardsInHand.get(draggedCardNum);
                     View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
@@ -528,7 +534,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
             case WAITING_FOR_ASSOCIATION:
 //
-                if (amITheTeller() || !isCardOnTable) {
+                if (amITheTeller() && !isCardOnTable) {
                     draggedCardNum = getListPlaceByView(v);
                     draggedView = cardsInHand.get(draggedCardNum);
                     View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
