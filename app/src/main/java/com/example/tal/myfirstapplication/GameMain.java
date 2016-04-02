@@ -97,10 +97,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     ImageView imageCardOpponentUser3;
     GestureListener gestureListener;
 
-    TextView myScore = ((TextView) findViewById(R.id.myscore));
-    TextView scorePlayer1 = ((TextView) findViewById(R.id.score1));
-    TextView scorePlayer2 = ((TextView) findViewById(R.id.score2));
-    TextView scorePlayer3 = ((TextView) findViewById(R.id.score3));
+    TextView myScore;
+    TextView scorePlayer1;
+    TextView scorePlayer2;
+    TextView scorePlayer3;
 
     BroadcastReceiver googleCloudBroadcastReceiver;
     BroadcastReceiver inApplicationBroadcastReceiver;
