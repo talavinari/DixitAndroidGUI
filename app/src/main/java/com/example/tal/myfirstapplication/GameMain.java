@@ -134,6 +134,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        startGameGUI();
+    }
+
     private void findViews() {
         opponentUserNameTextView1 = (TextView) findViewById(R.id.username1);
         opponentUserNameTextView2 = (TextView) findViewById(R.id.username2);
@@ -577,8 +583,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageCardOpponentUser1.setOnClickListener(this);
         imageCardOpponentUser2.setOnClickListener(this);
         imageCardOpponentUser3.setOnClickListener(this);
-
-        setTellerPic();
 
         findViewById(R.id.user1).setVisibility(View.INVISIBLE);
         findViewById(R.id.user2).setVisibility(View.INVISIBLE);
