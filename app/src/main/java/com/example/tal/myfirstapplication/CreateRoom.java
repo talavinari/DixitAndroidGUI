@@ -49,24 +49,26 @@ public class CreateRoom extends Activity {
 
                 Game.initGame();
                 String responseJSON = Requests.doPostWithResponse(Constants.ADD_ROOM_API_URL, sendingJSON);
+
                 JSONObject response = new JSONObject(responseJSON);
-                String cards = (String) response.get("cards");
-                UserData.getInstance().setCards(cards);
+                if (!response.has("error")) {
+                    String cards = (String) response.get("cards");
+                    UserData.getInstance().setCards(cards);
 
-                Game.getGame().addPlayer(new Player(nickName, 1));
-                Game.getGame().setFirstStoryTeller();
+                    Game.getGame().addPlayer(new Player(nickName, 1));
+                    Game.getGame().setFirstStoryTeller();
 
 
-//                if (checkPlayServices()) {
-                    // Start IntentService to register this application with GCM.
                     Intent intent = new Intent(context, RegistrationIntentService.class);
                     intent.putExtra(Constants.TOPIC_ROOM_NAME, roomName);
                     startService(intent);
-//                }
+                }
+                else{
+
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
 
 
             return "";

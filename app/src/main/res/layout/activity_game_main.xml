@@ -224,7 +224,7 @@
         android:maxLength="50"
         android:background="#ccffffff"
         android:textColor="@color/Black"
-        android:imeActionLabel="SEND"
+        android:imeActionLabel="Send"
         android:visibility="invisible"
         android:imeOptions="actionGo|actionDone|actionSend"
         android:singleLine="true"

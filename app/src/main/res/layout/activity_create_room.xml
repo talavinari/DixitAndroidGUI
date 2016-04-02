@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     >
 
-
     <TextView
         android:layout_width="206dp"
         android:layout_height="wrap_content"
@@ -17,7 +16,9 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/RoomName" />
+        android:id="@+id/RoomName"
+        android:imeActionLabel="Create"
+        android:singleLine="true"/>
 
     <Button
         style="@style/Button"

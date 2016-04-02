@@ -130,16 +130,6 @@ public class Game {
         return null;
     }
 
-    public Player getPlayerByIndex(int index) {
-        for (Player p : players){
-            if (p.index == index){
-                return p;
-            }
-        }
-
-        return null;
-    }
-
     public void setPickedCardForPlayer(String playerName, int pickedCard) {
         Player player = getPlayerByName(playerName);
         pickedCards.put(player, pickedCard);
@@ -157,4 +147,3 @@ public class Game {
         return winners.size() == 0;
     }
 }
-//TODO change the retun index?
