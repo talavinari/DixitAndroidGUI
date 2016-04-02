@@ -114,6 +114,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 attachImageToPlayer(player);
             }
         }
+
+        if (Game.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
+            startGameGUI();
+            Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
+        }
+
     }
 
     private void findViews() {
@@ -322,11 +328,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         if (checkNotSelfNotification(playerName)) {
             int index = Integer.valueOf(data.getString(Constants.INDEX));
             Game.getGame().addPlayer(attachImageToPlayer(new Player(playerName, index)));
-        }
 
-        if (Game.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
-            startGameGUI();
-            Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
+            if (Game.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
+                startGameGUI();
+                Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
+            }
         }
     }
 

@@ -18,9 +18,9 @@ public class Game {
     String currentAssociation;
     int currentWinningCard;
     List<Player> winners;
-    GameState gameState = GameState.WAITING_FOR_ASSOCIATION;
+    GameState gameState = GameState.INIT_GAME;
 
-    private static Game game = new Game();
+    private static Game game;
 
     private Game(){
         players = new ArrayList<>();
