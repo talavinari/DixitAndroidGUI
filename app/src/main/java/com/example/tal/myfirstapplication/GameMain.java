@@ -857,17 +857,18 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void setTellerPic() {
         teller.setVisibility(View.VISIBLE);
-        RelativeLayout.LayoutParams userPicLayeout = (RelativeLayout.LayoutParams) teller.getLayoutParams();
+        RelativeLayout.LayoutParams tellerPicLayout = (RelativeLayout.LayoutParams) teller.getLayoutParams();
         if (!amITheTeller()) {
-            if (Game.getGame().currentStoryTeller.userPic.getX() - 200 > po.x / 2) {
-                userPicLayeout.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX();
+            ImageView userTellerPic = Game.getGame().currentStoryTeller.userPic;
+            if (userTellerPic.getX() - 200 > po.x / 2) {
+                tellerPicLayout.leftMargin = (int) userTellerPic.getX();
             } else {
-                userPicLayeout.leftMargin = (int) Game.getGame().currentStoryTeller.userPic.getX() + 300;
+                tellerPicLayout.leftMargin = (int) userTellerPic.getX() + userTellerPic.getWidth();
             }
-            userPicLayeout.topMargin = (int) Game.getGame().currentStoryTeller.userPic.getY();
+            tellerPicLayout.topMargin = (int) userTellerPic.getY();
         } else {
-            userPicLayeout.leftMargin = (int) (po.x - (userPicLayeout.width * 1.5));
-            userPicLayeout.topMargin = (po.y - findViewById(R.id.table).getHeight());
+            tellerPicLayout.leftMargin = (int) (po.x - (teller.getWidth() * 1.5));
+            tellerPicLayout.topMargin = (po.y - findViewById(R.id.table).getHeight());
         }
     }
 
