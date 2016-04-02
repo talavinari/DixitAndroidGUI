@@ -129,7 +129,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         }
 
         if (Game.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
-            startGameGUI();
             Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
         }
 
@@ -579,7 +578,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageCardOpponentUser2.setOnClickListener(this);
         imageCardOpponentUser3.setOnClickListener(this);
 
-
+        setTellerPic();
 
         findViewById(R.id.user1).setVisibility(View.INVISIBLE);
         findViewById(R.id.user2).setVisibility(View.INVISIBLE);
