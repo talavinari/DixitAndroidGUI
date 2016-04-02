@@ -1,7 +1,5 @@
 package com.example.tal.myfirstapplication;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -16,9 +14,7 @@ import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
-import android.view.GestureDetector;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.InputMethodManager;
@@ -56,9 +52,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     Point po;
     public static Vibrator vib;
     Context context;
-    boolean usr1 = false;
-    boolean usr2 = false;
-    boolean usr3 = false;
+
     AlphaAnimation flashingCardAnim;
     Boolean isFlashingCard = false;
     int draggedCardNum;
@@ -75,8 +69,17 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     ImageView cardImage4;
     ImageView cardImage5;
     ImageView cardImage6;
+
+    TextView card1TextView;
+    TextView card2TextView;
+    TextView card3TextView;
+    TextView card4TextView;
+    TextView card5TextView;
+    TextView card6TextView;
+
     List<ImageView> cardsImages;
 
+    ImageView tableImage;
     EditText association;
     Map<ImageView, TextView> imageToTextViewMap = new HashMap<>();
     ImageView teller;
@@ -85,27 +88,29 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     TextView cardText3;
     ImageView imageCardOpponentUser1;
     ImageView imageCardOpponentUser2;
-    ImageView imageCardOpponentUser3;
-    GestureListener gestureListener;
-
-    TextView myScore;
-    TextView scorePlayer1;
-    TextView scorePlayer2;
-    TextView scorePlayer3;
-
-
-    // Property animation
-    int user1Startx;
-    int user2Startx;
-    int user3Starty;
-    int user1Endx;
-    int user2Endx;
-    int user3Endy;
-
-
 
     BroadcastReceiver googleCloudBroadcastReceiver;
     BroadcastReceiver inApplicationBroadcastReceiver;
+
+    ImageView imageCardOpponentUser3;
+    TextView myScore;
+    TextView scorePlayer1;
+    TextView scorePlayer2;
+
+    TextView scorePlayer3;
+    boolean usr1 = false;
+    boolean usr2 = false;
+    boolean usr3 = false;
+
+    // Property animation
+    int user1ShowX;
+    int user2ShowX;
+
+    int user3ShowY;
+    int user1HideX;
+    int user2HideX;
+
+    int user3HideY;
 
     int myPickedCard;
 
@@ -143,6 +148,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void findViews() {
+        tableImage = (ImageView)findViewById(R.id.table);
+
         opponentUserNameTextView1 = (TextView) findViewById(R.id.username1);
         opponentUserNameTextView2 = (TextView) findViewById(R.id.username2);
         opponentUserNameTextView3 = (TextView) findViewById(R.id.username3);
@@ -172,6 +179,14 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         cardImage6 = (ImageView) findViewById(R.id.card6);
         cardsImages = new ArrayList<>(Arrays.asList(new ImageView[]{cardImage1, cardImage2, cardImage3,
                 cardImage4, cardImage5, cardImage6}));
+
+        card1TextView = (TextView) findViewById(R.id.card1text);
+        card2TextView = (TextView) findViewById(R.id.card2text);
+        card3TextView = (TextView) findViewById(R.id.card3text);
+        card4TextView = (TextView) findViewById(R.id.card4text);
+        card5TextView = (TextView) findViewById(R.id.card5text);
+        card6TextView = (TextView) findViewById(R.id.card6text);
+
 
         myScore = ((TextView) findViewById(R.id.myscore));
         scorePlayer1 = ((TextView) findViewById(R.id.score1));
@@ -543,7 +558,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 setAllCards(cardSize, (int) (cardSize * 1.5));
                 return true;
             case DragEvent.ACTION_DROP:
-                if (findViewById(R.id.table) == v) {
+                if (tableImage.equals(v)) {
                     cardsInHand.remove(draggedCardNum);
                     draggedView.cardPic.setLayoutParams(getOutgoingCardLayoutParams());
                     rearrangeCards();
@@ -608,26 +623,20 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     public void setCardsInPosition() {
-
         handleCards();
         calcSize();
-
         setPropertyAnimation();
-
-
-
         imageCardOpponentUser1.setOnClickListener(this);
         imageCardOpponentUser2.setOnClickListener(this);
         imageCardOpponentUser3.setOnClickListener(this);
 
-        findViewById(R.id.user1).setVisibility(View.INVISIBLE);
-        findViewById(R.id.user2).setVisibility(View.INVISIBLE);
-        findViewById(R.id.user3).setVisibility(View.INVISIBLE);
-        findViewById(R.id.username1).setVisibility(View.INVISIBLE);
-        findViewById(R.id.username2).setVisibility(View.INVISIBLE);
-        findViewById(R.id.username3).setVisibility(View.INVISIBLE);
+        opponentUserImageView1.setVisibility(View.INVISIBLE);
+        opponentUserImageView2.setVisibility(View.INVISIBLE);
+        opponentUserImageView3.setVisibility(View.INVISIBLE);
+        opponentUserNameTextView1.setVisibility(View.INVISIBLE);
+        opponentUserNameTextView2.setVisibility(View.INVISIBLE);
+        opponentUserNameTextView3.setVisibility(View.INVISIBLE);
 
-//        flashingCardAnim = new AlphaAnimation(context,Xml.asAttributeSet(getResources().getXml(R.animator.flashingcard)));
         flashingCardAnim = new AlphaAnimation(1.0f, 0.2f);
         flashingCardAnim.setDuration(300);
         flashingCardAnim.setRepeatMode(AlphaAnimation.REVERSE);
@@ -651,42 +660,47 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             cardsInHand.get(i).cardPic.setOnDragListener(this);
         }
 
-        ImageView table = (ImageView) findViewById(R.id.table);
-        RelativeLayout.LayoutParams r = new RelativeLayout.LayoutParams(table.getLayoutParams().width, sizeH * 5 / 7);
+        RelativeLayout.LayoutParams r = new RelativeLayout.LayoutParams(tableImage.getLayoutParams().width, sizeH * 5 / 7);
         r.addRule(RelativeLayout.ALIGN_PARENT_START);
-        table.setLayoutParams(r);
-        table.setOnDragListener(this);
+        tableImage.setLayoutParams(r);
+        tableImage.setOnDragListener(this);
     }
 
     private void setPropertyAnimation() {
-        user1Endx = (int) (opponentUserImageView1.getWidth() * -0.5);
-        user1Startx = (int) (opponentUserImageView1.getWidth() *0.5);
+        user1HideX = (int) (opponentUserImageView1.getWidth() * -0.5);
+        user1ShowX = (int) (opponentUserImageView1.getWidth() *0.5);
 
-        user2Endx = (int) (po.x - opponentUserImageView2.getWidth() *0.5);
-        user2Startx = (int) (po.x - opponentUserImageView2.getWidth() *1.5);
+        user2HideX = (int) (po.x - opponentUserImageView2.getWidth() *0.5);
+        user2ShowX = (int) (po.x - opponentUserImageView2.getWidth() *1.5);
 
-        user3Endy = (int) (opponentUserImageView3.getHeight() *-0.5);
-        user3Starty = (int) (opponentUserImageView3.getHeight() *0.5);
+        user3HideY = (int) (opponentUserImageView3.getHeight() *-0.5);
+        user3ShowY = (int) (opponentUserImageView3.getHeight() *0.5);
     }
 
     private void handleCards() {
         for (int i = 0; i < cardsImages.size(); i++) {
             cardsImages.get(i).setImageDrawable(
-                    getImageByCardNumber(UserData.getInstance().getCards().get(i)));
+                    getImageByCardNumber(getCards(i)));
         }
 
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1),
-                cardImage1, this,
-                (TextView) findViewById(R.id.card1text),
-                UserData.getInstance().getCards().get(0)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1),
-                cardImage2, this,
-                (TextView) findViewById(R.id.card2text),
-                UserData.getInstance().getCards().get(1)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), cardImage3, this, (TextView) findViewById(R.id.card3text), UserData.getInstance().getCards().get(2)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), cardImage4, this, (TextView) findViewById(R.id.card4text), UserData.getInstance().getCards().get(3)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), cardImage5, this, (TextView) findViewById(R.id.card5text), UserData.getInstance().getCards().get(4)));
-        cardsInHand.add(new Card(1, 1, new RelativeLayout.LayoutParams(1, 1), cardImage6, this, (TextView) findViewById(R.id.card6text), UserData.getInstance().getCards().get(5)));
+        cardsInHand.add(cardCreator(cardImage1, card1TextView, 0));
+        cardsInHand.add(cardCreator(cardImage2, card2TextView, 1));
+        cardsInHand.add(cardCreator(cardImage3, card3TextView, 2));
+        cardsInHand.add(cardCreator(cardImage4, card4TextView, 3));
+        cardsInHand.add(cardCreator(cardImage5, card5TextView, 4));
+        cardsInHand.add(cardCreator(cardImage6, card6TextView, 5));
+    }
+
+    @NonNull
+    private Card cardCreator(ImageView cardImage, TextView cardTextview, int cardNum) {
+        return new Card(new RelativeLayout.LayoutParams(1, 1),
+                cardImage, this,
+                cardTextview,
+                getCards(cardNum));
+    }
+
+    private String getCards(int index) {
+        return UserData.getInstance().getCards().get(index);
     }
 
     private Drawable getImageByCardNumber(String cardNumber) {
@@ -740,7 +754,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         int tmpCardSize = cardSize / 2;
         int bigCardSize = cardSize * 5;
         int tmpWideSize = (po.x - (bigCardSize + (cardsInHand.size() * tmpCardSize))) / (cardsInHand.size() + 1);
-        RelativeLayout.LayoutParams labelLayoutParams = null;
+        RelativeLayout.LayoutParams labelLayoutParams;
 
         for (int j = 0; j < cardsInHand.size(); j++) {
             if (j < i) {
@@ -784,15 +798,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         ObjectAnimator userScoreAnimation;
 
         if (usr1) {
-            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView1, "x", user1Startx, user1Endx);
-            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView1, "x", user1Startx, user1Endx);
-            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer1, "x", user1Startx, user1Endx);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView1, "x", user1ShowX, user1HideX);
+            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView1, "x", user1ShowX, user1HideX);
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer1, "x", user1ShowX, user1HideX);
             scorePlayer1.setVisibility(View.INVISIBLE);
             usr1 = false;
         } else {
-            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView1, "x", user1Endx, user1Startx);
-            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView1, "x", user1Endx, user1Startx);
-            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer1, "x", user1Endx, user1Startx);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView1, "x", user1HideX, user1ShowX);
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView1, "x", user1HideX, user1ShowX);
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer1, "x", user1HideX, user1ShowX);
             scorePlayer1.setVisibility(View.VISIBLE);
             usr1 = true;
         }
@@ -812,15 +826,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         ObjectAnimator userScoreAnimation;
 
         if (usr2) {
-            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView2, "x", user2Startx, user2Endx);
-            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView2, "x", user2Startx, user2Endx);
-            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer2, "x", user2Startx, user2Endx);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView2, "x", user2ShowX, user2HideX);
+            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView2, "x", user2ShowX, user2HideX);
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer2, "x", user2ShowX, user2HideX);
             scorePlayer2.setVisibility(View.INVISIBLE);
             usr2 = false;
         } else {
-            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView2, "x", user2Endx, user2Startx);
-            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView2, "x", user2Endx, user2Startx);
-            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer2, "x", user2Endx, user2Startx);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView2, "x", user2HideX, user2ShowX);
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView2, "x", user2HideX, user2ShowX);
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer2, "x", user2HideX, user2ShowX);
             scorePlayer2.setVisibility(View.VISIBLE);
             usr2 = true;
         }
@@ -840,15 +854,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         ObjectAnimator userScoreAnimation;
 
         if (usr3) {
-            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3Starty, user3Endy);
-            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3Starty + opponentUserImageView3.getHeight(), user3Endy + opponentUserImageView3.getHeight());
-            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3Starty, user3Endy);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3ShowY, user3HideY);
+            userTextAnimation= ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3ShowY + opponentUserImageView3.getHeight(), user3HideY + opponentUserImageView3.getHeight());
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3ShowY, user3HideY);
             scorePlayer3.setVisibility(View.INVISIBLE);
             usr3 = false;
         } else {
-            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3Endy, user3Starty);
-            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3Endy + opponentUserImageView3.getHeight(), user3Starty + opponentUserImageView3.getHeight());
-            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3Endy, user3Starty);
+            userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3HideY, user3ShowY);
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3HideY + opponentUserImageView3.getHeight(), user3ShowY + opponentUserImageView3.getHeight());
+            userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3HideY, user3ShowY);
             scorePlayer3.setVisibility(View.VISIBLE);
             usr3 = true;
         }
@@ -933,31 +947,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             tellerPicLayout.topMargin = (int) userTellerPic.getY() +userTellerPic.getHeight() - teller.getHeight();
         } else {
             tellerPicLayout.leftMargin = (int) (po.x - (teller.getWidth() * 1.5));
-            tellerPicLayout.topMargin = (findViewById(R.id.table).getHeight() - (teller.getHeight()/2));
+            tellerPicLayout.topMargin = (tableImage.getHeight() - (teller.getHeight()/2));
         }
     }
 
     private boolean amITheTeller() {
         return Game.getGame().currentStoryTeller.name.equals(UserData.getInstance().getNickName(this));
-    }
-
-    private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onDown(MotionEvent e) {
-
-            if (e.getY() + 20 < e.getHistoricalY(0) ){
-                Animator animator = AnimatorInflater.loadAnimator(context,R.animator.user3movement);
-                animator.setTarget(association);
-                animator.start();
-
-
-            }else if (e.getY() > e.getHistoricalY(0)+ 20 ){
-
-                Animator animator = AnimatorInflater.loadAnimator(context,R.animator.user3moveback);
-                animator.setTarget(association);
-                animator.start();
-            }
-            return super.onDown(e);
-        }
     }
 }

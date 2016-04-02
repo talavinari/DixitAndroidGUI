@@ -15,9 +15,9 @@ public class Card {
     ImageView cardPic;
     TextView tv;
 
-    public Card(int cardNum, int imageNum, RelativeLayout.LayoutParams layoutParams, ImageView cardPic,Object obj, TextView tv, String tvText) {
-        this.cardNum = cardNum;
-        this.imageNum = imageNum;
+    public Card(RelativeLayout.LayoutParams layoutParams, ImageView cardPic,Object obj, TextView tv, String tvText) {
+        this.cardNum = 1;
+        this.imageNum = 1;
         this.layoutParams = layoutParams;
         this.cardPic = cardPic;
         cardPic.setOnClickListener((View.OnClickListener) obj);
@@ -26,7 +26,6 @@ public class Card {
         this.tv = tv;
         this.tv.setText(tvText);
     }
-
 
     public Card() {
     }
@@ -39,13 +38,6 @@ public class Card {
 
     public void setText(String text){
         this.tv.setText(text);
-    }
-
-    private void setTextAlign(){
-//        RelativeLayout.LayoutParams lay = (RelativeLayout.LayoutParams) tv.getLayoutParams();
-//        lay.addRule(RelativeLayout.CENTER_HORIZONTAL,cardPic.getId());
-//        lay.addRule(RelativeLayout.CENTER_VERTICAL,cardPic.getId());
-//        tv.setLayoutParams(lay);
     }
 
     public void bringToFront(){
