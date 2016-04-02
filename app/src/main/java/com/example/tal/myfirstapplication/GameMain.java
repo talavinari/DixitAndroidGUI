@@ -379,6 +379,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         setTellerPic();
         cardsInHand.clear();
         handleCards();
+        rearrangeCards();
         setOpponentsCardVisibility(View.INVISIBLE);
     }
 
@@ -458,7 +459,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     if (v.getLayoutParams().height < cardSize * 5 && i >= 0) {
                         setBigCardLayout(getListPlaceByView(v));
                     } else {
-                        setAllCards(cardSize, cardSize * 2);
+                        setAllCards(cardSize, (int) (cardSize * 1.5));
                     }
                 } else if (
                         oneOfOpponentPickedCards(v)) {
@@ -539,7 +540,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 draggedView.setVisibility(View.VISIBLE);
 //                cardsInHand.get(draggedCardNum).cardPic.setVisibility(View.VISIBLE);
                 isCardOnTable = false;
-                setAllCards(cardSize, cardSize * 2);
+                setAllCards(cardSize, (int) (cardSize * 1.5));
                 return true;
             case DragEvent.ACTION_DROP:
                 if (findViewById(R.id.table) == v) {
@@ -643,7 +644,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         targetCard.setVisibility(View.INVISIBLE);
         targetCard.bringToFront();
 
-        setAllCards(cardSize, cardSize * 2);
+        setAllCards(cardSize, (int) (cardSize * 1.5));
         for (int i = 0; i < cardsInHand.size(); i++) {
             cardsInHand.get(i).cardPic.setOnClickListener(this);
             cardsInHand.get(i).cardPic.setOnLongClickListener(this);
@@ -722,7 +723,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void setRegularCard(View view) {
         RelativeLayout.LayoutParams labelLayoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
         labelLayoutParams.width = cardSize;
-        labelLayoutParams.height = cardSize * 2;
+        labelLayoutParams.height = (int) (cardSize * 1.5);
         view.setLayoutParams(labelLayoutParams);
     }
 
@@ -731,7 +732,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         int bigCardSize = cardSize * 5;
         RelativeLayout.LayoutParams labelLayoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
         labelLayoutParams.width = bigCardSize;
-        labelLayoutParams.height = bigCardSize * 2;
+        labelLayoutParams.height = (int) (bigCardSize * 1.5);
         view.setLayoutParams(labelLayoutParams);
     }
 
@@ -743,20 +744,20 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         for (int j = 0; j < cardsInHand.size(); j++) {
             if (j < i) {
-                labelLayoutParams = new RelativeLayout.LayoutParams(tmpCardSize, tmpCardSize * 2);
+                labelLayoutParams = new RelativeLayout.LayoutParams(tmpCardSize, (int) (tmpCardSize * 1.5));
                 labelLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 labelLayoutParams.bottomMargin = cardSize;
                 labelLayoutParams.leftMargin = (j * (tmpCardSize + tmpWideSize)) + tmpWideSize;
             } else if (j == i) {
-                labelLayoutParams = new RelativeLayout.LayoutParams(bigCardSize, bigCardSize * 2);
+                labelLayoutParams = new RelativeLayout.LayoutParams(bigCardSize, (int) (bigCardSize * 1.5));
                 labelLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 labelLayoutParams.bottomMargin = cardSize;
                 labelLayoutParams.leftMargin = (j * (tmpCardSize + tmpWideSize)) + tmpWideSize;
             } else {
-                labelLayoutParams = new RelativeLayout.LayoutParams(tmpCardSize, tmpCardSize * 2);
+                labelLayoutParams = new RelativeLayout.LayoutParams(tmpCardSize, (int) (tmpCardSize * 1.5));
                 labelLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 labelLayoutParams.bottomMargin = cardSize;
-                labelLayoutParams.leftMargin = ((j - 1) * (tmpCardSize + tmpWideSize)) + (2 * tmpWideSize) + bigCardSize;
+                labelLayoutParams.leftMargin = (int) (((j - 1) * (tmpCardSize + tmpWideSize)) + (1.5 * tmpWideSize) + bigCardSize);
             }
             cardsInHand.get(j).cardPic.setLayoutParams(labelLayoutParams);
         }
@@ -764,7 +765,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private RelativeLayout.LayoutParams getOutgoingCardLayoutParams() {
-        RelativeLayout.LayoutParams labelLayoutParams = new RelativeLayout.LayoutParams(cardSize, cardSize * 2);
+        RelativeLayout.LayoutParams labelLayoutParams = new RelativeLayout.LayoutParams(cardSize, (int) (cardSize * 1.5));
         labelLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         labelLayoutParams.topMargin = 8 * cardSize;
         return labelLayoutParams;
@@ -772,7 +773,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void rearrangeCards() {
         calcSize();
-        setAllCards(cardSize, cardSize * 2);
+        setAllCards(cardSize, (int) (cardSize * 1.5));
     }
 
     public void moveUser1(View view) {
@@ -864,7 +865,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         if (cardSize == 0) {
             sizeW = po.x / (3 * cardsInHand.size() + 1);
-            cardSize = 2 * sizeW;
+            cardSize = (int) (1.5 * sizeW);
         } else {
             sizeW = ((po.x - (cardsInHand.size() * cardSize)) / (cardsInHand.size() + 1));
         }
