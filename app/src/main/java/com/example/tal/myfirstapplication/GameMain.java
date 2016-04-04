@@ -133,7 +133,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         setContentView(R.layout.activity_game_main);
         findViews();
         initListeners();
-        handleAssociationGUI(false);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -385,6 +384,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         association.setText(Game.getGame().currentAssociation);
         association.setVisibility(View.VISIBLE);
         associationButton.setVisibility(View.VISIBLE);
+        association.setFocusableInTouchMode(editable);
         association.setFocusable(editable);
         association.setClickable(editable);
 
