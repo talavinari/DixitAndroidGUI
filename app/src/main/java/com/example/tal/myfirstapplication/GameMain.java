@@ -516,13 +516,19 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             labelLayoutParams.leftMargin = po.x/2 -opponentUserImageView1.getWidth();
 
         }else if(v.equals(imageCardOpponentUser2)){
-            labelLayoutParams.leftMargin = po.x/2 +opponentUserImageView1.getWidth() - imageCardOpponentUser2.getWidth();
+            labelLayoutParams.leftMargin = po.x/2 +opponentUserImageView1.getWidth() - cardSize;
 
         }else if(v.equals(imageCardOpponentUser3)){
-            labelLayoutParams.leftMargin = (po.x -imageCardOpponentUser3.getWidth())/2;
+            labelLayoutParams.leftMargin = (po.x -cardSize)/2;
         }
 
         v.setLayoutParams(labelLayoutParams);
+    }
+
+    private void setAllOppCardsRegular(){
+        setOpponentRegularCard(imageCardOpponentUser1);
+        setOpponentRegularCard(imageCardOpponentUser2);
+        setOpponentRegularCard(imageCardOpponentUser3);
     }
 
     @Override
@@ -541,6 +547,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                         if (v.getLayoutParams().height > cardSize * 1.5) {
                             setOpponentRegularCard(v);
                         } else {
+                            setAllOppCardsRegular();
                             setBigOpponentCard(v);
                             v.bringToFront();
                         }
