@@ -1,26 +1,22 @@
 package com.example.tal.myfirstapplication;
 
 import android.content.Intent;
-import android.graphics.Paint;
-import android.graphics.Paint.Align;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
-import static android.graphics.Paint.Align.*;
 
 public class ChooseCreateJoin extends AppCompatActivity {
 
@@ -33,7 +29,9 @@ public class ChooseCreateJoin extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_choose_create_join);
 
         join = (ImageButton) findViewById(R.id.join);
