@@ -390,6 +390,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         association.setFocusable(editable);
         association.setClickable(editable);
         isTyping = editable;
+        if (association.getX() < 0){
+            hideAndShowAssociation(association);
+        }
         if (!amITheTeller()) {
             isCardOnTable = false;
         }
@@ -491,10 +494,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void setPickedPlace(View view){
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) picked.getLayoutParams();
-        lp.leftMargin = (int) (po.x - view.getX()+ view.getWidth() - (picked.getWidth()/2));
-        lp.topMargin = (int) (view.getY() + view.getHeight() - (picked.getHeight()/2));
+        lp.leftMargin = (int) (po.x - view.getX()- (picked.getWidth()/2));
+        lp.topMargin = (int) (view.getY() - (picked.getHeight()/2));
         picked.setLayoutParams(lp);
         picked.setVisibility(View.VISIBLE);
+        picked.bringToFront();
     }
 
     private void setBigOpponentCard(View v){
@@ -550,6 +554,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                             setAllOppCardsRegular();
                             setBigOpponentCard(v);
                             v.bringToFront();
+                            picked.bringToFront();
                         }
                     }
                 }
@@ -1136,34 +1141,45 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
 
     private void setTellerPic() {
-        ObjectAnimator tellerAnimationX;
-        ObjectAnimator tellerAnimationY;
-        float fromX = teller.getX();
-        float toX;
-        float fromY = teller.getY();
-        float  toY;
+//        ObjectAnimator tellerAnimationX;
+//        ObjectAnimator tellerAnimationY;
+        TranslateAnimation tellerAni;
+//        float fromX = teller.getX();
+        float toX = 0;
+//        float fromY = teller.getY();
+        float  toY = 0;
         teller.setVisibility(View.VISIBLE);
         RelativeLayout.LayoutParams tellerPicLayout = (RelativeLayout.LayoutParams) teller.getLayoutParams();
 
         if (!amITheTeller()) {
             ImageView userTellerPic = Game.getGame().currentStoryTeller.userPic;
-            if (userTellerPic.getX() - 200 > po.x / 2) {
-                toX = userTellerPic.getX();
-            } else {
-                toX = userTellerPic.getX() + userTellerPic.getWidth();
+            if (userTellerPic.equals(opponentUserImageView1)) {
+                toX = userTellerPic.getX() + userTellerPic.getWidth() + (teller.getWidth()/2);
+                toY  = userTellerPic.getY() + userTellerPic.getHeight() - (teller.getHeight()/2);
+            } else if(userTellerPic.equals(opponentUserImageView2)){
+                toX = userTellerPic.getX() - (teller.getWidth()/2);
+                toY  = userTellerPic.getY() + userTellerPic.getHeight() - (teller.getHeight()/2);
+            }else if(userTellerPic.equals(opponentUserImageView3)){
+                toX = userTellerPic.getX() - (teller.getWidth()/2);
+                toY  = userTellerPic.getY() + userTellerPic.getHeight() - (teller.getHeight()/2);
             }
-            toY  = userTellerPic.getY() + userTellerPic.getHeight() - teller.getHeight();
         } else {
             toX = (float) (po.x - (teller.getWidth() * 1.5));
             toY = (tableImage.getHeight() - (teller.getHeight() / 2));
         }
 
-        tellerAnimationX = ObjectAnimator.ofFloat(teller,"x",fromX,toX);
-        tellerAnimationY = ObjectAnimator.ofFloat(teller,"y",fromY,toY);
-        tellerAnimationX.setDuration(800);
-        tellerAnimationY.setDuration(800);
-        tellerAnimationX.start();
-        tellerAnimationY.start();
+        tellerAni = new TranslateAnimation(teller.getX(),toX,teller.getY(),toY);
+        tellerAni.setDuration(800);
+
+        teller.startAnimation(tellerAni);
+
+//
+//        tellerAnimationX = ObjectAnimator.ofFloat(teller,"x",fromX,toX);
+//        tellerAnimationY = ObjectAnimator.ofFloat(teller,"y",fromY,toY);
+//        tellerAnimationX.setDuration(800);
+//        tellerAnimationY.setDuration(800);
+//        tellerAnimationX.start();
+//        tellerAnimationY.start();
     }
 
     private boolean amITheTeller() {
