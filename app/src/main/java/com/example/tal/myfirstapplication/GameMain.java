@@ -497,6 +497,34 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         picked.setVisibility(View.VISIBLE);
     }
 
+    private void setBigOpponentCard(View v){
+
+        int bigCardSize = cardSize * 5;
+        RelativeLayout.LayoutParams labelLayoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
+        labelLayoutParams.width = bigCardSize;
+        labelLayoutParams.height = (int) (bigCardSize * 1.5);
+        labelLayoutParams.leftMargin = (po.x - (cardSize * 5))/2;
+        v.setLayoutParams(labelLayoutParams);
+    }
+
+    private void setOpponentRegularCard(View v){
+
+        RelativeLayout.LayoutParams labelLayoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
+        labelLayoutParams.width = cardSize;
+        labelLayoutParams.height = (int) (cardSize * 1.5);
+        if (v.equals(imageCardOpponentUser1)){
+            labelLayoutParams.leftMargin = po.x/2 -opponentUserImageView1.getWidth();
+
+        }else if(v.equals(imageCardOpponentUser2)){
+            labelLayoutParams.leftMargin = po.x/2 +opponentUserImageView1.getWidth() - imageCardOpponentUser2.getWidth();
+
+        }else if(v.equals(imageCardOpponentUser3)){
+            labelLayoutParams.leftMargin = (po.x -imageCardOpponentUser3.getWidth())/2;
+        }
+
+        v.setLayoutParams(labelLayoutParams);
+    }
+
     @Override
     public void onClick(View v) {
         switch (Game.getGame().gameState) {
@@ -511,9 +539,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                         setPickedPlace(v);
                     } else {
                         if (v.getLayoutParams().height > cardSize * 1.5) {
-                            setRegularCard(v);
+                            setOpponentRegularCard(v);
                         } else {
-                            setBigCard(v);
+                            setBigOpponentCard(v);
                             v.bringToFront();
                         }
                     }
@@ -531,14 +559,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                         setAllCards(cardSize, (int) (cardSize * 1.5));
                     }
                 }
-//                if (isOneOfOpponentsCards(v) && !isFlashingCard) {
-//                    if (v.getLayoutParams().height < cardSize * 5) {
-//                        setBigCard(v);
-//                    } else {
-//                        setRegularCard(v);
-//                    }
-//                }
-
                 break;
 
             case WAITING_FOR_ASSOCIATION:
