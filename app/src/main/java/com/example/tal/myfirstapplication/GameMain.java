@@ -720,20 +720,20 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         flashingCardAnim.setRepeatMode(AlphaAnimation.REVERSE);
         flashingCardAnim.setRepeatCount(AlphaAnimation.INFINITE);
 
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) imageCardOpponentUser1.getLayoutParams();
-        lp.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
-        lp.leftMargin = po.x/2 -opponentUserImageView1.getWidth();
-        imageCardOpponentUser1.setLayoutParams(lp);
+        RelativeLayout.LayoutParams lp1 = (RelativeLayout.LayoutParams) imageCardOpponentUser1.getLayoutParams();
+        lp1.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
+        lp1.leftMargin = po.x/2 -opponentUserImageView1.getWidth();
+        imageCardOpponentUser1.setLayoutParams(lp1);
 
-        lp = (RelativeLayout.LayoutParams) imageCardOpponentUser2.getLayoutParams();
-        lp.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
-        lp.leftMargin = po.x/2 +opponentUserImageView1.getWidth();
-        imageCardOpponentUser2.setLayoutParams(lp);
+        RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) imageCardOpponentUser2.getLayoutParams();
+        lp2.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
+        lp2.leftMargin = po.x/2 +opponentUserImageView1.getWidth();
+        imageCardOpponentUser2.setLayoutParams(lp2);
 
-        lp = (RelativeLayout.LayoutParams) imageCardOpponentUser3.getLayoutParams();
-        lp.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
-        lp.leftMargin = (po.x -imageCardOpponentUser3.getWidth())/2;
-        imageCardOpponentUser3.setLayoutParams(lp);
+        RelativeLayout.LayoutParams lp3 = (RelativeLayout.LayoutParams) imageCardOpponentUser3.getLayoutParams();
+        lp3.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
+        lp3.leftMargin = (po.x -imageCardOpponentUser3.getWidth())/2;
+        imageCardOpponentUser3.setLayoutParams(lp3);
 
         associationButton.setVisibility(View.INVISIBLE);
 
