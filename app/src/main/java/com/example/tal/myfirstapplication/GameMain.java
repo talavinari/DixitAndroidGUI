@@ -175,6 +175,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        startCardsAnimation();
+    }
+
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         startGameGUI();
@@ -813,11 +819,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void startCardsAnimation(){
-        int startOffset = 500;
-        int counter =0;
-        TranslateAnimation cardAnimation;
         MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.cards);
-        mediaPlayer.start();
         List<Point> lst = new ArrayList<>(cardsInHandParams.values());
 
         Collections.sort(lst, new Comparator<Point>() {
@@ -826,32 +828,37 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 return lhs.x - rhs.x;
             }
         });
-//
-//        Point point2 = cardsInHandParams.entrySet().iterator().next().getValue();
-//
-//        TranslateAnimation test = new TranslateAnimation(
-//                cardsInHand.get(counter).cardPic.getX(),
-//                point2.x,
-//                cardsInHand.get(counter).cardPic.getY(),
-//                point2.y);
-//
-//        test.setStartOffset(100);
-//        test.setDuration(3000);
-//        cardsInHand.get(0).cardPic.startAnimation(test);
 
-        for (Point point : cardsInHandParams.values()){
+        TranslateAnimation card1anim = new TranslateAnimation(po.x,cardsInHand.get(0).cardPic.getX(),po.y,cardsInHand.get(0).cardPic.getX());
+        TranslateAnimation card2anim = new TranslateAnimation(po.x,cardsInHand.get(1).cardPic.getX(),po.y,cardsInHand.get(1).cardPic.getX());
+        TranslateAnimation card3anim = new TranslateAnimation(po.x,cardsInHand.get(2).cardPic.getX(),po.y,cardsInHand.get(2).cardPic.getX());
+        TranslateAnimation card4anim = new TranslateAnimation(po.x,cardsInHand.get(3).cardPic.getX(),po.y,cardsInHand.get(3).cardPic.getX());
+        TranslateAnimation card5anim = new TranslateAnimation(po.x,cardsInHand.get(4).cardPic.getX(),po.y,cardsInHand.get(4).cardPic.getX());
+        TranslateAnimation card6anim = new TranslateAnimation(po.x,cardsInHand.get(5).cardPic.getX(),po.y,cardsInHand.get(5).cardPic.getX());
 
-            cardAnimation = new TranslateAnimation(
-                    cardsInHand.get(counter).cardPic.getX(),
-                    point.x,
-                    cardsInHand.get(counter).cardPic.getY(),
-                    point.y);
-            cardAnimation.setDuration(300);
-            cardAnimation.setStartOffset(startOffset);
-            cardsInHand.get(counter).cardPic.startAnimation(cardAnimation);
-            startOffset += 50;
-            counter++;
-        }
+        card1anim.setDuration(350);
+        card2anim.setDuration(350);
+        card3anim.setDuration(350);
+        card4anim.setDuration(350);
+        card5anim.setDuration(350);
+        card6anim.setDuration(350);
+
+        card1anim.setStartOffset(500);
+        card1anim.setStartOffset(550);
+        card1anim.setStartOffset(600);
+        card1anim.setStartOffset(650);
+        card1anim.setStartOffset(700);
+        card1anim.setStartOffset(750);
+
+        mediaPlayer.start();
+
+        cardsInHand.get(0).cardPic.startAnimation(card1anim);
+        cardsInHand.get(1).cardPic.startAnimation(card2anim);
+        cardsInHand.get(2).cardPic.startAnimation(card3anim);
+        cardsInHand.get(3).cardPic.startAnimation(card4anim);
+        cardsInHand.get(4).cardPic.startAnimation(card5anim);
+        cardsInHand.get(5).cardPic.startAnimation(card6anim);
+
     }
 
 
