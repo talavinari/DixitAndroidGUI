@@ -20,6 +20,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
@@ -133,6 +134,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         setContentView(R.layout.activity_game_main);
         findViews();
         initListeners();
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 
