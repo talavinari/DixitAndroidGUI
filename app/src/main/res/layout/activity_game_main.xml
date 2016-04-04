@@ -226,7 +226,6 @@
         android:hint="Enter your association (50 characters)"
         android:maxLength="50"
         android:background="#ffffff"
-        android:onClick="hideAndShowAssociation"
         android:textColor="@color/Black"
         android:imeActionLabel="SEND"
         android:visibility="invisible"
@@ -351,6 +350,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:scaleType="fitXY"
+        android:onClick="hideAndShowAssociation"
         android:src="@drawable/association_button"
         android:contentDescription="association button"
         android:alpha="0.8"/>

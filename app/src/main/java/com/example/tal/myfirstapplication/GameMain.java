@@ -186,6 +186,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             startGameGUI();
+            setOpponentCarsPosition();
         }
 
         //TODO fix animation
@@ -720,20 +721,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         flashingCardAnim.setRepeatMode(AlphaAnimation.REVERSE);
         flashingCardAnim.setRepeatCount(AlphaAnimation.INFINITE);
 
-        RelativeLayout.LayoutParams lp1 = (RelativeLayout.LayoutParams) imageCardOpponentUser1.getLayoutParams();
-        lp1.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
-        lp1.leftMargin = po.x/2 -opponentUserImageView1.getWidth();
-        imageCardOpponentUser1.setLayoutParams(lp1);
-
-        RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) imageCardOpponentUser2.getLayoutParams();
-        lp2.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
-        lp2.leftMargin = po.x/2 +opponentUserImageView1.getWidth();
-        imageCardOpponentUser2.setLayoutParams(lp2);
-
-        RelativeLayout.LayoutParams lp3 = (RelativeLayout.LayoutParams) imageCardOpponentUser3.getLayoutParams();
-        lp3.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
-        lp3.leftMargin = (po.x -imageCardOpponentUser3.getWidth())/2;
-        imageCardOpponentUser3.setLayoutParams(lp3);
 
         associationButton.setVisibility(View.INVISIBLE);
 
@@ -764,6 +751,23 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         r.addRule(RelativeLayout.ALIGN_PARENT_START);
         tableImage.setLayoutParams(r);
         tableImage.setOnDragListener(this);
+    }
+
+    private void setOpponentCarsPosition() {
+        RelativeLayout.LayoutParams lp1 = (RelativeLayout.LayoutParams) imageCardOpponentUser1.getLayoutParams();
+        lp1.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
+        lp1.leftMargin = po.x/2 -opponentUserImageView1.getWidth();
+        imageCardOpponentUser1.setLayoutParams(lp1);
+
+        RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) imageCardOpponentUser2.getLayoutParams();
+        lp2.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
+        lp2.leftMargin = po.x/2 +opponentUserImageView1.getWidth();
+        imageCardOpponentUser2.setLayoutParams(lp2);
+
+        RelativeLayout.LayoutParams lp3 = (RelativeLayout.LayoutParams) imageCardOpponentUser3.getLayoutParams();
+        lp3.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
+        lp3.leftMargin = (po.x -imageCardOpponentUser3.getWidth())/2;
+        imageCardOpponentUser3.setLayoutParams(lp3);
     }
 
     private void setTargetCardEmpty() {
@@ -1139,9 +1143,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     public void hideAndShowAssociation(View view){
+        int threshold;
+        if (view.equals(association)){
+            threshold = -10;
+        }else{
+            threshold = 0;
+        }
         ObjectAnimator buttonAnimation = null;
         ObjectAnimator associationAnimation = null;
-        if (view.getX() > 10){
+        if (view.getX() > threshold){
             buttonAnimation= ObjectAnimator.ofFloat(view,"x",view.getX(),0);
             associationAnimation = ObjectAnimator.ofFloat(association,"x",association.getX(),-association.getWidth());
         }else{
