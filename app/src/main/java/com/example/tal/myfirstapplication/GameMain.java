@@ -848,11 +848,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         card6anim.setDuration(350);
 
         card1anim.setStartOffset(500);
-        card1anim.setStartOffset(550);
-        card1anim.setStartOffset(600);
-        card1anim.setStartOffset(650);
-        card1anim.setStartOffset(700);
-        card1anim.setStartOffset(750);
+        card2anim.setStartOffset(550);
+        card3anim.setStartOffset(600);
+        card4anim.setStartOffset(650);
+        card5anim.setStartOffset(700);
+        card6anim.setStartOffset(750);
 
         mediaPlayer.start();
 
