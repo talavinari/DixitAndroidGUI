@@ -1146,18 +1146,17 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void setTellerPic() {
 //        ObjectAnimator tellerAnimationX;
 //        ObjectAnimator tellerAnimationY;
-        TranslateAnimation tellerAni;
+
 //        float fromX = teller.getX();
         float toX = 0;
 //        float fromY = teller.getY();
         float  toY = 0;
         teller.setVisibility(View.VISIBLE);
-        RelativeLayout.LayoutParams tellerPicLayout = (RelativeLayout.LayoutParams) teller.getLayoutParams();
 
         if (!amITheTeller()) {
             ImageView userTellerPic = Game.getGame().currentStoryTeller.userPic;
             if (userTellerPic.equals(opponentUserImageView1)) {
-                toX = userTellerPic.getX() + userTellerPic.getWidth() + (teller.getWidth()/2);
+                toX = userTellerPic.getX() + userTellerPic.getWidth() - (teller.getWidth()/2);
                 toY  = userTellerPic.getY() + userTellerPic.getHeight() - (teller.getHeight()/2);
             } else if(userTellerPic.equals(opponentUserImageView2)){
                 toX = userTellerPic.getX() - (teller.getWidth()/2);
@@ -1171,18 +1170,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             toY = (tableImage.getHeight() - (teller.getHeight() / 2));
         }
 
-        tellerAni = new TranslateAnimation(teller.getX(),toX,teller.getY(),toY);
+        TranslateAnimation tellerAni = new TranslateAnimation(teller.getX(),toX,teller.getY(),toY);
         tellerAni.setDuration(800);
-
+        tellerAni.setFillAfter(true);
         teller.startAnimation(tellerAni);
 
-//
-//        tellerAnimationX = ObjectAnimator.ofFloat(teller,"x",fromX,toX);
-//        tellerAnimationY = ObjectAnimator.ofFloat(teller,"y",fromY,toY);
-//        tellerAnimationX.setDuration(800);
-//        tellerAnimationY.setDuration(800);
-//        tellerAnimationX.start();
-//        tellerAnimationY.start();
     }
 
     private boolean amITheTeller() {
