@@ -159,6 +159,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageCardOpponentUser1.setOnLongClickListener(this);
         imageCardOpponentUser2.setOnLongClickListener(this);
         imageCardOpponentUser3.setOnLongClickListener(this);
+        tableImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopBlinking();
+            }
+        });
     }
 
     @Override
@@ -460,21 +466,24 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             case VOTING:
                 if (isOneOfOpponentsCards(v)) {
                     if ((isFlashingCard) && (!isVoted) && !amITheTeller() && v.equals(flashingCard) ){
-                        stopFlash();
                         String votedCard = imageToTextViewMap.get(v).getText().toString();
                         Game.getGame().setVoteForPlayer(UserData.getInstance().getNickName(context), Integer.valueOf(votedCard));
-                        handleAfterAllVotes();
                         new VoteTask(this).execute(votedCard);
                         isVoted = true;
+                        handleAfterAllVotes();
                     } else {
-                        if (v.getHeight() < cardSize * 5) {
-                            setBigCard(v);
-                        } else {
+                        if (v.getLayoutParams().height > cardSize * 1.5) {
                             setRegularCard(v);
+                        } else {
+                            setBigCard(v);
+                            v.bringToFront();
                         }
                     }
-                    stopFlash();
+
                 }
+
+                stopBlinking();
+
                 break;
             case PICKING_CARDS:
                 if (getListPlaceByView(v) != -1) {
@@ -523,30 +532,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 v == imageCardOpponentUser3;
     }
 
-    private void flash(View v){
-        stopFlash();
-        v.startAnimation(flashingCardAnim);
-        flashingCard = (ImageView) v;
-        isFlashingCard = true;
-    }
-
-    private void stopFlash(){
-        flashingCardAnim.cancel();
-        if (imageCardOpponentUser1.equals(flashingCard)){
-            imageCardOpponentUser1.clearAnimation();
-            isFlashingCard = false;
-            flashingCard=null;
+    private void stopBlinking(){
+        if (flashingCard != null) {
+            flashingCard.clearAnimation();
         }
-        if (imageCardOpponentUser2.equals(flashingCard)){
-            imageCardOpponentUser2.clearAnimation();
-            isFlashingCard = false;
-            flashingCard=null;
-        }
-        if (imageCardOpponentUser3.equals(flashingCard)){
-            imageCardOpponentUser3.clearAnimation();
-            isFlashingCard = false;
-            flashingCard=null;
-        }
+        isFlashingCard = false;
     }
 
     @Override
@@ -554,8 +544,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         switch (Game.getGame().gameState) {
             case VOTING:
                 if (isOneOfOpponentsCards(v) && !amITheTeller() && !isVoted && !isFlashingCard) {
-                    setRegularCard(v);
-                    flash(v);
+                    v.startAnimation(flashingCardAnim);
+                    isFlashingCard = true;
+                    flashingCard = (ImageView) v;
                 }
                 break;
             case PICKING_CARDS:
@@ -572,7 +563,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 break;
 
             case WAITING_FOR_ASSOCIATION:
-//
                 if (amITheTeller() && !isCardOnTable) {
                     draggedCardNum = getListPlaceByView(v);
                     draggedView = cardsInHand.get(draggedCardNum);
@@ -587,7 +577,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             default:
                 break;
         }
-        return false;
+        return true;
     }
 
     private boolean isOneOfOpponentsCards(View v) {
@@ -691,9 +681,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         opponentUserNameTextView3.setVisibility(View.INVISIBLE);
 
         flashingCardAnim = new AlphaAnimation(1.0f, 0.2f);
-        flashingCardAnim.setDuration(300);
+        flashingCardAnim.setDuration(500);
         flashingCardAnim.setRepeatMode(AlphaAnimation.REVERSE);
         flashingCardAnim.setRepeatCount(AlphaAnimation.INFINITE);
+
+
 
         associationButton.setVisibility(View.INVISIBLE);
 
@@ -746,19 +738,19 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     getImageByCardNumber(getCards(i)));
         }
 
-        cardsInHand.add(cardCreator(cardImage1, card1TextView, 0));
-        cardsInHand.add(cardCreator(cardImage2, card2TextView, 1));
-        cardsInHand.add(cardCreator(cardImage3, card3TextView, 2));
-        cardsInHand.add(cardCreator(cardImage4, card4TextView, 3));
-        cardsInHand.add(cardCreator(cardImage5, card5TextView, 4));
-        cardsInHand.add(cardCreator(cardImage6, card6TextView, 5));
+        cardsInHand.add(createCardHelper(cardImage1, card1TextView, 0));
+        cardsInHand.add(createCardHelper(cardImage2, card2TextView, 1));
+        cardsInHand.add(createCardHelper(cardImage3, card3TextView, 2));
+        cardsInHand.add(createCardHelper(cardImage4, card4TextView, 3));
+        cardsInHand.add(createCardHelper(cardImage5, card5TextView, 4));
+        cardsInHand.add(createCardHelper(cardImage6, card6TextView, 5));
     }
 
     @NonNull
-    private Card cardCreator(ImageView cardImage, TextView cardTextview, int cardNum) {
+    private Card createCardHelper(ImageView cardImage, TextView cardTextView, int cardNum) {
         return new Card(new RelativeLayout.LayoutParams(1, 1),
                 cardImage, this,
-                cardTextview,
+                cardTextView,
                 getCards(cardNum));
     }
 
