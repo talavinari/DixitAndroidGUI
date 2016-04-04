@@ -3,7 +3,7 @@
     style="@style/Background"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:background="@drawable/tablepic">
 
     <TextView
         android:layout_width="206dp"

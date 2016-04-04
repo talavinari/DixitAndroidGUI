@@ -365,4 +365,11 @@
         android:contentDescription="association button"
         android:alpha="0.8"/>
 
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:id="@+id/picked"
+        android:src="@drawable/picked"
+        android:visibility="invisible"/>
+
 </RelativeLayout>

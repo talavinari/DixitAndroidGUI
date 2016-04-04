@@ -14,8 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 public class Splash extends Activity {
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
@@ -128,7 +126,7 @@ public class Splash extends Activity {
             Intent intent = new Intent(this, FirstLogIn.class);
             startActivity(intent);
         }else{
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ChooseCreateJoin.class);
             startActivity(intent);
         }
     }

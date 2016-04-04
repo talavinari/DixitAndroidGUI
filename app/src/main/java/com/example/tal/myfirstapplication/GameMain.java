@@ -21,6 +21,7 @@ import android.view.DragEvent;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,7 +35,9 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -79,11 +82,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     TextView card5TextView;
     TextView card6TextView;
 
+    ImageView picked;
+
     List<ImageView> cardsImages;
 
     ImageView tableImage;
     EditText association;
     Map<ImageView, TextView> imageToTextViewMap = new HashMap<>();
+    Point cardXY;
+    Map <Integer,Point> cardsInHandParams = new HashMap<>();
     ImageView teller;
     TextView cardText1;
     TextView cardText2;
@@ -165,6 +172,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         startGameGUI();
+
+        //TODO fix animation
+//        setCardsForAnimation();
+//        startCardsAnimation();
+
     }
 
     private void findViews() {
@@ -187,6 +199,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         associationButton = (ImageView) findViewById(R.id.association_button);
 
         teller = (ImageView) findViewById(R.id.teller);
+
+        picked = (ImageView) findViewById(R.id.picked);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.round_end);
 
@@ -218,6 +232,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         scorePlayer3 = ((TextView) findViewById(R.id.score3));
 
         association = (EditText) findViewById(R.id.association);
+
+        association.setHintTextColor(Color.DKGRAY);
     }
 
     private void initReceivers() {
@@ -396,7 +412,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         moveUser1(opponentUserImageView1);
         moveUser2(opponentUserImageView2);
         moveUser3(opponentUserImageView3);
-
+        picked.setVisibility(View.INVISIBLE);
         mediaPlayer.start();
         try {
             Thread.sleep(3000);
@@ -453,6 +469,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         super.onDestroy();
     }
 
+    private void setPickedPlace(View view){
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) picked.getLayoutParams();
+        lp.leftMargin = (int) (((ImageView) view).getX()+ view.getWidth() - (picked.getWidth()/2));
+        lp.bottomMargin = (int) (po.y - view.getY() + view.getHeight() - (picked.getHeight()/2));
+        picked.setLayoutParams(lp);
+        picked.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void onClick(View v) {
@@ -466,6 +489,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                         handleAfterAllVotes();
                         new VoteTask(this).execute(votedCard);
                         isVoted = true;
+                        setPickedPlace(v);
                     } else {
                         if (v.getHeight() < cardSize * 5) {
                             setBigCard(v);
@@ -777,8 +801,67 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void setAllCards(int w, int h) {
         for (int i = 0; i < cardsInHand.size(); i++) {
             cardsInHand.get(i).cardPic.setLayoutParams(getLayoutParams(w, h, i));
+
         }
     }
+
+    private void setCardsForAnimation(){
+        // Left, Right
+        RelativeLayout.LayoutParams lp;
+        for (int i=0;i<cardsInHand.size();i++){
+            cardsInHandParams.put(
+                    i,
+                    new Point(((RelativeLayout.LayoutParams)cardsInHand.get(i).cardPic.getLayoutParams()).leftMargin,
+                            ((RelativeLayout.LayoutParams)cardsInHand.get(i).cardPic.getLayoutParams()).bottomMargin));
+            lp = (RelativeLayout.LayoutParams) cardsInHand.get(i).cardPic.getLayoutParams();
+            lp.leftMargin = po.x;
+            lp.topMargin = po.y;
+            cardsInHand.get(i).cardPic.setLayoutParams(lp);
+        }
+    }
+
+    private void startCardsAnimation(){
+        int startOffset = 500;
+        int counter =0;
+        TranslateAnimation cardAnimation;
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.cards);
+        mediaPlayer.start();
+        List<Point> lst = new ArrayList<>(cardsInHandParams.values());
+
+        Collections.sort(lst, new Comparator<Point>() {
+            @Override
+            public int compare(Point lhs, Point rhs) {
+                return lhs.x - rhs.x;
+            }
+        });
+//
+//        Point point2 = cardsInHandParams.entrySet().iterator().next().getValue();
+//
+//        TranslateAnimation test = new TranslateAnimation(
+//                cardsInHand.get(counter).cardPic.getX(),
+//                point2.x,
+//                cardsInHand.get(counter).cardPic.getY(),
+//                point2.y);
+//
+//        test.setStartOffset(100);
+//        test.setDuration(3000);
+//        cardsInHand.get(0).cardPic.startAnimation(test);
+
+        for (Point point : cardsInHandParams.values()){
+
+            cardAnimation = new TranslateAnimation(
+                    cardsInHand.get(counter).cardPic.getX(),
+                    point.x,
+                    cardsInHand.get(counter).cardPic.getY(),
+                    point.y);
+            cardAnimation.setDuration(300);
+            cardAnimation.setStartOffset(startOffset);
+            cardsInHand.get(counter).cardPic.startAnimation(cardAnimation);
+            startOffset += 50;
+            counter++;
+        }
+    }
+
 
     private int getListPlaceByView(View v) {
         for (int i = 0; i < cardsInHand.size(); i++) {

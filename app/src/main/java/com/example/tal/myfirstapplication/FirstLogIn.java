@@ -32,7 +32,7 @@ public class FirstLogIn extends Activity {
 
     public void signIn(View view){
         UserData.getInstance().setNickName(inputUserName.getText().toString(), this);
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(this,ChooseCreateJoin.class);
         startActivity(intent);
     }
 
