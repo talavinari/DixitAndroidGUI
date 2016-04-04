@@ -59,6 +59,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     AlphaAnimation flashingCardAnim;
     Boolean isFlashingCard = false;
     int draggedCardNum;
+    boolean isTyping;
     TextView opponentUserNameTextView1;
     TextView opponentUserNameTextView2;
     TextView opponentUserNameTextView3;
@@ -388,7 +389,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         association.setFocusableInTouchMode(editable);
         association.setFocusable(editable);
         association.setClickable(editable);
-
+        isTyping = editable;
         if (!amITheTeller()) {
             isCardOnTable = false;
         }
@@ -755,17 +756,17 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void setOpponentCarsPosition() {
         RelativeLayout.LayoutParams lp1 = (RelativeLayout.LayoutParams) imageCardOpponentUser1.getLayoutParams();
-        lp1.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
+        lp1.topMargin = (int) (opponentUserImageView1.getHeight()*1.5);
         lp1.leftMargin = po.x/2 -opponentUserImageView1.getWidth();
         imageCardOpponentUser1.setLayoutParams(lp1);
 
         RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) imageCardOpponentUser2.getLayoutParams();
-        lp2.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
-        lp2.leftMargin = po.x/2 +opponentUserImageView1.getWidth();
+        lp2.topMargin = (int) (opponentUserImageView1.getHeight()*1.5);
+        lp2.leftMargin = po.x/2 +opponentUserImageView1.getWidth() - imageCardOpponentUser2.getWidth();
         imageCardOpponentUser2.setLayoutParams(lp2);
 
         RelativeLayout.LayoutParams lp3 = (RelativeLayout.LayoutParams) imageCardOpponentUser3.getLayoutParams();
-        lp3.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
+        lp3.topMargin = (int) (opponentUserImageView1.getHeight()*1.5);
         lp3.leftMargin = (po.x -imageCardOpponentUser3.getWidth())/2;
         imageCardOpponentUser3.setLayoutParams(lp3);
     }
@@ -1143,26 +1144,27 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     public void hideAndShowAssociation(View view){
-        int threshold;
-        if (view.equals(association)){
-            threshold = -10;
-        }else{
-            threshold = 0;
+        if(isTyping) {
+            int threshold;
+            if (view.equals(association)) {
+                threshold = -10;
+            } else {
+                threshold = 0;
+            }
+            ObjectAnimator buttonAnimation = null;
+            ObjectAnimator associationAnimation = null;
+            if (view.getX() > threshold) {
+                buttonAnimation = ObjectAnimator.ofFloat(view, "x", associationButton.getX(), 0);
+                associationAnimation = ObjectAnimator.ofFloat(association, "x", association.getX(), -association.getWidth());
+            } else {
+                buttonAnimation = ObjectAnimator.ofFloat(view, "x", associationButton.getX(), po.x - view.getWidth());
+                associationAnimation = ObjectAnimator.ofFloat(association, "x", association.getX(), 0);
+            }
+            buttonAnimation.setDuration(300);
+            associationAnimation.setDuration(300);
+            buttonAnimation.start();
+            associationAnimation.start();
         }
-        ObjectAnimator buttonAnimation = null;
-        ObjectAnimator associationAnimation = null;
-        if (view.getX() > threshold){
-            buttonAnimation= ObjectAnimator.ofFloat(view,"x",view.getX(),0);
-            associationAnimation = ObjectAnimator.ofFloat(association,"x",association.getX(),-association.getWidth());
-        }else{
-            buttonAnimation= ObjectAnimator.ofFloat(view,"x",view.getX(),po.x - view.getWidth());
-            associationAnimation = ObjectAnimator.ofFloat(association,"x",association.getX(),0);
-        }
-        buttonAnimation.setDuration(300);
-        associationAnimation.setDuration(300);
-        buttonAnimation.start();
-        associationAnimation.start();
-
     }
 
 }
