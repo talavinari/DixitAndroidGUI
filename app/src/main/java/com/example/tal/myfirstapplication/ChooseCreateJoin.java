@@ -119,7 +119,7 @@ public class ChooseCreateJoin extends AppCompatActivity {
         tableSound.start();
         TranslateAnimation transAnim = new TranslateAnimation(0, 0, -table.getHeight(),0);
         transAnim.setStartOffset(500);
-        transAnim.setDuration(3000);
+        transAnim.setDuration(1500);
         transAnim.setFillAfter(true);
         transAnim.setInterpolator(new BounceInterpolator());
         transAnim.setAnimationListener(new Animation.AnimationListener() {

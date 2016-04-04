@@ -431,11 +431,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         picked.setVisibility(View.INVISIBLE);
         mediaPlayer.start();
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        moveUser1(opponentUserImageView1);
+        moveUser2(opponentUserImageView2);
+        moveUser3(opponentUserImageView3);
     }
 
     private void updateGUI() {
@@ -487,7 +489,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void setPickedPlace(View view){
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) picked.getLayoutParams();
-        lp.leftMargin = (int) (((ImageView) view).getX()+ view.getWidth() - (picked.getWidth()/2));
+        lp.leftMargin = (int) (po.x - view.getX()+ view.getWidth() - (picked.getWidth()/2));
         lp.bottomMargin = (int) (po.y - view.getY() + view.getHeight() - (picked.getHeight()/2));
         picked.setLayoutParams(lp);
         picked.setVisibility(View.VISIBLE);
@@ -513,7 +515,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                             v.bringToFront();
                         }
                     }
-
                 }
 
                 stopBlinking();
@@ -719,7 +720,20 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         flashingCardAnim.setRepeatMode(AlphaAnimation.REVERSE);
         flashingCardAnim.setRepeatCount(AlphaAnimation.INFINITE);
 
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) imageCardOpponentUser1.getLayoutParams();
+        lp.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
+        lp.leftMargin = po.x/2 -opponentUserImageView1.getWidth();
+        imageCardOpponentUser1.setLayoutParams(lp);
 
+        lp = (RelativeLayout.LayoutParams) imageCardOpponentUser2.getLayoutParams();
+        lp.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
+        lp.leftMargin = po.x/2 +opponentUserImageView1.getWidth();
+        imageCardOpponentUser2.setLayoutParams(lp);
+
+        lp = (RelativeLayout.LayoutParams) imageCardOpponentUser3.getLayoutParams();
+        lp.bottomMargin = (int) (po.y - (opponentUserImageView1.getHeight()*1.5));
+        lp.leftMargin = (po.x -imageCardOpponentUser3.getWidth())/2;
+        imageCardOpponentUser3.setLayoutParams(lp);
 
         associationButton.setVisibility(View.INVISIBLE);
 
