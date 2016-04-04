@@ -1154,10 +1154,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             ObjectAnimator buttonAnimation = null;
             ObjectAnimator associationAnimation = null;
             if (view.getX() > threshold) {
-                buttonAnimation = ObjectAnimator.ofFloat(view, "x", associationButton.getX(), 0);
+                buttonAnimation = ObjectAnimator.ofFloat(associationButton, "x", associationButton.getX(), 0);
                 associationAnimation = ObjectAnimator.ofFloat(association, "x", association.getX(), -association.getWidth());
             } else {
-                buttonAnimation = ObjectAnimator.ofFloat(view, "x", associationButton.getX(), po.x - view.getWidth());
+                buttonAnimation = ObjectAnimator.ofFloat(associationButton, "x", associationButton.getX(), po.x - associationButton.getWidth());
                 associationAnimation = ObjectAnimator.ofFloat(association, "x", association.getX(), 0);
             }
             buttonAnimation.setDuration(300);
