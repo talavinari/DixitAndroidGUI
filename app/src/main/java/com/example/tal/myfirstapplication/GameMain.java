@@ -1144,7 +1144,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     public void hideAndShowAssociation(View view){
-        if(isTyping) {
+        if(!isTyping) {
             int threshold;
             if (view.equals(association)) {
                 threshold = -10;
