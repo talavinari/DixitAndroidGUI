@@ -38,7 +38,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -134,7 +133,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         setContentView(R.layout.activity_game_main);
         findViews();
         initListeners();
-
+        handleAssociationGUI(false);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -186,7 +185,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        startGameGUI();
+        if (hasFocus) {
+            startGameGUI();
+        }
 
         //TODO fix animation
 //        setCardsForAnimation();
