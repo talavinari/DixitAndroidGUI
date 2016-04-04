@@ -739,6 +739,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         setOpponentsCardVisibility(View.INVISIBLE);
 
+        association.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideAndShowAssociation(v);
+            }
+        });
+
         setRegularCard(imageCardOpponentUser1);
         setRegularCard(imageCardOpponentUser2);
         setRegularCard(imageCardOpponentUser3);
