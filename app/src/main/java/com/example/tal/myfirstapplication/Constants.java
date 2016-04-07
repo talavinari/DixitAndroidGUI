@@ -3,8 +3,8 @@ package com.example.tal.myfirstapplication;
 public class Constants {
 
     public static final String ID_EXTRA = "extra";
-    public static final String REST_API_PREFIX = "http://192.168.14.103:8080/DixitRESTfulAPI/rest/service/";
-//    public static final String REST_API_PREFIX = "http://192.168.1.11:8080/DixitRESTfulAPI/rest/service/";
+//    public static final String REST_API_PREFIX = "http://192.168.14.103:8080/DixitRESTfulAPI/rest/service/";
+    public static final String REST_API_PREFIX = "http://192.168.1.11:8080/DixitRESTfulAPI/rest/service/";
 //    public static final String REST_API_PREFIX = "http://149.78.156.195:8080/DixitRESTfulAPI/rest/service/";
     public static final String ADD_ROOM_API_URL = REST_API_PREFIX + "addRoom";
     public static final String ADD_PLAYER_TO_ROOM_API_URL = REST_API_PREFIX + "join";
