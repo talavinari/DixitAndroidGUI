@@ -361,5 +361,11 @@
         android:id="@+id/picked"
         android:src="@drawable/picked"
         android:visibility="invisible"/>
+    <ImageView
+        android:layout_width="300px"
+        android:layout_height="300px"
+        android:id="@+id/crown"
+        android:src="@drawable/crown"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

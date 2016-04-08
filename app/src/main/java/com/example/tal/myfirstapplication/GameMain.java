@@ -103,6 +103,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     ImageView imageCardOpponentUser2;
     ImageView flashingCard;
 
+    ImageView crown;
 
     BroadcastReceiver googleCloudBroadcastReceiver;
 
@@ -223,6 +224,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         picked = (ImageView) findViewById(R.id.picked);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.round_end);
+
+        crown = (ImageView) findViewById(R.id.crown);
 
         imageToTextViewMap = new HashMap<>();
         imageToTextViewMap.put(imageCardOpponentUser1, cardText1);
@@ -362,8 +365,34 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void handleWinningGUI() {
-        // TODO winnig GUI - Unsubscribe from topic + cant touch anything
+        // TODO winning GUI - Unsubscribe from topic + cant touch anything
         List<Player> winners = Game.getGame().winners;
+
+        usr1 = false;
+        usr2 = false;
+        usr3 = false;
+        moveUser1(opponentUserImageView1);
+        moveUser2(opponentUserImageView2);
+        moveUser3(opponentUserImageView3);
+        picked.setVisibility(View.INVISIBLE);
+        mediaPlayer.start();
+        crown.setVisibility(View.VISIBLE);
+
+        TranslateAnimation crownAnimation = new TranslateAnimation(winners.get(0).userPic.getX(),winners.get(0).userPic.getX(),-winners.get(0).userPic.getHeight(),winners.get(0).userPic.getY()-(winners.get(0).userPic.getHeight()*2/3));
+        crownAnimation.setDuration(3500);
+        crownAnimation.setFillAfter(true);
+        crown.startAnimation(crownAnimation);
+
+        Game.getGame().gameState = GameState.GAME_ENDED;
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // TODO exit?
+
     }
 
     private void notifyAssociation(Bundle data) {
@@ -393,7 +422,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         association.setFocusable(editable);
         association.setClickable(editable);
         isTyping = editable;
-        if (association.getX() < 0){
+        if (association.getX() < 0 && editable){
             hideAndShowAssociation(association);
         }
         if (!amITheTeller()) {
@@ -429,6 +458,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     }
 
+
+
     private void newRound(){
         usr1 = false;
         usr2 = false;
@@ -449,10 +480,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void updateGUI() {
-        newRound();
-
-        setTellerPic();
         cardsInHand.clear();
+        newRound();
+        setTellerPic();
+
         handleCards();
         rearrangeCards();
         setTargetCardEmpty();
@@ -491,6 +522,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     @Override
     protected void onDestroy() {
+        Game.getGame().initGame();
         new OnClose(this).execute();
         super.onDestroy();
     }
@@ -1156,14 +1188,14 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         if (!amITheTeller()) {
             ImageView userTellerPic = Game.getGame().currentStoryTeller.userPic;
             if (userTellerPic.equals(opponentUserImageView1)) {
-                toX = userTellerPic.getX() + userTellerPic.getWidth() - (teller.getWidth()/2);
+                toX = (userTellerPic.getWidth()/2) - (teller.getWidth()/2);
                 toY  = userTellerPic.getY() + userTellerPic.getHeight() - (teller.getHeight()/2);
             } else if(userTellerPic.equals(opponentUserImageView2)){
-                toX = userTellerPic.getX() - (teller.getWidth()/2);
+                toX = po.x - (userTellerPic.getX()/2) - (teller.getWidth()/2);
                 toY  = userTellerPic.getY() + userTellerPic.getHeight() - (teller.getHeight()/2);
             }else if(userTellerPic.equals(opponentUserImageView3)){
                 toX = userTellerPic.getX() - (teller.getWidth()/2);
-                toY  = userTellerPic.getY() + userTellerPic.getHeight() - (teller.getHeight()/2);
+                toY  = (userTellerPic.getHeight()/2) - (teller.getHeight()/2);
             }
         } else {
             toX = (float) (po.x - (teller.getWidth() * 1.5));
