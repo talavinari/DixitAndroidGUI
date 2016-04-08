@@ -135,4 +135,8 @@ public class UserData extends Activity {
             return null;
         }
     }
+
+    public void removeAllCards() {
+        cards.clear();
+    }
 }

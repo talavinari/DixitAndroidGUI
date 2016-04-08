@@ -4,8 +4,7 @@ public class Constants {
 
     public static final String ID_EXTRA = "extra";
 //    public static final String REST_API_PREFIX = "http://192.168.14.103:8080/DixitRESTfulAPI/rest/service/";
-//    public static final String REST_API_PREFIX = "http://192.168.1.11:8080/DixitRESTfulAPI/rest/service/";
-    public static final String REST_API_PREFIX = "http://192.168.1.22:8080/DixitRESTfulAPI/rest/service/";
+    public static final String REST_API_PREFIX = "http://10.0.0.6:8080/DixitRESTfulAPI/rest/service/";
 //    public static final String REST_API_PREFIX = "http://149.78.156.195:8080/DixitRESTfulAPI/rest/service/";
     public static final String ADD_ROOM_API_URL = REST_API_PREFIX + "addRoom";
     public static final String ADD_PLAYER_TO_ROOM_API_URL = REST_API_PREFIX + "join";
@@ -15,8 +14,6 @@ public class Constants {
     public static final String GET_ROOMS_API_URL = REST_API_PREFIX + "rooms";
     public static final String REMOVE_PLAYER = REST_API_PREFIX + "removePlayer";
     public static final String GET_ROOM_DETAILS_API_URL = REST_API_PREFIX + "players"; // /players/{roomName}
-    public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000; // /players/{roomName}
-    public static final float SCROLL_THRESHOLD = 80;
     public static final String ROOM_FIELD = "roomName";
     public static final String NAME_FIELD = "nickName";
     public static final String BASIC_INFO_FIELD = "basicInfo";
@@ -37,9 +34,5 @@ public class Constants {
     public static int WINNING_SCORE_THRESHOLD = 10;
 
     public static final String DELIMITER = ",";
-
-    public static final String IN_APP_MESSAGE_TYPE = "InAppMessageType";
-    public static final String CARD_RECEIVED_EVENT = "cardReceived";
-
 
 }

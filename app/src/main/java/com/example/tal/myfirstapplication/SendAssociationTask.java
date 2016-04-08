@@ -1,8 +1,6 @@
 package com.example.tal.myfirstapplication;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,9 +28,6 @@ public class SendAssociationTask extends BaseTask {
             String card = (String) response.get(Constants.NEW_CARD);
             UserData.getInstance().removeCard(associationCard);
             UserData.getInstance().addCard(card);
-            Intent intent = new Intent(QuickstartPreferences.IN_APP_MESSAGE);
-            intent.putExtra(Constants.IN_APP_MESSAGE_TYPE, Constants.CARD_RECEIVED_EVENT);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         } catch (JSONException e) {
             e.printStackTrace();
         }
