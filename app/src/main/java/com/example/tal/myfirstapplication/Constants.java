@@ -38,6 +38,7 @@ public class Constants {
     public static final String FATAL_ERROR_TITLE = "Fatal Error";
 
     public static final int DUPLICATE_ERROR_CODE = 1;
+    public static final int FULL_ROOM_ERROR_CODE = 2;
     public static final int NUMBER_OF_CARDS_IN_HAND = 6;
     public static final int NUMBER_OF_PLAYERS_IN_DIXIT = 4;
     public static int WINNING_SCORE_THRESHOLD = 10;

@@ -194,6 +194,15 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
             if (doInBackgroundExitCode == Constants.DUPLICATE_ERROR_CODE) {
                 builder = getDuplicateDialogBuilder();
             }
+            else if (doInBackgroundExitCode == Constants.FULL_ROOM_ERROR_CODE){
+                builder = new AlertDialog.Builder(JoinRoom.this).setMessage("Room is already full").
+                        setCancelable(true).setPositiveButton(("Pick another room"),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+            }
             else{
                 builder = new AlertDialog.Builder(JoinRoom.this).setMessage(errorMessage).
                         setCancelable(true).setTitle(Constants.FATAL_ERROR_TITLE).setPositiveButton("OK", null);
@@ -211,7 +220,6 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
                     .setPositiveButton(("Pick another room"),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-
                                     dialog.cancel();
                                 }
                             })
