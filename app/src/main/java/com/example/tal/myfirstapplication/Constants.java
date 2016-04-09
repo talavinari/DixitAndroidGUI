@@ -3,8 +3,8 @@ package com.example.tal.myfirstapplication;
 public class Constants {
 
     public static final String ID_EXTRA = "extra";
-//    public static final String REST_API_PREFIX = "http://192.168.14.103:8080/DixitRESTfulAPI/rest/service/";
-    public static final String REST_API_PREFIX = "http://10.0.0.6:8080/DixitRESTfulAPI/rest/service/";
+    public static final String REST_API_PREFIX = "http://192.168.14.103:8080/DixitRESTfulAPI/rest/service/";
+//    public static final String REST_API_PREFIX = "http://10.0.0.6:8080/DixitRESTfulAPI/rest/service/";
 //    public static final String REST_API_PREFIX = "http://149.78.156.195:8080/DixitRESTfulAPI/rest/service/";
     public static final String ADD_ROOM_API_URL = REST_API_PREFIX + "addRoom";
     public static final String ADD_PLAYER_TO_ROOM_API_URL = REST_API_PREFIX + "join";
@@ -21,6 +21,9 @@ public class Constants {
     public static final String IMG_PREFIX = "img";
 
     public static final String TOPIC_ROOM_NAME = "roomName";
+    public static final String OPERATION_TYPE = "operation";
+    public static final String REGISTER_OPERATION = "register";
+    public static final String UNREGISTER_OPERATION = "unregister";
 
     public static final String PLAYER_NAME = "playerName";
     public static final String WINNING_CARD = "winningCard";

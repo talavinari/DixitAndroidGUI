@@ -18,6 +18,7 @@ public class UserData extends Activity {
     private List<String> cards;
     private String nickName;
     private Bitmap bmp;
+    private String token;
 
     private UserData(){
         cards = new ArrayList<>();
@@ -138,5 +139,13 @@ public class UserData extends Activity {
 
     public void removeAllCards() {
         cards.clear();
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
     }
 }
