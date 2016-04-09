@@ -33,6 +33,7 @@ public class ChooseCreateJoin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_choose_create_join);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         join = (ImageButton) findViewById(R.id.join);
         create = (ImageButton) findViewById(R.id.create);

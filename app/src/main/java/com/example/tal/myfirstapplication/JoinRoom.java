@@ -44,6 +44,7 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_join_room);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         new GetRooms().execute();
         // ATTENTION: This was auto-generated to implement the App Indexing API.

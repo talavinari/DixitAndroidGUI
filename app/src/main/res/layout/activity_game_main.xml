@@ -397,4 +397,71 @@
         android:visibility="invisible"/>
 
 
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/user1picked"
+        android:src="@drawable/userpicked"
+
+        android:layout_alignBottom="@+id/user1"
+        android:layout_alignEnd="@+id/user1"
+
+        android:visibility="invisible"/>
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/user2picked"
+        android:src="@drawable/userpicked"
+
+        android:layout_alignBottom="@+id/user2"
+        android:layout_alignStart="@+id/user2"
+
+        android:visibility="invisible"
+        />
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/user3picked"
+        android:src="@drawable/userpicked"
+
+        android:layout_alignBottom="@+id/user3"
+        android:layout_alignStart="@+id/user3"
+
+        android:visibility="invisible"/>
+
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/user1voted"
+        android:src="@drawable/voted"
+
+        android:layout_alignTop="@+id/user1"
+        android:layout_alignEnd="@+id/user1"
+
+        android:visibility="invisible"/>
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/user2voted"
+        android:src="@drawable/voted"
+
+        android:layout_alignTop="@+id/user2"
+        android:layout_alignStart="@+id/user2"
+
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/user3voted"
+        android:src="@drawable/voted"
+
+        android:layout_alignBottom="@+id/user3"
+        android:layout_alignEnd="@+id/user3"
+
+        android:visibility="invisible"/>
+
+
 </RelativeLayout>

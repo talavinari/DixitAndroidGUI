@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Camera;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -19,6 +20,7 @@ public class FirstLogIn extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_log_in);
         inputUserName = (EditText) findViewById(R.id.editText);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         String nickName = UserData.getInstance().getNickName(this);
         if (nickName != null){
             inputUserName.setText(nickName);

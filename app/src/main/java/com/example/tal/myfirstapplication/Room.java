@@ -3,6 +3,7 @@ package com.example.tal.myfirstapplication;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class Room extends AppCompatActivity {
         setContentView(R.layout.activity_room);
 
         String roomName = getIntent().getExtras().getString(Constants.ID_EXTRA);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         ((TextView)findViewById(R.id.roomname)).setText(roomName);
 
