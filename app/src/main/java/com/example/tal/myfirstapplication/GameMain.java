@@ -375,8 +375,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             e.printStackTrace();
         }
 
+        unregisterFromTopic();
         // TODO exit?
+    }
 
+    private void unregisterFromTopic() {
+        Intent intent = new Intent(context, RegistrationIntentService.class);
+        intent.putExtra(Constants.OPERATION_TYPE, Constants.UNREGISTER_OPERATION);
+        intent.putExtra(Constants.TOPIC_ROOM_NAME, UserData.getInstance().getCurrRoom(this));
+        startService(intent);
     }
 
     private void notifyAssociation(Bundle data) {

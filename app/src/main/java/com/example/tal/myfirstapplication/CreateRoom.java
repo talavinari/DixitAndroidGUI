@@ -78,6 +78,7 @@ public class CreateRoom extends Activity {
             boolean noErrors = Boolean.valueOf(result);
             if (noErrors) {
                 Intent intent = new Intent(context, RegistrationIntentService.class);
+                intent.putExtra(Constants.OPERATION_TYPE, Constants.REGISTER_OPERATION);
                 intent.putExtra(Constants.TOPIC_ROOM_NAME, roomName);
                 startService(intent);
 

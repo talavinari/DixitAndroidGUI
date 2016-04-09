@@ -86,6 +86,7 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
 
             new AddMeToRoom(this).execute();
             Intent intent = new Intent(this, RegistrationIntentService.class);
+            intent.putExtra(Constants.OPERATION_TYPE, Constants.REGISTER_OPERATION);
             intent.putExtra(Constants.TOPIC_ROOM_NAME, roomName);
             startService(intent);
         }
