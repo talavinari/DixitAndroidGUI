@@ -45,7 +45,10 @@ import java.util.Map;
 
 public class GameMain extends Activity implements View.OnClickListener, View.OnLongClickListener, View.OnDragListener {
 
-    MediaPlayer mediaPlayer;
+    MediaPlayer soundWinner;
+    MediaPlayer soundLoser;
+    MediaPlayer soundRoundEnd;
+
     int sizeW;
     int sizeH;
     int cardSize;
@@ -224,7 +227,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         teller.getLayoutParams().width=150;
         picked = (ImageView) findViewById(R.id.picked);
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.round_end);
+        soundWinner = MediaPlayer.create(this, R.raw.round_end);
+        soundLoser = MediaPlayer.create(this, R.raw.loser);
+        soundRoundEnd = MediaPlayer.create(this, R.raw.round_winner);
 
         crown = (ImageView) findViewById(R.id.crown);
 
@@ -354,26 +359,25 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         usr1 = false;
         usr2 = false;
         usr3 = false;
+
+        if(winners.contains(Game.getGame().getPlayerByName(UserData.getInstance().getNickName(this)))){
+            soundWinner.start();
+        }else{
+            soundLoser.start();
+        }
+
         moveUsers();
+        TranslateAnimation crownAnimation = new TranslateAnimation(winners.get(0).userPic.getX(),winners.get(0).userPic.getX(),-winners.get(0).userPic.getHeight(),winners.get(0).userPic.getY()-(winners.get(0).userPic.getHeight()*2/3));
         picked.setVisibility(View.INVISIBLE);
-        mediaPlayer.start();
         crown.setVisibility(View.VISIBLE);
 
-        TranslateAnimation crownAnimation = new TranslateAnimation(winners.get(0).userPic.getX(),winners.get(0).userPic.getX(),-winners.get(0).userPic.getHeight(),winners.get(0).userPic.getY()-(winners.get(0).userPic.getHeight()*2/3));
         crownAnimation.setDuration(3500);
         crownAnimation.setFillAfter(true);
         crown.startAnimation(crownAnimation);
 
-
         Game.getGame().gameState = GameState.GAME_ENDED;
 
-
-        // TODO : all listenenr
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // TODO : what next!?
 
         unregisterFromTopic();
         // TODO exit?
@@ -424,7 +428,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         association.setFocusable(editable);
         association.setClickable(editable);
         isTyping = editable;
-        if (association.getX() < 0 && editable){
+        if (isAssociationHidden() && editable){
             hideAndShowAssociation(association);
         }
         if (!amITheTeller()) {
@@ -464,29 +468,49 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         usr1 = false;
         usr2 = false;
         usr3 = false;
-        mediaPlayer.start();
-        moveUsers();
-        opponentUserImageView1.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        },300);
-        moveUsers();
+        moveUsersBackAndForth(2500);
+
     }
 
-    private void moveUsers() {
+    private void moveUsers(){
         moveUser1(null);
         moveUser2(null);
         moveUser3(null);
     }
 
+    private void moveUsersBackAndForth(int delay) {
+        scorePlayer1.setVisibility(View.VISIBLE);
+
+        opponentUserImageView1.animate().x(user1ShowX).setDuration(300);
+        opponentUserNameTextView1.animate().x(user1ShowX).setDuration(300);
+        scorePlayer1.animate().x(user1ShowX).setDuration(300);
+        opponentUserImageView2.animate().x(user2ShowX).setDuration(300);
+        opponentUserNameTextView2.animate().x(user2ShowX).setDuration(300);
+        scorePlayer2.animate().x(user2ShowX).setDuration(300);
+        opponentUserImageView3.animate().y(user3ShowY).setDuration(300);
+        opponentUserNameTextView3.animate().y(user3ShowY).setDuration(300);
+        scorePlayer3.animate().y(user3ShowY).setDuration(300);
+
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        opponentUserImageView1.animate().x(user1HideX).setDuration(300);
+        opponentUserNameTextView1.animate().x(user1HideX).setDuration(300);
+        scorePlayer1.animate().x(user1HideX).setDuration(300);
+        opponentUserImageView2.animate().x(user2HideX).setDuration(300);
+        opponentUserNameTextView2.animate().x(user2HideX).setDuration(300);
+        scorePlayer2.animate().x(user2HideX).setDuration(300);
+        opponentUserImageView3.animate().y(user3HideY).setDuration(300);
+        opponentUserNameTextView3.animate().y(user3HideY).setDuration(300);
+        scorePlayer3.animate().y(user3HideY).setDuration(300);
+    }
+
     private void updateAfterRoundGUI() {
         cardsInHand.clear();
+        soundRoundEnd.start();
         userAndScoresPresentation();
         setTellerPic();
         handleCards();
@@ -795,6 +819,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         flashingCardAnim.setRepeatMode(AlphaAnimation.REVERSE);
         flashingCardAnim.setRepeatCount(AlphaAnimation.INFINITE);
 
+        tableImage.setSoundEffectsEnabled(false);
 
         associationButton.setVisibility(View.INVISIBLE);
 
@@ -861,8 +886,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         user2HideX = (int) (po.x - opponentUserImageView2.getWidth() * 0.5);
         user2ShowX = (int) (po.x - opponentUserImageView2.getWidth() * 1.5);
 
-        user3HideY = (int) (opponentUserImageView3.getHeight() * -0.5);
-        user3ShowY = (int) (opponentUserImageView3.getHeight() * 0.5);
+        user3HideY = (int) (opponentUserImageView3.getHeight() * -0.5) + 30;
+        user3ShowY = (int) (opponentUserImageView3.getHeight() * 0.5) + 30;
     }
 
     private void handleCards() {

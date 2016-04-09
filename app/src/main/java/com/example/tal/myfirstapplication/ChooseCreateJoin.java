@@ -41,6 +41,7 @@ public class ChooseCreateJoin extends AppCompatActivity {
         this.getWindowManager().getDefaultDisplay().getSize(po);
 
         initLayout();
+
     }
 
     private void initLayout() {

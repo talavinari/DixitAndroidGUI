@@ -176,6 +176,8 @@ public class Splash extends Activity {
                             // button
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
+                                Intent intent = new Intent(Splash.this, ChooseCreateJoin.class);
+                                startActivity(intent);
                             }
                         });
 
