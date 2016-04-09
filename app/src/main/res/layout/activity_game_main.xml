@@ -378,5 +378,22 @@
         android:id="@+id/crown"
         android:src="@drawable/crown"
         android:visibility="invisible"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/transSheet"
+        android:alpha="0"
+        android:background="#FFFFFF"
+        android:visibility="invisible"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:id="@+id/endGame"
+        android:gravity="center"
+        android:alpha="0"
+        android:text="Game ended! click to go back"
+        android:visibility="invisible"/>
+
 
 </RelativeLayout>

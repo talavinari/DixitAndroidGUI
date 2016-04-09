@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -68,6 +69,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     TextView opponentUserNameTextView1;
     TextView opponentUserNameTextView2;
     TextView opponentUserNameTextView3;
+    TextView endGame;
 
     ImageView opponentUserImageView1;
     ImageView opponentUserImageView2;
@@ -105,6 +107,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     ImageView imageCardOpponentUser3;
     ImageView imageCardOpponentUser2;
     ImageView flashingCard;
+    ImageView transSheet;
 
     ImageView crown;
 
@@ -232,6 +235,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         soundRoundEnd = MediaPlayer.create(this, R.raw.round_winner);
 
         crown = (ImageView) findViewById(R.id.crown);
+        transSheet = (ImageView) findViewById(R.id.transSheet);
+        endGame = (TextView) findViewById(R.id.endGame);
 
         imageToTextViewMap = new HashMap<>();
         imageToTextViewMap.put(imageCardOpponentUser1, cardText1);
@@ -360,6 +365,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         usr2 = false;
         usr3 = false;
 
+
+
         if(winners.contains(Game.getGame().getPlayerByName(UserData.getInstance().getNickName(this)))){
             soundWinner.start();
         }else{
@@ -377,10 +384,22 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         Game.getGame().gameState = GameState.GAME_ENDED;
 
-        // TODO : what next!?
+        transSheet.setVisibility(View.VISIBLE);
+        transSheet.bringToFront();
+        transSheet.animate().alpha((float) 0.5).start();
+        endGame.setVisibility(View.VISIBLE);
+        endGame.bringToFront();
+        endGame.animate().alpha((float) 0.5).start();
 
         unregisterFromTopic();
-        // TODO exit?
+
+        transSheet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context,ChooseCreateJoin.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void unregisterFromTopic() {
