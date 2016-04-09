@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -169,9 +168,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             }
         }
 
-        if (Game.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
-            Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
-        }
+
 
     }
 
@@ -203,6 +200,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
             startGameGUI();
             setOpponentCarsPosition();
+            if (Game.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
+                Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
+            }
         }
     }
 

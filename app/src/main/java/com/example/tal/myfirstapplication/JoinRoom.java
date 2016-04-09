@@ -124,9 +124,6 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
 
     public class AddMeToRoom extends BaseTask {
 
-
-
-
         public AddMeToRoom(Context context) {
             super(context.getApplicationContext());
         }
@@ -195,13 +192,9 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
                 builder = getDuplicateDialogBuilder();
             }
             else if (doInBackgroundExitCode == Constants.FULL_ROOM_ERROR_CODE){
-                builder = new AlertDialog.Builder(JoinRoom.this).setMessage("Room is already full").
-                        setCancelable(true).setPositiveButton(("Pick another room"),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                builder = getBuilderForGenericMessage("Room is already full");
+            } else if (doInBackgroundExitCode == Constants.NOT_EXISTS_ROOM_ERROR_CODE){
+                builder = getBuilderForGenericMessage("Room is not exists anymore");
             }
             else{
                 builder = new AlertDialog.Builder(JoinRoom.this).setMessage(errorMessage).
@@ -210,6 +203,18 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
 
             AlertDialog alert = builder.create();
             alert.show();
+        }
+
+        private AlertDialog.Builder getBuilderForGenericMessage(String message) {
+            AlertDialog.Builder builder;
+            builder = new AlertDialog.Builder(JoinRoom.this).setMessage(message).
+                    setCancelable(true).setPositiveButton(("Pick another room"),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            return builder;
         }
 
         @NonNull
