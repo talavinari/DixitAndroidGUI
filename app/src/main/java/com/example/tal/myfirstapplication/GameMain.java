@@ -510,11 +510,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         opponentUserNameTextView3.animate().y(user3ShowY).setDuration(300);
         scorePlayer3.animate().y(user3ShowY).setDuration(300);
 
-        try {
-            Thread.sleep(delay);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         opponentUserImageView1.animate().x(user1HideX).setDuration(300);
         opponentUserNameTextView1.animate().x(user1HideX).setDuration(300);
@@ -840,7 +835,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         tableImage.setSoundEffectsEnabled(false);
 
-        associationButton.animate().rotation(-90).start();
+        associationButton.animate().rotation(90).start();
         associationButton.setVisibility(View.INVISIBLE);
 
         setOpponentsCardVisibility(View.INVISIBLE);
@@ -1260,11 +1255,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             ObjectAnimator buttonAnimation;
             ObjectAnimator associationAnimation;
             // Hide
-            associationButton.animate().rotation(180).start();
             if (view.getX() > threshold) {
+                associationButton.animate().rotation(270).start();
                 buttonAnimation = ObjectAnimator.ofFloat(associationButton, "x", associationButton.getX(), 0);
                 associationAnimation = ObjectAnimator.ofFloat(association, "x", association.getX(), -association.getWidth());
             } else {
+                associationButton.animate().rotation(90).start();
                 buttonAnimation = ObjectAnimator.ofFloat(associationButton, "x", associationButton.getX(), po.x - associationButton.getWidth());
                 associationAnimation = ObjectAnimator.ofFloat(association, "x", association.getX(), 0);
             }
