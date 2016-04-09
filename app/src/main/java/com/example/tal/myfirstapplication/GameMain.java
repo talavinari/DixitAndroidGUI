@@ -905,8 +905,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         user2HideX = (int) (po.x - opponentUserImageView2.getWidth() * 0.5);
         user2ShowX = (int) (po.x - opponentUserImageView2.getWidth() * 1.5);
 
-        user3HideY = (int) (opponentUserImageView3.getHeight() * -0.5) + 30;
-        user3ShowY = (int) (opponentUserImageView3.getHeight() * 0.5) + 30;
+        user3HideY = (int) (opponentUserImageView3.getHeight() * -0.5);
+        user3ShowY = (int) (opponentUserImageView3.getHeight() * 0.5);
     }
 
     private void handleCards() {
@@ -1141,13 +1141,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         if (usr3) {
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3ShowY, user3HideY);
-            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3ShowY + opponentUserImageView3.getHeight(), user3HideY + opponentUserImageView3.getHeight());
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3ShowY + opponentUserImageView3.getHeight(), user3HideY + opponentUserImageView3.getHeight() + 30);
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3ShowY, user3HideY);
             scorePlayer3.setVisibility(View.INVISIBLE);
 
         } else {
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView3, "y", user3HideY, user3ShowY);
-            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3HideY + opponentUserImageView3.getHeight(), user3ShowY + opponentUserImageView3.getHeight());
+            userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3HideY + opponentUserImageView3.getHeight(), user3ShowY + opponentUserImageView3.getHeight() + 30);
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3HideY, user3ShowY);
             scorePlayer3.setVisibility(View.VISIBLE);
         }
