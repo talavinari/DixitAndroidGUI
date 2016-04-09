@@ -277,7 +277,7 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
                     name.setTextSize(30);
                     name.setText(rooms[i]);
                     ImageButton but = new ImageButton(JoinRoom.this);
-                    but.setBackground(getResources().getDrawable(R.drawable.i));
+                    but.setBackground(getResources().getDrawable(R.drawable.i, getApplicationContext().getTheme()));
                     but.setOnClickListener(JoinRoom.this);
                     row.addView(name);
                     row.addView(but);
