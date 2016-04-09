@@ -706,7 +706,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             int index = Integer.valueOf(data.getString(Constants.INDEX));
             Game.getGame().addPlayer(attachImageToPlayer(new Player(playerName, index)));
             joindRoom.start();
-            if (Game.getGame().players.size() == Constants.NUMBER_OF_PLAYERS_IN_DIXIT) {
+            if (Game.getGame().players.size() == Constants.     NUMBER_OF_PLAYERS_IN_DIXIT) {
                 Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
                 setPickedVotedInPosition();
             }
