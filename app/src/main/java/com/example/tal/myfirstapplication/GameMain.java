@@ -117,6 +117,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     boolean usr2 = false;
     boolean usr3 = false;
 
+    boolean isGameStarted = false;
+
     // Property animation
     int user1ShowX;
     int user2ShowX;
@@ -182,7 +184,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     @Override
     protected void onStart() {
         super.onStart();
-        startCardsAnimation();
+        if (!isGameStarted) {
+            isGameStarted= true;
+            startCardsAnimation();
+        }
     }
 
     @Override
@@ -359,8 +364,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         crownAnimation.setFillAfter(true);
         crown.startAnimation(crownAnimation);
 
+
         Game.getGame().gameState = GameState.GAME_ENDED;
 
+
+        // TODO : all listenenr
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -376,18 +384,29 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         if (checkNotSelfNotification(playerName)) {
             int pickedWinner = Integer.valueOf(data.getString(Constants.WINNING_CARD));
             Game.getGame().currentWinningCard = pickedWinner;
-            String association;
+            String associationText;
             try {
-                association = URLDecoder.decode(data.getString(Constants.ASSOCIATION), "UTF8");
+                associationText = URLDecoder.decode(data.getString(Constants.ASSOCIATION), "UTF8");
             } catch (UnsupportedEncodingException e) {
-                association = data.getString(Constants.ASSOCIATION);
+                associationText = data.getString(Constants.ASSOCIATION);
             }
-            Game.getGame().currentAssociation = association;
+            Game.getGame().currentAssociation = associationText;
             Game.getGame().setPickedCardForPlayer(playerName, pickedWinner);
+
+            if (isAssociationHidden()){
+                hideAndShowAssociation(association);
+            }
 
             Game.getGame().gameState = GameState.PICKING_CARDS;
         }
         handleAssociationGUI(false);
+    }
+
+    private boolean isAssociationHidden(){
+        if (association.getX() < 0){
+            return true;
+        }
+        return false;
     }
 
     private void handleAssociationGUI(boolean editable) {
@@ -434,17 +453,22 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     }
     private void userAndScoresPresentation(){
+        picked.setVisibility(View.INVISIBLE);
         usr1 = false;
         usr2 = false;
         usr3 = false;
-        moveUsers();
-        picked.setVisibility(View.INVISIBLE);
         mediaPlayer.start();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        moveUsers();
+        opponentUserImageView1.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        },300);
         moveUsers();
     }
 
