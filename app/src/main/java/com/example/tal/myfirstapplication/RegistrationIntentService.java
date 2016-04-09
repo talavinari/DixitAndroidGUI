@@ -60,12 +60,6 @@ public class RegistrationIntentService extends IntentService {
         }
     }
 
-    /**
-     * Subscribe to any GCM topics of interest, as defined by the TOPICS constant.
-     *
-     * @param token GCM token
-     * @throws IOException if unable to reach the GCM PubSub service
-     */
     private void subscribeTopics(String token, String topic) throws IOException {
         GcmPubSub pubSub = GcmPubSub.getInstance(this);
         pubSub.subscribe(token, "/topics/" + topic, null);

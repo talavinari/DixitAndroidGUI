@@ -213,6 +213,7 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
+                            new GetRooms().execute();
                         }
                     });
             return builder;

@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
@@ -146,6 +148,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     int user3HideY;
 
     int myPickedCard;
+    boolean notifyDestroyIndication = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,8 +182,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 attachImageToPlayer(player);
             }
         }
-
-
     }
 
     private void initListeners() {
@@ -337,9 +338,34 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 } else if (MessageType.PickedCard.getDescription().equals(messageType)) {
                     notifyPlayerPickedCard(data);
                 }
+                else if  (MessageType.DestroyRoom.getDescription().equals(messageType)){
+                    handleDestroyRoom(data.getString(Constants.PLAYER_NAME));
+                }
             }
         };
         registerGCMReceiver();
+    }
+
+    private void handleDestroyRoom(String playerName) {
+        if (checkNotSelfNotification(playerName)) {
+            notifyDestroyIndication = true;
+            unregisterFromTopic();
+            Game.getGame().clearObjects();
+            if (!playerName.isEmpty()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context).setMessage(playerName + " has left, game is over unexpectedly").
+                        setCancelable(true).setTitle(Constants.FATAL_ERROR_TITLE).setPositiveButton("OK", null);
+                AlertDialog alert = builder.create();
+                alert.show();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        GameMain.this.finish();
+                    }
+                }, 2500);
+            } else {
+                GameMain.this.finish();
+            }
+        }
     }
 
     private void notifyPlayerPickedCard(Bundle data) {
@@ -485,8 +511,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         endGame.bringToFront();
         endGame.animate().alpha((float) 0.5).start();
 
-        unregisterFromTopic();
-
         transSheet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -494,6 +518,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 startActivity(intent);
             }
         });
+
+        handleDestroyRoom("");
     }
 
     private void unregisterFromTopic() {
@@ -526,11 +552,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         handleAssociationGUI(false);
     }
 
-    private boolean isAssociationHidden() {
-        if (association.getX() < 0) {
-            return true;
-        }
-        return false;
+    private boolean isAssociationHidden(){
+        return association.getX() < 0;
+
     }
 
     private void handleAssociationGUI(boolean editable) {
@@ -664,8 +688,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     @Override
     protected void onDestroy() {
-        Game.initGame();
-        new OnClose(this).execute();
+        if (!notifyDestroyIndication && !Game.getGame().gameState.equals(GameState.GAME_ENDED)) {
+            new OnClose(this).execute();
+            unregisterFromTopic();
+            Game.getGame().clearObjects();
+        }
         super.onDestroy();
     }
 
@@ -1051,22 +1078,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         }
     }
 
-    private void setCardsForAnimation() {
-        // Left, Right
-        RelativeLayout.LayoutParams lp;
-        for (int i = 0; i < cardsInHand.size(); i++) {
-            cardsInHandParams.put(
-                    i,
-                    new Point(((RelativeLayout.LayoutParams) cardsInHand.get(i).cardPic.getLayoutParams()).leftMargin,
-                            ((RelativeLayout.LayoutParams) cardsInHand.get(i).cardPic.getLayoutParams()).bottomMargin));
-            lp = (RelativeLayout.LayoutParams) cardsInHand.get(i).cardPic.getLayoutParams();
-            lp.leftMargin = po.x;
-            lp.topMargin = po.y;
-            cardsInHand.get(i).cardPic.setLayoutParams(lp);
-        }
-    }
-
-    private void startCardsAnimation() {
+    private void startCardsAnimation(){
         MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.cards);
         List<Point> lst = new ArrayList<>(cardsInHandParams.values());
 
@@ -1339,6 +1351,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         protected String doInBackground(String... params) {
             try {
                 Requests.doPost(Constants.REMOVE_PLAYER, getBasicInfoJSON());
+                if (!Game.getGame().gameState.equals(GameState.INIT_GAME)){
+                    Requests.doPost(Constants.DESTROY_ROOM, getBasicInfoJSON());
+                }
                 UserData.getInstance().removeAllCards();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -1349,7 +1364,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     private void registerGCMReceiver() {
         LocalBroadcastManager.getInstance(this).registerReceiver(googleCloudBroadcastReceiver,
-                new IntentFilter(QuickstartPreferences.ROOM_MESSAGE_RECEIVED));
+                new IntentFilter(Constants.ROOM_MESSAGE_RECEIVED));
     }
 
     private void setTellerPic() {

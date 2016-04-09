@@ -127,17 +127,16 @@ public class Game {
         return null;
     }
 
-//    public void clearObjects(){
-//        players = null;
-//        votes = null;
-//        pickedCards = null;
-//        currentStoryTeller = null;
-//        currentAssociation = null;
-//        currentWinningCard = -1;
-//        winners = null;
-//        gameState = GameState.INIT_GAME;
-//
-//    }
+    public void clearObjects(){
+        players = null;
+        votes = null;
+        pickedCards = null;
+        currentStoryTeller = null;
+        currentAssociation = null;
+        currentWinningCard = -1;
+        winners = null;
+        gameState = GameState.INIT_GAME;
+    }
 
     public void setPickedCardForPlayer(String playerName, int pickedCard) {
         Player player = getPlayerByName(playerName);
