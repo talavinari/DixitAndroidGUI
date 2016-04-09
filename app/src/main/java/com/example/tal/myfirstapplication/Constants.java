@@ -15,6 +15,7 @@ public class Constants {
     public static final String SEND_ASSOCIATION_API_URL = REST_API_PREFIX + "sendAssociation";
     public static final String GET_ROOMS_API_URL = REST_API_PREFIX + "rooms";
     public static final String REMOVE_PLAYER = REST_API_PREFIX + "removePlayer";
+    public static final String DESTROY_ROOM = REST_API_PREFIX + "destroyRoom";
     public static final String GET_ROOM_DETAILS_API_URL = REST_API_PREFIX + "players"; // /players/{roomName}
     public static final String ROOM_FIELD = "roomName";
     public static final String NAME_FIELD = "nickName";
@@ -45,5 +46,7 @@ public class Constants {
     public static int WINNING_SCORE_THRESHOLD = 10;
 
     public static final String DELIMITER = ",";
+
+    public static final String ROOM_MESSAGE_RECEIVED = "roomMessageReceived";
 
 }

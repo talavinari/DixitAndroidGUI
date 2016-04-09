@@ -33,7 +33,7 @@ public class MyGcmListenerService extends GcmListenerService {
      */
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        Intent intent = new Intent(QuickstartPreferences.ROOM_MESSAGE_RECEIVED);
+        Intent intent = new Intent(Constants.ROOM_MESSAGE_RECEIVED);
         intent.putExtra("message", data);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
