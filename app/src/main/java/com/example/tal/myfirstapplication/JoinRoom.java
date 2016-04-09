@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -50,29 +51,6 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    private void handleError(final Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("The name you have chosen is already in use. What next?")
-                .setCancelable(false)
-                .setPositiveButton(("Pick another room"),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-
-                                dialog.cancel();
-                            }
-                        })
-                .setNegativeButton(("Pick another name"),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-
-                                Intent intent = new Intent(context, FirstLogIn.class);
-                                startActivity(intent);
-                            }
-                        });
-
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
 
     @Override
     public void onClick(View v) {
@@ -146,6 +124,9 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
 
     public class AddMeToRoom extends BaseTask {
 
+
+
+
         public AddMeToRoom(Context context) {
             super(context.getApplicationContext());
         }
@@ -156,7 +137,7 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
             String responseJSON;
             try {
                 responseJSON = Requests.doPostWithResponse(Constants.ADD_PLAYER_TO_ROOM_API_URL, getBasicInfoJSON());
-                return Boolean.toString(parseJsonResponse(responseJSON));
+                return parseJsonResponse(responseJSON);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -167,20 +148,20 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if (Boolean.parseBoolean(s)) {
+            if (s.isEmpty()) {
                 Intent intent = new Intent(context, GameMain.class);
                 startActivity(intent);
             } else {
-                handleError(JoinRoom.this);
+                handleError(s);
             }
         }
 
 
-        private boolean parseJsonResponse(String json) {
+        private String parseJsonResponse(String json) {
             try {
 
                 JSONObject response = new JSONObject(json);
-                if (!response.has("error")) {
+                if (!response.has(Constants.ERROR)) {
 
                     String cards = (String) response.get("cards");
                     UserData.getInstance().setCards(cards);
@@ -195,17 +176,59 @@ public class JoinRoom extends Activity implements View.OnClickListener, View.OnT
                     }
 
                     Game.getGame().setFirstStoryTeller();
-                    return true;
+                    doInBackgroundExitCode = 0;
+                    return "";
                 } else {
-                    return false;
+                    doInBackgroundExitCode = response.getInt(Constants.ERROR_CODE);
+                    return  response.getString(Constants.ERROR);
                 }
 
             } catch (JSONException e) {
-                e.printStackTrace();
-                return false;
+                doInBackgroundExitCode = -1;
+                return e.getMessage();
+
             }
         }
+        private void handleError(String errorMessage) {
+            AlertDialog.Builder builder;
+            if (doInBackgroundExitCode == Constants.DUPLICATE_ERROR_CODE) {
+                builder = getDuplicateDialogBuilder();
+            }
+            else{
+                builder = new AlertDialog.Builder(JoinRoom.this).setMessage(errorMessage).
+                        setCancelable(true).setTitle(Constants.FATAL_ERROR_TITLE).setPositiveButton("OK", null);
+            }
+
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+
+        @NonNull
+        private AlertDialog.Builder getDuplicateDialogBuilder() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(JoinRoom.this);
+            builder.setMessage("The name you have chosen is already in use. What next?")
+                    .setCancelable(false)
+                    .setPositiveButton(("Pick another room"),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    dialog.cancel();
+                                }
+                            })
+                    .setNegativeButton(("Pick another name"),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    Intent intent = new Intent(JoinRoom.this, FirstLogIn.class);
+                                    startActivity(intent);
+                                }
+                            });
+            return builder;
+        }
+
     }
+
+
 
     @Override
     protected void onResume() {

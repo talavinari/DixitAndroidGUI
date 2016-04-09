@@ -14,7 +14,7 @@ import android.widget.EditText;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CreateRoom extends Activity {
+    public class CreateRoom extends Activity {
 
 
     @Override
@@ -34,7 +34,8 @@ public class CreateRoom extends Activity {
 
     private class AddRoom extends AsyncTask<String, String, String> {
         private Context context;
-        String roomName;
+        private String roomName;
+        protected int doInBackgroundExitCode;
 
         public AddRoom(Context context, String roomName) {
             this.context = context.getApplicationContext();
@@ -49,7 +50,6 @@ public class CreateRoom extends Activity {
             try {
                 sendingJSON.put(Constants.NAME_FIELD, nickName);
                 sendingJSON.put(Constants.ROOM_FIELD, roomName);
-
                 String responseJSON = Requests.doPostWithResponse(Constants.ADD_ROOM_API_URL, sendingJSON);
 
                 JSONObject response = new JSONObject(responseJSON);
@@ -61,40 +61,55 @@ public class CreateRoom extends Activity {
                     Game.getGame().addPlayer(new Player(nickName, 1));
                     Game.getGame().setFirstStoryTeller();
 
-                    return String.valueOf(true);
+                    doInBackgroundExitCode = 0;
+                    return "";
                 }
                 else{
-                    return String.valueOf(false);
-
+                    doInBackgroundExitCode = response.getInt(Constants.ERROR_CODE);
+                    return  response.getString(Constants.ERROR);
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
-                return String.valueOf(false);
+                doInBackgroundExitCode = -1;
+                return e.getMessage();
             }
 
         }
 
-        protected void onPostExecute(String result) {
-            boolean noErrors = Boolean.valueOf(result);
-            if (noErrors) {
-                Intent intent = new Intent(context, RegistrationIntentService.class);
-                intent.putExtra(Constants.OPERATION_TYPE, Constants.REGISTER_OPERATION);
-                intent.putExtra(Constants.TOPIC_ROOM_NAME, roomName);
-                startService(intent);
-
-                Intent gameIntent = new Intent(context, GameMain.class);
-                startActivity(gameIntent);
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s.isEmpty()) {
+                startGameActivity();
             }
             else{
-                handleError(CreateRoom.this);
+                handleError(s);
             }
         }
-        private void handleError(final Context context) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("The room name you have chosen is already in use. Change your room name")
-                    .setCancelable(true).setTitle("Error").setPositiveButton("OK", null);
+
+        private void startGameActivity() {
+            Intent intent = new Intent(context, RegistrationIntentService.class);
+            intent.putExtra(Constants.OPERATION_TYPE, Constants.REGISTER_OPERATION);
+            intent.putExtra(Constants.TOPIC_ROOM_NAME, roomName);
+            startService(intent);
+
+            Intent gameIntent = new Intent(context, GameMain.class);
+            startActivity(gameIntent);
+        }
+
+        private void handleError(String errorMessage) {
+            AlertDialog.Builder builder;
+            if (doInBackgroundExitCode == Constants.DUPLICATE_ERROR_CODE) {
+                builder = new AlertDialog.Builder(CreateRoom.this).
+                        setMessage("The room name you have chosen is already in use. Change your room name")
+                        .setCancelable(true).setTitle("Error").setPositiveButton("OK", null);
+            }
+            else{
+                builder = new AlertDialog.Builder(CreateRoom.this).setMessage(errorMessage).
+                        setCancelable(true).setTitle(Constants.FATAL_ERROR_TITLE).setPositiveButton("OK", null);
+            }
+
             AlertDialog alert = builder.create();
             alert.show();
+
         }
     }
 }
