@@ -564,10 +564,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         association.setFocusableInTouchMode(editable);
         association.setFocusable(editable);
         association.setClickable(editable);
-        isTyping = editable;
         if (isAssociationHidden() && editable) {
             hideAndShowAssociation(association);
         }
+        isTyping = editable;
         if (!amITheTeller()) {
             isCardOnTable = false;
         }
@@ -631,15 +631,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                opponentUserImageView1.animate().x(user1HideX).setDuration(300);
-                opponentUserNameTextView1.animate().x(user1HideX).setDuration(300);
-                scorePlayer1.animate().x(user1HideX).setDuration(300);
-                opponentUserImageView2.animate().x(user2HideX).setDuration(300);
-                opponentUserNameTextView2.animate().x(user2HideX).setDuration(300);
-                scorePlayer2.animate().x(user2HideX).setDuration(300);
-                opponentUserImageView3.animate().y(user3HideY).setDuration(300);
-                opponentUserNameTextView3.animate().y(user3HideY).setDuration(300);
-                scorePlayer3.animate().y(user3HideY).setDuration(300);
+                opponentUserImageView1.animate().x(user1HideX).setDuration(300).setStartDelay(2500);
+                opponentUserNameTextView1.animate().x(user1HideX).setDuration(300).setStartDelay(2500);
+                scorePlayer1.animate().x(user1HideX).setDuration(300).setStartDelay(2500);
+                opponentUserImageView2.animate().x(user2HideX).setDuration(300).setStartDelay(2500);
+                opponentUserNameTextView2.animate().x(user2HideX).setDuration(300).setStartDelay(2500);
+                scorePlayer2.animate().x(user2HideX).setDuration(300).setStartDelay(2500);
+                opponentUserImageView3.animate().y(user3HideY).setDuration(300).setStartDelay(2500);
+                opponentUserNameTextView3.animate().y(user3HideY).setDuration(300).setStartDelay(2500);
+                scorePlayer3.animate().y(user3HideY).setDuration(300).setStartDelay(2500).setListener(null);
             }
         });
     }
