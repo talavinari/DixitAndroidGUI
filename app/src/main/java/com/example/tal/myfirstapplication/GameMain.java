@@ -17,6 +17,7 @@ import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -35,6 +36,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONException;
 
@@ -149,6 +154,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     int myPickedCard;
     boolean notifyDestroyIndication = false;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,6 +192,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 attachImageToPlayer(player);
             }
         }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void initListeners() {
@@ -199,10 +212,26 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     @Override
     protected void onStart() {
         super.onStart();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
         if (!isGameStarted) {
             isGameStarted = true;
             startCardsAnimation();
         }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "GameMain Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.tal.myfirstapplication/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     @Override
@@ -291,34 +320,34 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
     }
 
-    private void setPickedVotedInPosition(){
+    private void setPickedVotedInPosition() {
         RelativeLayout.LayoutParams lp1 = (RelativeLayout.LayoutParams) user1voted.getLayoutParams();
-        lp1.addRule(RelativeLayout.ALIGN_END,opponentUserImageView1.getId());
+        lp1.addRule(RelativeLayout.ALIGN_END, opponentUserImageView1.getId());
         lp1.addRule(RelativeLayout.ALIGN_TOP, opponentUserImageView1.getId());
         user1voted.setLayoutParams(lp1);
 
         RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) user2voted.getLayoutParams();
-        lp2.addRule(RelativeLayout.ALIGN_START,opponentUserImageView2.getId());
+        lp2.addRule(RelativeLayout.ALIGN_START, opponentUserImageView2.getId());
         lp2.addRule(RelativeLayout.ALIGN_TOP, opponentUserImageView2.getId());
         user2voted.setLayoutParams(lp2);
 
         RelativeLayout.LayoutParams lp3 = (RelativeLayout.LayoutParams) user3voted.getLayoutParams();
-        lp3.addRule(RelativeLayout.ALIGN_END,opponentUserImageView3.getId());
+        lp3.addRule(RelativeLayout.ALIGN_END, opponentUserImageView3.getId());
         lp3.addRule(RelativeLayout.ALIGN_BOTTOM, opponentUserImageView3.getId());
         user3voted.setLayoutParams(lp3);
 
         RelativeLayout.LayoutParams lp4 = (RelativeLayout.LayoutParams) user1picked.getLayoutParams();
-        lp4.addRule(RelativeLayout.ALIGN_END,opponentUserImageView1.getId());
+        lp4.addRule(RelativeLayout.ALIGN_END, opponentUserImageView1.getId());
         lp4.addRule(RelativeLayout.ALIGN_BOTTOM, opponentUserImageView1.getId());
         user1picked.setLayoutParams(lp4);
 
         RelativeLayout.LayoutParams lp5 = (RelativeLayout.LayoutParams) user2picked.getLayoutParams();
-        lp5.addRule(RelativeLayout.ALIGN_START,opponentUserImageView2.getId());
+        lp5.addRule(RelativeLayout.ALIGN_START, opponentUserImageView2.getId());
         lp5.addRule(RelativeLayout.ALIGN_BOTTOM, opponentUserImageView2.getId());
         user2picked.setLayoutParams(lp5);
 
         RelativeLayout.LayoutParams lp6 = (RelativeLayout.LayoutParams) user3picked.getLayoutParams();
-        lp6.addRule(RelativeLayout.ALIGN_START,opponentUserImageView3.getId());
+        lp6.addRule(RelativeLayout.ALIGN_START, opponentUserImageView3.getId());
         lp6.addRule(RelativeLayout.ALIGN_BOTTOM, opponentUserImageView3.getId());
         user3picked.setLayoutParams(lp6);
     }
@@ -337,8 +366,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     notifyJoinedToRoom(data);
                 } else if (MessageType.PickedCard.getDescription().equals(messageType)) {
                     notifyPlayerPickedCard(data);
-                }
-                else if  (MessageType.DestroyRoom.getDescription().equals(messageType)){
+                } else if (MessageType.DestroyRoom.getDescription().equals(messageType)) {
                     handleDestroyRoom(data.getString(Constants.PLAYER_NAME));
                 }
             }
@@ -494,13 +522,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         }
 
         moveUsers();
-        TranslateAnimation crownAnimation = new TranslateAnimation(winners.get(0).userPic.getX(), winners.get(0).userPic.getX(), -winners.get(0).userPic.getHeight(), winners.get(0).userPic.getY() - (winners.get(0).userPic.getHeight() * 2 / 3));
+
+        //TranslateAnimation crownAnimation = new TranslateAnimation(winners.get(0).userPic.getX(), winners.get(0).userPic.getX(), -winners.get(0).userPic.getHeight(), winners.get(0).userPic.getY() - (winners.get(0).userPic.getHeight() * 2 / 3));
         picked.setVisibility(View.INVISIBLE);
         crown.setVisibility(View.VISIBLE);
 
-        crownAnimation.setDuration(3500);
-        crownAnimation.setFillAfter(true);
-        crown.startAnimation(crownAnimation);
+
+        //crownAnimation.setDuration(3500);
+        //crownAnimation.setFillAfter(true);
+        //crown.startAnimation(crownAnimation);
 
         Game.getGame().gameState = GameState.GAME_ENDED;
 
@@ -514,11 +544,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         transSheet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                handleDestroyRoomNormally();
                 Intent intent = new Intent(context, ChooseCreateJoin.class);
                 startActivity(intent);
             }
         });
 
+    }
+
+    private void handleDestroyRoomNormally() {
         handleDestroyRoom("");
     }
 
@@ -552,7 +586,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         handleAssociationGUI(false);
     }
 
-    private boolean isAssociationHidden(){
+    private boolean isAssociationHidden() {
         return association.getX() < 0;
 
     }
@@ -1078,7 +1112,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         }
     }
 
-    private void startCardsAnimation(){
+    private void startCardsAnimation() {
         MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.cards);
         List<Point> lst = new ArrayList<>(cardsInHandParams.values());
 
@@ -1247,7 +1281,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             user2picked.animate().x(user2HideX).setDuration(300);
 
             if (Game.getGame().currentStoryTeller.name.equals(opponentUserNameTextView2.getText())) {
-                moveTellerPic(user1HideX - (teller.getWidth() / 2), -1);
+                moveTellerPic(user2HideX - (teller.getWidth() / 2), -1);
             }
         } else {
             userPicAnimation = ObjectAnimator.ofFloat(opponentUserImageView2, "x", user2HideX, user2ShowX);
@@ -1259,7 +1293,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
             scorePlayer2.setVisibility(View.VISIBLE);
             if (Game.getGame().currentStoryTeller.name.equals(opponentUserNameTextView2.getText())) {
-                moveTellerPic(user1ShowX - (teller.getWidth() / 2), -1);
+                moveTellerPic(user2ShowX - (teller.getWidth() / 2), -1);
             }
         }
         userPicAnimation.setDuration(300);
@@ -1282,8 +1316,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3ShowY, user3HideY);
             scorePlayer3.setVisibility(View.INVISIBLE);
 
-            user3voted.animate().y(user3HideY).setDuration(300);
-            user3picked.animate().y(user3HideY).setDuration(300);
+            user3voted.animate().y(user3HideY + opponentUserImageView3.getHeight() - user3voted.getHeight()).setDuration(300);
+            user3picked.animate().y(user3HideY + opponentUserImageView3.getHeight() - user3picked.getHeight()).setDuration(300);
 
             if (Game.getGame().currentStoryTeller.name.equals(opponentUserNameTextView3.getText())) {
                 moveTellerPic(-1, user3HideY + opponentUserImageView3.getHeight() - (teller.getHeight() / 2));
@@ -1293,8 +1327,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             userTextAnimation = ObjectAnimator.ofFloat(opponentUserNameTextView3, "y", user3HideY + opponentUserImageView3.getHeight() + 30, user3ShowY + opponentUserImageView3.getHeight() + 30);
             userScoreAnimation = ObjectAnimator.ofFloat(scorePlayer3, "y", user3HideY, user3ShowY);
 
-            user3voted.animate().y(user3ShowY).setDuration(300);
-            user3picked.animate().y(user3ShowY).setDuration(300);
+            user3voted.animate().y(user3ShowY + opponentUserImageView3.getHeight() - user3voted.getHeight()).setDuration(300);
+            user3picked.animate().y(user3ShowY + opponentUserImageView3.getHeight() - user3picked.getHeight()).setDuration(300);
 
             scorePlayer3.setVisibility(View.VISIBLE);
             if (Game.getGame().currentStoryTeller.name.equals(opponentUserNameTextView3.getText())) {
@@ -1341,6 +1375,26 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         return true;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "GameMain Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.tal.myfirstapplication/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+
     private class OnClose extends BaseTask {
 
         public OnClose(Context context) {
@@ -1351,7 +1405,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         protected String doInBackground(String... params) {
             try {
                 Requests.doPost(Constants.REMOVE_PLAYER, getBasicInfoJSON());
-                if (!Game.getGame().gameState.equals(GameState.INIT_GAME)){
+                if (!Game.getGame().gameState.equals(GameState.INIT_GAME)) {
                     Requests.doPost(Constants.DESTROY_ROOM, getBasicInfoJSON());
                 }
                 UserData.getInstance().removeAllCards();
