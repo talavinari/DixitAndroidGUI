@@ -1101,7 +1101,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private int getDrawableID(String cardNumber) {
-        return this.getResources().getIdentifier(Constants.IMG_PREFIX + cardNumber, "drawable", this.getPackageName());
+        return this.getResources().getIdentifier(Constants.IMG_PREFIX + cardNumber + "_mobile", "drawable", this.getPackageName());
     }
 
     private void setAllCards(int w, int h) {
