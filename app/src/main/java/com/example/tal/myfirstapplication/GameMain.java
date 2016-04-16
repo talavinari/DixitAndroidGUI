@@ -42,7 +42,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONException;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -167,6 +166,19 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         setContentView(R.layout.activity_game_main);
         findViews();
         initListeners();
+        Thread.UncaughtExceptionHandler mUEHandler = new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                try {
+                    unregisterFromTopic(getCurrRoom());
+                } catch (Exception e1) {
+                    // do nothing
+                }
+                GameMain.this.finish();
+            }
+        };
+
+        Thread.setDefaultUncaughtExceptionHandler(mUEHandler);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
@@ -358,28 +370,41 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         googleCloudBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Bundle data = intent.getBundleExtra("message");
-                String messageType = data.getString(Constants.MESSAGE_TYPE);
-                if (MessageType.Association.getDescription().equals(messageType)) {
-                    notifyAssociation(data);
-                } else if (MessageType.Vote.getDescription().equals(messageType)) {
-                    notifyVote(data);
-                } else if (MessageType.JoinedToRoom.getDescription().equals(messageType)) {
-                    notifyJoinedToRoom(data);
-                } else if (MessageType.PickedCard.getDescription().equals(messageType)) {
-                    notifyPlayerPickedCard(data);
-                } else if (MessageType.DestroyRoom.getDescription().equals(messageType)) {
-                    handleDestroyRoom(data.getString(Constants.PLAYER_NAME));
+                String from = intent.getStringExtra("from");
+                if (from.length() > 8) {
+                    String roomTopicName = from.substring(8);
+                    if (roomTopicName.equals(getCurrRoom())) {
+                        Bundle data = intent.getBundleExtra("message");
+                        String messageType = data.getString(Constants.MESSAGE_TYPE);
+                        if (MessageType.Association.getDescription().equals(messageType)) {
+                            notifyAssociation(data);
+                        } else if (MessageType.Vote.getDescription().equals(messageType)) {
+                            notifyVote(data);
+                        } else if (MessageType.JoinedToRoom.getDescription().equals(messageType)) {
+                            notifyJoinedToRoom(data);
+                        } else if (MessageType.PickedCard.getDescription().equals(messageType)) {
+                            notifyPlayerPickedCard(data);
+                        } else if (MessageType.DestroyRoom.getDescription().equals(messageType)) {
+                            handleDestroyRoom(data.getString(Constants.PLAYER_NAME));
+                        }
+                    }
+                    else{
+                        unregisterFromTopic(roomTopicName);
+                    }
                 }
             }
         };
         registerGCMReceiver();
     }
 
+    private String getCurrRoom() {
+        return UserData.getInstance().getCurrRoom(GameMain.this);
+    }
+
     private void handleDestroyRoom(String playerName) {
         if (checkNotSelfNotification(playerName)) {
             notifyDestroyIndication = true;
-            unregisterFromTopic();
+            unregisterFromTopic(getCurrRoom());
             Game.getGame().clearObjects();
             if (!playerName.isEmpty()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context).setMessage(playerName + " has left, game is over unexpectedly").
@@ -557,14 +582,15 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         handleDestroyRoom("");
     }
 
-    private void unregisterFromTopic() {
+    private void unregisterFromTopic(String roomTopicName) {
         Intent intent = new Intent(context, RegistrationIntentService.class);
         intent.putExtra(Constants.OPERATION_TYPE, Constants.UNREGISTER_OPERATION);
-        intent.putExtra(Constants.TOPIC_ROOM_NAME, UserData.getInstance().getCurrRoom(this));
+        intent.putExtra(Constants.TOPIC_ROOM_NAME, roomTopicName);
         startService(intent);
     }
 
     private void notifyAssociation(Bundle data) {
+
         String playerName = data.getString(Constants.PLAYER_NAME);
         if (checkNotSelfNotification(playerName)) {
             int pickedWinner = Integer.valueOf(data.getString(Constants.WINNING_CARD));
@@ -732,7 +758,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     protected void onDestroy() {
         if (!notifyDestroyIndication && !Game.getGame().gameState.equals(GameState.GAME_ENDED)) {
             new OnClose(this).execute();
-            unregisterFromTopic();
+            unregisterFromTopic(getCurrRoom());
             Game.getGame().clearObjects();
         }
         super.onDestroy();

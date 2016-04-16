@@ -35,6 +35,7 @@ public class MyGcmListenerService extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         Intent intent = new Intent(Constants.ROOM_MESSAGE_RECEIVED);
         intent.putExtra("message", data);
+        intent.putExtra("from", from);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }
