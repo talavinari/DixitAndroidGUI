@@ -418,6 +418,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     }
                 }, 2500);
             } else {
+                new OnClose(this).execute();
                 GameMain.this.finish();
             }
         }
@@ -534,7 +535,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void handleWinningGUI() {
-        // TODO winning GUI - Unsubscribe from topic + cant touch anything
         List<Player> winners = Game.getGame().winners;
 
         if (winners.contains(Game.getGame().getPlayerByName(UserData.getInstance().getNickName(this)))) {
