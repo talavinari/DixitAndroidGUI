@@ -45,8 +45,9 @@ public class Room extends AppCompatActivity {
         protected String doInBackground(String... params) {
             String urlString = params[0];
             String roomName = params[1];
+            urlString = urlString + "/" + roomName;
 
-            return Requests.doPostWithResponse(urlString, roomName);
+            return Requests.doGet(urlString);
         }
 
         protected void onPostExecute(String result) {
