@@ -39,7 +39,7 @@ public class Constants {
     public static final int NOT_EXISTS_ROOM_ERROR_CODE = 3;
     public static final int NUMBER_OF_CARDS_IN_HAND = 6;
     public static final int NUMBER_OF_PLAYERS_IN_DIXIT = 4;
-    public static int WINNING_SCORE_THRESHOLD = 10;
+    public static int WINNING_SCORE_THRESHOLD = 2;
 
     public static final String DELIMITER = ",";
     public static final String ROOM_MESSAGE_RECEIVED = "roomMessageReceived";

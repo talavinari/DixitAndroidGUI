@@ -684,9 +684,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         scorePlayer1.setVisibility(View.VISIBLE);
         scorePlayer2.setVisibility(View.VISIBLE);
         scorePlayer3.setVisibility(View.VISIBLE);
-        scorePlayer1.bringToFront();
-        scorePlayer2.bringToFront();
-        scorePlayer3.bringToFront();
         opponentUserImageView1.animate().x(user1ShowX).setDuration(300);
         opponentUserNameTextView1.animate().x(user1ShowX).setDuration(300);
         scorePlayer1.animate().x(user1ShowX).setDuration(300);
@@ -695,6 +692,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         scorePlayer2.animate().x(user2ShowX).setDuration(300);
         opponentUserImageView3.animate().y(user3ShowY).setDuration(300);
         opponentUserNameTextView3.animate().y(user3ShowY + opponentUserImageView3.getHeight()).setDuration(300);
+        scorePlayer1.bringToFront();
+        scorePlayer2.bringToFront();
+        scorePlayer3.bringToFront();
         scorePlayer3.animate().y(user3ShowY).setDuration(300).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
