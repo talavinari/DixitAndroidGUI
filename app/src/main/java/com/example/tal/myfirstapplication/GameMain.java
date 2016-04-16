@@ -540,11 +540,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         if (winners.contains(Game.getGame().getPlayerByName(UserData.getInstance().getNickName(this)))) {
             soundWinner.start();
             crown.setVisibility(View.VISIBLE);
-            endGame.setText("You WIN! game ended, click to o back");
+            endGame.setText("You WIN! game ended, click to go back");
 
         } else {
             soundLoser.start();
-            endGame.setText("You Lost! game ended, click to o back");
+            endGame.setText("You Lost! game ended, click to go back");
         }
 
         moveUsers();
