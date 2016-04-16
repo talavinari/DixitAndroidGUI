@@ -514,6 +514,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         if (winners.contains(Game.getGame().getPlayerByName(UserData.getInstance().getNickName(this)))) {
             soundWinner.start();
+            crown.setVisibility(View.VISIBLE);
 
         } else {
             soundLoser.start();
@@ -653,6 +654,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void moveUsersBackAndForth(int delay) {
         scorePlayer1.setVisibility(View.VISIBLE);
 
+        scorePlayer1.setVisibility(View.VISIBLE);
+        scorePlayer2.setVisibility(View.VISIBLE);
+        scorePlayer3.setVisibility(View.VISIBLE);
         opponentUserImageView1.animate().x(user1ShowX).setDuration(300);
         opponentUserNameTextView1.animate().x(user1ShowX).setDuration(300);
         scorePlayer1.animate().x(user1ShowX).setDuration(300);
@@ -674,6 +678,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 opponentUserImageView3.animate().y(user3HideY).setDuration(300).setStartDelay(2500);
                 opponentUserNameTextView3.animate().y(user3HideY).setDuration(300).setStartDelay(2500);
                 scorePlayer3.animate().y(user3HideY).setDuration(300).setStartDelay(2500).setListener(null);
+
+                scorePlayer1.setVisibility(View.INVISIBLE);
+                scorePlayer2.setVisibility(View.INVISIBLE);
+                scorePlayer3.setVisibility(View.INVISIBLE);
             }
         });
     }
