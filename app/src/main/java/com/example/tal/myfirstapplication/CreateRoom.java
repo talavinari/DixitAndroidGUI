@@ -29,8 +29,20 @@ import org.json.JSONObject;
     public void createRoom(View view) {
         EditText editText = (EditText) findViewById(R.id.RoomName);
 
-        new AddRoom(this, editText.getText().toString()).execute(UserData.getInstance().getNickName(this));
-        UserData.getInstance().setCurrRoom(editText.getText().toString(), this);
+        if (editText.getText().length() > 0) {
+            new AddRoom(this, editText.getText().toString()).execute(UserData.getInstance().getNickName(this));
+            UserData.getInstance().setCurrRoom(editText.getText().toString(), this);
+        }else{
+            AlertDialog.Builder builder;
+
+                builder = new AlertDialog.Builder(CreateRoom.this).
+                        setMessage("You must enter a valid room name")
+                        .setCancelable(true).setTitle("Error").setPositiveButton("OK", null);
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        }
+
     }
 
     private class AddRoom extends AsyncTask<String, String, String> {

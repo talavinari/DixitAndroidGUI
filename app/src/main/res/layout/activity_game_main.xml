@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:components="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/tablepic"
@@ -373,27 +374,30 @@
         android:id="@+id/picked"
         android:src="@drawable/picked"
         android:visibility="invisible"/>
-    <ImageView
+    <com.example.tal.myfirstapplication.GifMovie
         android:layout_width="300px"
         android:layout_height="300px"
         android:id="@+id/crown"
-        android:src="@drawable/crown"
+        components:src="@raw/crown2"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:visibility="invisible"/>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/transSheet"
-        android:alpha="0"
         android:background="#FFFFFF"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:alpha="0.7" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:id="@+id/endGame"
         android:gravity="center"
-        android:alpha="0"
+        android:alpha="1"
         android:text="Game ended! click to go back"
+        android:textColor="@color/Black"
         android:visibility="invisible"/>
 
 

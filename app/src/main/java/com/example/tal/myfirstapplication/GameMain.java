@@ -42,6 +42,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -106,7 +107,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     ImageView user2voted;
     ImageView user3voted;
 
-
     ImageView picked;
 
     List<ImageView> cardsImages;
@@ -126,7 +126,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     ImageView flashingCard;
     ImageView transSheet;
 
-    ImageView crown;
+    GifMovie crown;
 
     BroadcastReceiver googleCloudBroadcastReceiver;
 
@@ -183,6 +183,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         data = ClipData.newPlainText("", "");
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         context = this;
+
+
 
         setCardsInPosition();
 
@@ -265,6 +267,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
 
         associationButton = (ImageView) findViewById(R.id.association_button);
 
+
         teller = (ImageView) findViewById(R.id.teller);
         teller.getLayoutParams().height = 150;
         teller.getLayoutParams().width = 150;
@@ -275,7 +278,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         soundRoundEnd = MediaPlayer.create(this, R.raw.round_winner);
         joindRoom = MediaPlayer.create(this, R.raw.join_room_notification);
 
-        crown = (ImageView) findViewById(R.id.crown);
+        crown = (GifMovie) findViewById(R.id.crown);
         transSheet = (ImageView) findViewById(R.id.transSheet);
         endGame = (TextView) findViewById(R.id.endGame);
 
@@ -509,36 +512,34 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         // TODO winning GUI - Unsubscribe from topic + cant touch anything
         List<Player> winners = Game.getGame().winners;
 
-        usr1 = false;
-        usr2 = false;
-        usr3 = false;
-
-
         if (winners.contains(Game.getGame().getPlayerByName(UserData.getInstance().getNickName(this)))) {
             soundWinner.start();
+
         } else {
             soundLoser.start();
         }
 
+
         moveUsers();
 
-        //TranslateAnimation crownAnimation = new TranslateAnimation(winners.get(0).userPic.getX(), winners.get(0).userPic.getX(), -winners.get(0).userPic.getHeight(), winners.get(0).userPic.getY() - (winners.get(0).userPic.getHeight() * 2 / 3));
+        setAllVotedVisibility(View.INVISIBLE);
+        setAllPickedVisibility(View.INVISIBLE);
+
         picked.setVisibility(View.INVISIBLE);
-        crown.setVisibility(View.VISIBLE);
+        teller.setVisibility(View.INVISIBLE);
+        setOpponentsCardVisibility(View.GONE);
 
 
-        //crownAnimation.setDuration(3500);
-        //crownAnimation.setFillAfter(true);
-        //crown.startAnimation(crownAnimation);
+        cardsInHand.clear();
+        userAndScoresPresentation();
+        setTargetCardEmpty();
 
         Game.getGame().gameState = GameState.GAME_ENDED;
 
         transSheet.setVisibility(View.VISIBLE);
         transSheet.bringToFront();
-        transSheet.animate().alpha((float) 0.5).start();
         endGame.setVisibility(View.VISIBLE);
         endGame.bringToFront();
-        endGame.animate().alpha((float) 0.5).start();
 
         transSheet.setOnClickListener(new View.OnClickListener() {
             @Override
