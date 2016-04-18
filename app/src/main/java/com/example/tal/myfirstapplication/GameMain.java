@@ -175,6 +175,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 } catch (Exception e1) {
                     // do nothing
                 }
+                resetPlayers();
                 GameMain.this.finish();
             }
         };
@@ -259,6 +260,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 Game.getGame().gameState = GameState.WAITING_FOR_ASSOCIATION;
             }
         }
+    }
+
+    private void resetPlayers(){
+        opponentUserNameTextView1.setText(getString(R.string.noNameUser));
+        opponentUserNameTextView2.setText(getString(R.string.noNameUser));
+        opponentUserNameTextView3.setText(getString(R.string.noNameUser));
     }
 
     private void findViews() {
@@ -415,11 +422,13 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
+                        resetPlayers();
                         GameMain.this.finish();
                     }
                 }, 2500);
             } else {
                 new OnClose(this).execute();
+                resetPlayers();
                 GameMain.this.finish();
             }
         }
@@ -576,7 +585,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 handleDestroyRoomNormally();
                 Intent intent = new Intent(context, ChooseCreateJoin.class);
                 startActivity(intent);
-                GameMain.this.finish();
+                resetPlayers();
+                finish();
 
             }
         });
