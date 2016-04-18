@@ -3,7 +3,6 @@ package com.example.tal.myfirstapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Camera;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -47,7 +46,6 @@ public class FirstLogIn extends Activity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Camera cam = new Camera();
 
         if ( data != null && data.getExtras() !=  null) {
             bmp = (Bitmap) data.getExtras().get("data");

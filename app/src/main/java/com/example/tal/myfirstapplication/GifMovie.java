@@ -13,12 +13,6 @@ import java.io.InputStream;
 public class GifMovie extends View {
     Movie movie;
     private long movieStart;
-    private int gifId;
-
-    public GifMovie(Context context, InputStream is) {
-        super(context);
-        movie = Movie.decodeStream(is);
-    }
 
     public GifMovie(Context context) {
         super(context);
@@ -54,14 +48,5 @@ public class GifMovie extends View {
             movie.draw(canvas, (getHeight() - movie.height())/2, (getWidth() - movie.width())/2);
             this.invalidate();
         }
-    }
-
-    public void setGifResource(int resId){
-        this.gifId = resId;
-        initializeView();
-    }
-
-    public int getGifResource() {
-        return gifId;
     }
 }
