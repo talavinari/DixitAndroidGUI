@@ -425,7 +425,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                     }
                 }, 2500);
             } else {
-                new OnClose(this).execute();
                 onDestroy();
             }
         }
@@ -770,10 +769,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     @Override
     protected void onDestroy() {
         if (!notifyDestroyIndication && !Game.getGame().gameState.equals(GameState.GAME_ENDED)) {
-            new OnClose(this).execute();
             unregisterFromTopic(getCurrRoom());
             Game.getGame().clearObjects();
         }
+        new OnClose(this).execute();
         resetPlayers();
         super.onDestroy();
         finish();
@@ -1456,9 +1455,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         protected String doInBackground(String... params) {
             try {
                 Requests.doPost(Constants.REMOVE_PLAYER, getBasicInfoJSON());
-                if (!Game.getGame().gameState.equals(GameState.INIT_GAME)) {
-                    Requests.doPost(Constants.DESTROY_ROOM, getBasicInfoJSON());
-                }
+                Requests.doPost(Constants.DESTROY_ROOM, getBasicInfoJSON());
                 UserData.getInstance().removeAllCards();
             } catch (JSONException e) {
                 e.printStackTrace();
