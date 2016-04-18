@@ -1,6 +1,5 @@
 package com.example.tal.myfirstapplication;
 
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,12 +20,4 @@ public class Player {
         username.setVisibility(i);
         userPic.setVisibility(i);
     }
-
-    public void hideText(){
-        username.setVisibility(View.INVISIBLE);
-    }
-    public void showText(){
-        username.setVisibility(View.VISIBLE);
-    }
-
 }

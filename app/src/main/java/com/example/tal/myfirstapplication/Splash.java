@@ -6,14 +6,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 public class Splash extends Activity {
     private static final boolean AUTO_HIDE = true;
@@ -88,38 +86,6 @@ public class Splash extends Activity {
         super.onDestroy();
 
     }
-
-    private void start(){
-        Runnable run = new Runnable() {
-            @Override
-            public void run() {
-
-                for (int i=0;i<30;i++){
-                    for (int j=0;j<50;j++){
-                        ((TextView)findViewById(R.id.fullscreen_content)).setTextColor(Color.rgb(j,j,j));
-
-                        try {
-                            Thread.sleep(5);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    for (int j=50;j>=0;j--){
-                        ((TextView)findViewById(R.id.fullscreen_content)).setTextColor(Color.rgb(j,j,j));
-                        try {
-                            Thread.sleep(5);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        };
-
-        Thread myThread = new Thread(run);
-        myThread.start();
-    }
-
 
     private void getUserNick(){
         String nickName=UserData.getInstance().getNickName(this);
@@ -204,18 +170,6 @@ public class Splash extends Activity {
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
-    }
-
-    @SuppressLint("InlinedApi")
-    private void show() {
-        // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
-
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
     }
 
     /**

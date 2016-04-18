@@ -19,7 +19,7 @@ public class VoteTask extends BaseTask {
             json.put(Constants.BASIC_INFO_FIELD, getBasicInfoJSON());
             json.put(Constants.VOTED_CARD, votedCard);
 
-            String responseJSON = Requests.doPostWithResponse(Constants.VOTE_FOR_CARD_API_URL, json);
+            Requests.doPostWithResponse(Constants.VOTE_FOR_CARD_API_URL, json);
         } catch (JSONException e) {
             e.printStackTrace();
         }
