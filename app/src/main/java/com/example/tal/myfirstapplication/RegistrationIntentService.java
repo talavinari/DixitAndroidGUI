@@ -58,6 +58,10 @@ public class RegistrationIntentService extends IntentService {
         } catch (Exception e) {
             Log.d(TAG, "Failed to complete token refresh", e);
         }
+        finally {
+            this.stopService(intent);
+        }
+
     }
 
     private void subscribeTopics(String token, String topic) throws IOException {
