@@ -25,6 +25,7 @@ public class Card {
         cardPic.setOnDragListener((View.OnDragListener) obj);
         this.tv = tv;
         this.tv.setText(tvText);
+        tv.setVisibility(View.INVISIBLE);
     }
 
     public Card() {
@@ -33,7 +34,7 @@ public class Card {
     public void setVisibility(int i){
         cardPic.setVisibility(i);
 
-        tv.setVisibility(i);
+//        tv.setVisibility(i);
     }
 
     public void setText(String text){
@@ -42,7 +43,7 @@ public class Card {
 
     public void bringToFront(){
         cardPic.bringToFront();
-        tv.bringToFront();
+//        tv.bringToFront();
     }
 
 

@@ -41,7 +41,8 @@
             android:src="@drawable/camera_icon"
             android:layout_gravity="right|top"
             android:scaleType="fitXY"
-            android:onClick="takePic"/>
+            android:onClick="takePic"
+            android:visibility="invisible"/>
     </TableRow>
     <TableRow>
 
@@ -62,6 +63,7 @@
         android:layout_height="300dp"
         android:id="@+id/mypic"
         android:layout_gravity="left|center_vertical"
-        android:scaleType="fitXY"/>
+        android:scaleType="fitXY"
+        android:visibility="invisible"/>
 
 </FrameLayout>
