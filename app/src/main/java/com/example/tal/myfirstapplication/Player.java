@@ -5,9 +5,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-/**
- * Created by gront on 24/03/2016.
- */
 public class Player {
     String name;
     TextView username;

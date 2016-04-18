@@ -5,9 +5,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-/**
- * Created by gront on 21/03/2016.
- */
 public class Card {
     int imageNum;
     int cardNum;
@@ -33,8 +30,6 @@ public class Card {
 
     public void setVisibility(int i){
         cardPic.setVisibility(i);
-
-//        tv.setVisibility(i);
     }
 
     public void setText(String text){
@@ -43,7 +38,6 @@ public class Card {
 
     public void bringToFront(){
         cardPic.bringToFront();
-//        tv.bringToFront();
     }
 
 

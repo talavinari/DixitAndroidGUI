@@ -5,9 +5,6 @@ import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by tal on 3/29/2016.
- */
 public class PickCardTask extends BaseTask {
 
     public PickCardTask(Context context) {

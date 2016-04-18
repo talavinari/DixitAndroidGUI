@@ -24,13 +24,6 @@ import com.google.android.gms.gcm.GcmListenerService;
 
 public class MyGcmListenerService extends GcmListenerService {
 
-    /**
-     * Called when message is received.
-     *
-     * @param from SenderID of the sender.
-     * @param data Data bundle containing message data as key/value pairs.
-     *             For Set of keys use data.keySet().
-     */
     @Override
     public void onMessageReceived(String from, Bundle data) {
         Intent intent = new Intent(Constants.ROOM_MESSAGE_RECEIVED);

@@ -10,9 +10,6 @@ import android.view.View;
 
 import java.io.InputStream;
 
-/**
- * Created by gront on 16/04/2016.
- */
 public class GifMovie extends View {
     Movie movie;
     private long movieStart;

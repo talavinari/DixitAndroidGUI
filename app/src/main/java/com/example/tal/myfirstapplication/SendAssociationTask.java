@@ -5,9 +5,6 @@ import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by tal on 3/30/2016.
- */
 public class SendAssociationTask extends BaseTask {
 
     public SendAssociationTask(Context context) {
