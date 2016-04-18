@@ -776,7 +776,6 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         super.onDestroy();
         finish();
         unRegisterGCMReceiver();
-        return;
     }
 
     private void setPickedPlace(View view) {
