@@ -17,4 +17,6 @@
     <string name="myScore">"My Score: "</string>
     <string name="score">"Score: "</string>
     <string name="noRoomToShow">No Rooms To Show!</string>
+    <string name="losePlayerMessage">You Lost! game ended, click to go back</string>
+    <string name="winPlayerMessage">You WIN! game ended, click to go back</string>
 </resources>
