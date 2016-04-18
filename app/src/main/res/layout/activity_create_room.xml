@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="206dp"
         android:layout_height="wrap_content"
-        android:text="Room Name"
+        android:text="@string/roomName"
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal"
         android:textSize="30dp" />
@@ -18,13 +18,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/RoomName"
         android:imeActionLabel="Create"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789"/>
 
     <Button
         style="@style/Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create Room"
+        android:text="@string/createRoom"
         android:onClick="createRoom"
         android:id="@+id/create" />
 </LinearLayout>
