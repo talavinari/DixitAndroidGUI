@@ -175,8 +175,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 } catch (Exception e1) {
                     // do nothing
                 }
-                resetPlayers();
-                GameMain.this.finish();
+                onDestroy();
             }
         };
 
@@ -422,14 +421,12 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
-                        resetPlayers();
-                        GameMain.this.finish();
+                        onDestroy();
                     }
                 }, 2500);
             } else {
                 new OnClose(this).execute();
-                resetPlayers();
-                GameMain.this.finish();
+                onDestroy();
             }
         }
     }
@@ -585,8 +582,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 handleDestroyRoomNormally();
                 Intent intent = new Intent(context, ChooseCreateJoin.class);
                 startActivity(intent);
-                resetPlayers();
-                finish();
+                onDestroy();
 
             }
         });
@@ -778,6 +774,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             unregisterFromTopic(getCurrRoom());
             Game.getGame().clearObjects();
         }
+        resetPlayers();
+        finish();
         super.onDestroy();
     }
 

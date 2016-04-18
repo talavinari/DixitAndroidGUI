@@ -136,6 +136,7 @@ public class Game {
         currentWinningCard = -1;
         winners = null;
         gameState = GameState.INIT_GAME;
+
     }
 
     public void setPickedCardForPlayer(String playerName, int pickedCard) {
