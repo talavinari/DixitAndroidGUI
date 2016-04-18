@@ -576,6 +576,8 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
                 handleDestroyRoomNormally();
                 Intent intent = new Intent(context, ChooseCreateJoin.class);
                 startActivity(intent);
+                GameMain.this.finish();
+
             }
         });
 
