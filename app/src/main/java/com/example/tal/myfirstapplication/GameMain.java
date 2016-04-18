@@ -775,8 +775,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
             Game.getGame().clearObjects();
         }
         resetPlayers();
-        finish();
         super.onDestroy();
+        finish();
+        unRegisterGCMReceiver();
+        return;
     }
 
     private void setPickedPlace(View view) {
@@ -1468,6 +1470,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     private void registerGCMReceiver() {
         LocalBroadcastManager.getInstance(this).registerReceiver(googleCloudBroadcastReceiver,
                 new IntentFilter(Constants.ROOM_MESSAGE_RECEIVED));
+    }
+
+    private void unRegisterGCMReceiver() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(googleCloudBroadcastReceiver);
     }
 
     private void setTellerPic() {
