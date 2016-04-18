@@ -21,6 +21,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.renderscript.Script;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.DragEvent;
@@ -552,6 +553,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         setAllVotedVisibility(View.INVISIBLE);
         setAllPickedVisibility(View.INVISIBLE);
 
+        draggedView.setVisibility(View.INVISIBLE);
         picked.setVisibility(View.INVISIBLE);
         teller.setVisibility(View.INVISIBLE);
         setOpponentsCardVisibility(View.GONE);
@@ -647,10 +649,10 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         cardText1.setText(String.valueOf(values.get(0)));
         cardText2.setText(String.valueOf(values.get(1)));
         cardText3.setText(String.valueOf(values.get(2)));
-
-        cardText1.setVisibility(View.VISIBLE);
-        cardText2.setVisibility(View.VISIBLE);
-        cardText3.setVisibility(View.VISIBLE);
+//
+//        cardText1.setVisibility(View.VISIBLE);
+//        cardText2.setVisibility(View.VISIBLE);
+//        cardText3.setVisibility(View.VISIBLE);
 
         imageCardOpponentUser1.setVisibility(View.VISIBLE);
         imageCardOpponentUser2.setVisibility(View.VISIBLE);
@@ -731,9 +733,9 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         imageCardOpponentUser1.setVisibility(visibility);
         imageCardOpponentUser2.setVisibility(visibility);
         imageCardOpponentUser3.setVisibility(visibility);
-        cardText1.setVisibility(visibility);
-        cardText2.setVisibility(visibility);
-        cardText3.setVisibility(visibility);
+//        cardText1.setVisibility(visibility);
+//        cardText2.setVisibility(visibility);
+//        cardText3.setVisibility(visibility);
     }
 
     private void notifyJoinedToRoom(Bundle data) {
