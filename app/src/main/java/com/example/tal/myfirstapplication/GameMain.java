@@ -584,7 +584,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void unregisterFromTopic(String roomTopicName) {
-        Intent intent = new Intent(context, RegistrationIntentService.class);
+        Intent intent = UserData.getRegistrationIntent();
         intent.putExtra(Constants.OPERATION_TYPE, Constants.UNREGISTER_OPERATION);
         intent.putExtra(Constants.TOPIC_ROOM_NAME, roomTopicName);
         startService(intent);

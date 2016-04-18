@@ -99,7 +99,7 @@ import org.json.JSONObject;
         }
 
         private void startGameActivity() {
-            Intent intent = new Intent(context, RegistrationIntentService.class);
+            Intent intent = UserData.getRegistrationIntent();
             intent.putExtra(Constants.OPERATION_TYPE, Constants.REGISTER_OPERATION);
             intent.putExtra(Constants.TOPIC_ROOM_NAME, roomName);
             startService(intent);
