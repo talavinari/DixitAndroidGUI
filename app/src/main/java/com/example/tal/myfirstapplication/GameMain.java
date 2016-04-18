@@ -540,11 +540,11 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         if (winners.contains(Game.getGame().getPlayerByName(UserData.getInstance().getNickName(this)))) {
             soundWinner.start();
             crown.setVisibility(View.VISIBLE);
-            endGame.setText("You WIN! game ended, click to go back");
+            endGame.setText(R.string.winPlayerMessage);
 
         } else {
             soundLoser.start();
-            endGame.setText("You Lost! game ended, click to go back");
+            endGame.setText(R.string.losePlayerMessage);
         }
 
         moveUsers();
@@ -584,7 +584,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
     }
 
     private void unregisterFromTopic(String roomTopicName) {
-        Intent intent = new Intent(context, RegistrationIntentService.class);
+        Intent intent = UserData.getRegistrationIntent();
         intent.putExtra(Constants.OPERATION_TYPE, Constants.UNREGISTER_OPERATION);
         intent.putExtra(Constants.TOPIC_ROOM_NAME, roomTopicName);
         startService(intent);
@@ -668,8 +668,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         usr1 = false;
         usr2 = false;
         usr3 = false;
-        moveUsersBackAndForth(2500);
-
+        moveUsersBackAndForth();
     }
 
     private void moveUsers() {
@@ -678,7 +677,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         moveUser3(null);
     }
 
-    private void moveUsersBackAndForth(int delay) {
+    private void moveUsersBackAndForth() {
         scorePlayer1.setVisibility(View.VISIBLE);
 
         scorePlayer1.setVisibility(View.VISIBLE);

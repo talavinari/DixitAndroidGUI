@@ -73,7 +73,7 @@ public class Splash extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        UserData.setRegistrationIntent(this);
     }
 
     @Override

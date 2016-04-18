@@ -2,6 +2,7 @@ package com.example.tal.myfirstapplication;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,7 @@ import java.util.List;
 public class UserData extends Activity {
 
     private static UserData userData;
+    private static Intent registrationIntent;
     private List<String> cards;
     private String nickName;
     private Bitmap bmp;
@@ -147,5 +149,14 @@ public class UserData extends Activity {
 
     public String getToken() {
         return token;
+    }
+
+    public static Intent getRegistrationIntent() {
+        return registrationIntent;
+    }
+
+    public static void setRegistrationIntent(Context context) {
+        registrationIntent = new Intent(context, RegistrationIntentService.class);
+
     }
 }
