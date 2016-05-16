@@ -733,6 +733,7 @@ public class GameMain extends Activity implements View.OnClickListener, View.OnL
         setTargetCardEmpty();
         isCardOnTable = false;
         setOpponentsCardVisibility(View.GONE);
+        picked.setVisibility(View.INVISIBLE);
     }
 
     private void setOpponentsCardVisibility(int visibility) {
